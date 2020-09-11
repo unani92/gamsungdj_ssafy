@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*)^lm38+5hhf-t#jp@r!^^qf+7+xbzpm)5#4^km==hqanlp^w4'
+SECRET_KEY = '27wd!p)e)qstiv9j)pbilsuldofq*h!c74x!0umlep39f=hn+6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'allauth',  # signup
     'allauth.account',  # signup
     'rest_auth.registration',  # signup
+
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # CORS
     'corsheaders',
     # apps
@@ -136,11 +138,21 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'accounts.User'
 
 # DRF auth settings
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',  # JWT Token
-        'rest_framework.authentication.TokenAuthentication',
-    ]
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
 }
 
 ACCOUNT_LOGOUT_ON_GET = True
