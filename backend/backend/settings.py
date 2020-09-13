@@ -31,31 +31,61 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # DRF
-    'rest_framework',
-    'rest_framework.authtoken',
-    # rest-auth
-    'rest_auth',  # login, logout
-    'allauth',  # signup
-    'allauth.account',  # signup
-    'rest_auth.registration',  # signup
-
-    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # DRF
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    # rest-auth
+    'rest_auth',  # login, logout
+    'rest_auth.registration',  # signup
+    'allauth',  # signup
+    'allauth.account',  # signup
+    'allauth.socialaccount', # social login
+
+    # social-login providers
+    'allauth.socialaccount.providers.facebook',
 
     # CORS
     'corsheaders',
-    # apps
+
+    # My Apps
     'accounts',
+
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v7.0',
+    }
+}
+
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware', # CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -145,16 +175,27 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
 
+REST_USE_JWT = True
 
+import datetime
 JWT_AUTH = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
     'JWT_ALLOW_REFRESH': True,
+		# 1주일간 유효한 토큰
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+		# 28일 마다 갱신됨(유효 기간 연장시)
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
 }
+
 
 ACCOUNT_LOGOUT_ON_GET = True
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+SITE_ID = 1
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
