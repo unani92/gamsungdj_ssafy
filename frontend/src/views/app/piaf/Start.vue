@@ -50,13 +50,13 @@
                 <div v-for="(data, index) in dummyData1" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <img class="card-img-top" :src="data.src" alt="Card cap" />
+                            <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
                             <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
                             <!-- <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">TRENDING</b-badge> -->
                         </div>
                         <b-card-body>
-                            <h6 class="mb-4">{{ data.title }}</h6>
-                            <p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p>
+                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
+                            <a href="#" @click.prevent="tempFunction"><p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p></a>
                         </b-card-body>
                     </b-card>
                 </div>
@@ -76,13 +76,13 @@
                 <div v-for="(data, index) in dummyData2" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <img class="card-img-top" :src="data.src" alt="Card cap" />
+                            <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
                             <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
                             <!-- <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">TRENDING</b-badge> -->
                         </div>
                         <b-card-body>
-                            <h6 class="mb-4">{{ data.title }}</h6>
-                            <p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p>
+                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
+                            <a href="#" @click.prevent="tempFunction"><p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p></a>
                         </b-card-body>
                     </b-card>
                 </div>
@@ -102,13 +102,13 @@
                 <div v-for="(data, index) in dummyData3" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <img class="card-img-top" :src="data.src" alt="Card cap" />
+                            <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
                             <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
                             <!-- <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">TRENDING</b-badge> -->
                         </div>
                         <b-card-body>
-                            <h6 class="mb-4">{{ data.title }}</h6>
-                            <p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p>
+                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
+                            <a href="#" @click.prevent="tempFunction"><p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p></a>
                         </b-card-body>
                     </b-card>
                 </div>
@@ -251,7 +251,7 @@ export default {
 	},
 	methods:{
 		tempFunction(){
-			alert("페이지 준비중");
+			alert("페이지 준비중입니다.");
 		}
 	}
 }
