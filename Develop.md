@@ -1,18 +1,73 @@
-# 개발 일지
-## Backend
-### 1. urls
-#### Account
-```python
-BaseURL = "http://localhost:8000/"
-# sign up
-rest-auth/signup/
-# login
-rest-auth/login/
-# logout
-rest-auth/logout/
+# Backend
+> BaseURL = "http://localhost:8000/"
+## 1. Account
+### 1) Sign Up
 ```
-- 소셜로그인
-    - 페이스북 - redirection url https여야 해서 오류발생중..
+POST rest-auth/signup/
+```
+- Request
+```json
+{
+    "email": "", 
+    "password1": "",
+    "password2": "",
+}
+```
+- Response
+```json
+{
+    "token": "jwt token",
+    "user": {
+        "pk": 1,
+        "username": "",
+        "email": "",
+        "first_name": "",
+        "last_name": ""
+    }
+}
+```
+### 2) Login
+```
+POST rest-auth/login/
+```
+- Request
+```json
+{
+    "email": "", 
+    "password": ""
+}
+```
+- Response
+```json
+{
+    "token": "jwt token",
+    "user": {
+        "pk": 1,
+        "username": "",
+        "email": "",
+        "first_name": "",
+        "last_name": ""
+    }
+}
+```
+### 3) Logout
+```
+POST rest-auth/logout/
+```
+- Request
+```json
+{
+}
+```
+- Response
+```json
+{
+    "detail": "로그아웃되었습니다."
+}
+```
+
+
+   
     
 
 
