@@ -1,44 +1,62 @@
 <template>
 <div>
-	<!-- 감정 카테고리 분류 시작 -->
+	<!-- 감정 카테고리별 추천 음악 시작 -->
     <b-row>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideSingleOption">
-                <!-- 첫번째 -->
+                <!-- 카테고리1 시작 -->
                 <div class="pr-3 pl-3 mb-4 glide__slide" style="height:500px">
                     <b-card class="flex-row" no-body>
-                        
+                        <div class="col-sm-4">
+							<h1>여기 어떻게 할까??</h1>
+                        </div>
+						<div class="col-sm-8">
+							<b-colxx v-for="(data, index) in carouselData1" xxs="12" lg="6" class="mt-3 mb-3" :key="index" style="display:inline-block">
+								<b-card class="flex-row listing-card-container" no-body>
+									<div class="w-40 position-relative">
+										<img class="card-img-left" :src="data.src" alt="Card cap" />
+										<!-- <b-badge v-if="blogItem.badge" variant="primary" pill class="position-absolute badge-top-left">{{blogItem.badge}}</b-badge> -->
+									</div>
+									<div class="w-60 d-flex align-items-center">
+										<b-card-body>
+											<h5 class="mb-3 listing-heading" v-line-clamp="2">{{ data.title }}</h5>
+											<p class="listing-desc text-muted" v-line-clamp="3">{{ data.artist }}</p>
+										</b-card-body>
+									</div>
+								</b-card>
+							</b-colxx>
+                        </div>
                     </b-card>
                 </div>
-                <!-- 첫번째 끝 -->
+                <!-- 카테고리1 끝 -->
 
-                <!-- 두번째 시작 -->
-                <div class="pr-3 pl-3 mb-4 glide__slide" style="height:500px">
+                <!-- 카테고리2 시작 -->
+				<div class="pr-3 pl-3 mb-4 glide__slide" style="min-height:500px">
                     <b-card class="flex-row" no-body>
                         
                     </b-card>
                 </div>
-                <!-- 두번째 끝 -->
+                <!-- 카테고리2 끝 -->
 
-                <!-- 세번째 시작 -->
-                <div class="pr-3 pl-3 mb-4 glide__slide" style="height:500px">
+                <!-- 카테고리3 시작 -->
+                <div class="pr-3 pl-3 mb-4 glide__slide" style="min-height:500px">
                     <b-card class="flex-row" no-body>
                         
                     </b-card>
                 </div>
-                <!-- 세번째 끝 -->
+                <!-- 카테고리3 끝 -->
 
-                <!-- 네번째 시작 -->
-                <div class="pr-3 pl-3 mb-4 glide__slide" style="height:500px">
+                <!-- 카테고리4 시작 -->
+                <div class="pr-3 pl-3 mb-4 glide__slide" style="min-height:500px">
                     <b-card class="flex-row" no-body>
                         
                     </b-card>
                 </div>
-                <!-- 네번째 끝 -->
+                <!-- 카테고리4 끝 -->
             </glide-component>
         </b-colxx>
     </b-row>
-	<!-- 감정 카테고리 분류 끝 -->
+	<!-- 감정 카테고리별 추천 음악 끝 -->
 
 	<!-- 날씨 매칭 추천 시작 -->
     <b-row>
@@ -69,7 +87,7 @@
 	<!-- 시간 매칭 추천 시작 -->
     <b-row>
         <b-colxx xxs="12">
-            <a href="#" @click.prevent="tempFunction"><h5 class="mb-4 card-title">{{ $t('지금 시간대에 >') }}</h5></a>
+            <a href="#" @click.prevent="tempFunction"><h5 class="mb-4 card-title">{{ $t('이시간에는 >') }}</h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
@@ -103,8 +121,11 @@
                     <b-card no-body>
                         <div class="position-relative">
                             <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
-                            <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
-                            <!-- <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">TRENDING</b-badge> -->
+							<!-- <div class="glyph-icon simple-icon-control-play position-absolute" style="top:80%; left:30%;"></div>
+                            <div class="glyph-icon simple-icon-playlist position-absolute" style="top:80%; left:60%;"></div> -->
+							
+                            <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">Play</b-badge>
+                            <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">Add</b-badge> -->
                         </div>
                         <b-card-body>
                             <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
@@ -246,6 +267,40 @@ export default {
 					title: "Rewind",
 					artist: "케이시 (Kassy)",
 				},
+			],
+			carouselData1: [
+				{
+					src: "https://cdnimg.melon.co.kr/cm/album/images/000/34/289/34289_500.jpg/melon/quality/80/optimize",
+					title: "...사랑했잖아...",
+					artist: "린",
+				},
+				{
+					src: "https://cdnimg.melon.co.kr/cm/album/images/003/00/646/300646_500.jpg/melon/quality/80/optimize",
+					title: "가시",
+					artist: "버즈",
+				},
+				{
+					src: "https://cdnimg.melon.co.kr/cm/album/images/100/77/259/10077259_500.jpg?7bb8893e15d869a5ea05cdbdd21da58f/melon/quality/80/optimize",
+					title: "니가 미치도록 사랑스러운건지",
+					artist: "빌리어코스티",
+				},
+				{
+					src: "https://cdnimg.melon.co.kr/cm/album/images/102/23/502/10223502_500.jpg?99cf7f8da99b3da548cbe2e9cbeb5bfe/melon/resize/282/quality/80/optimize",
+					title: "On and On",
+					artist: "알레프 (ALEPH)",
+				},
+				{
+					src: "https://cdnimg.melon.co.kr/cm/album/images/103/13/133/10313133_500.jpg?7aee43f6c24b32e34745f55bfb9f4fcb/melon/resize/282/quality/80/optimize",
+					title: "서툰 이별을 하려해",
+					artist: "윤토벤",
+				},
+				{
+					src: "https://cdnimg.melon.co.kr/cm/album/images/102/34/448/10234448_500.jpg?e5d661857b951880a5af5eb99a6d9b7f/melon/resize/282/quality/80/optimize",
+					title: "Airman Morning Diaries EP.1",
+					artist: "공기남",
+				},
+				
+
 			]
         }
 	},
@@ -256,3 +311,8 @@ export default {
 	}
 }
 </script>
+<style scoped>
+/* .card-img-top:hover {
+    opacity: 0.3 !important;
+} */
+</style>
