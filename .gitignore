@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/django,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,python
 
+.idea
+.vscode
+
 ### Django ###
 *.log
 *.pot
@@ -123,6 +126,7 @@ env/
 ENV/
 env.bak/
 venv.bak/
+venv
 
 # Spyder project settings
 .spyderproject
