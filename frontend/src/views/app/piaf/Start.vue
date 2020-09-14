@@ -121,11 +121,10 @@
                     <b-card no-body>
                         <div class="position-relative">
                             <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
-							<!-- <div class="glyph-icon simple-icon-control-play position-absolute" style="top:80%; left:30%;"></div>
-                            <div class="glyph-icon simple-icon-playlist position-absolute" style="top:80%; left:60%;"></div> -->
-							
                             <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">Play</b-badge>
                             <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">Add</b-badge> -->
+                            <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
+                            <!-- <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">TRENDING</b-badge> -->
                         </div>
                         <b-card-body>
                             <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
