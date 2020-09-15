@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*)^lm38+5hhf-t#jp@r!^^qf+7+xbzpm)5#4^km==hqanlp^w4'
+SECRET_KEY = '27wd!p)e)qstiv9j)pbilsuldofq*h!c74x!0umlep39f=hn+6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,9 +47,66 @@ INSTALLED_APPS = [
     'sklearn',
     'numpy',
     'pandas'
+    'django.contrib.sites',
+
+    # DRF
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    # rest-auth
+    'rest_auth',  # login, logout
+    'rest_auth.registration',  # signup
+    'allauth',  # signup
+    'allauth.account',  # signup
+    'allauth.socialaccount', # social login
+
+    # social-login providers
+    # 'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.kakao',
+
+    # CORS
+    'corsheaders',
+
+    # My Apps
+    'accounts',
+
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    # 'facebook': {
+    #     'METHOD': 'oauth2',
+    #     'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+    #     'SCOPE': ['email', 'public_profile'],
+    #     'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+    #     'INIT_PARAMS': {'cookie': True},
+    #     'FIELDS': [
+    #         'id',
+    #         'first_name',
+    #         'last_name',
+    #         'name',
+    #         'name_format',
+    #         'picture',
+    #         'short_name'
+    #     ],
+    #     'EXCHANGE_TOKEN': True,
+    #     'LOCALE_FUNC': 'path.to.callable',
+    #     'VERIFIED_EMAIL': False,
+    #     'VERSION': 'v7.0',
+    # },
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', # CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,6 +129,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -127,3 +187,50 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'accounts.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+# DRF auth settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+REST_USE_JWT = True
+
+import datetime
+JWT_AUTH = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_ALLOW_REFRESH': True,
+		# 1주일간 유효한 토큰
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+		# 28일 마다 갱신됨(유효 기간 연장시)
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
+}
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
