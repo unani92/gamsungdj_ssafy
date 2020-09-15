@@ -32,7 +32,13 @@ const routes = [
             path: 'start',
             component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Start')
             // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          }
+          },
+          {
+            path: 'search',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Search')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          
         ]
       },
       {
