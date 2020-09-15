@@ -6,9 +6,9 @@
             <glide-component :settings="glideSingleOption">
                 <!-- 카테고리1 시작 -->
                 <div class="pr-3 pl-3 mb-4 glide__slide" style="height:500px">
-                    <b-card class="flex-row" no-body>
+                    <b-card class="flex-row" style="align-items: center;" no-body>
                         <div class="col-sm-4">
-							<h1>여기 어떻게 할까??</h1>
+							<h1>정렬되나</h1>
                         </div>
 						<div class="col-sm-8">
 							<b-colxx v-for="(data, index) in carouselData1" xxs="12" lg="6" class="mt-3 mb-3" :key="index" style="display:inline-block">
@@ -298,8 +298,6 @@ export default {
 					title: "Airman Morning Diaries EP.1",
 					artist: "공기남",
 				},
-				
-
 			]
         }
 	},
