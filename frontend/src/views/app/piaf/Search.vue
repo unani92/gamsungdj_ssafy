@@ -10,10 +10,10 @@
     <b-colxx xxs="12">
         <template v-if="isArtist">
           <template v-if="!moreArtist">
-            <h2>아티스트><a href="#" v-if="artists.length>3" @click="showMoreArtist" style="font-size:0.7em; float:right">더보기∨</a></h2>
+            <h2>아티스트><a v-if="artists.length>3" @click="showMoreArtist" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
           </template>
           <template v-else>
-            <h2>아티스트><a href="#" v-if="artists.length>3" @click="showMoreArtist" style="font-size:0.7em; float:right">접기∧</a></h2>
+            <h2>아티스트><a v-if="artists.length>3" @click="showMoreArtist" style="font-size:0.7em; float:right; cursor:pointer">접기∧</a></h2>
           </template>
           <b-colxx xxs="12" class="mb-4 pl-0 pr-0" style="display: inline-flex;">
                   <div class="pr-3 pl-3 mb-4 glide__slide" v-for="(artist, index) in artists.slice(0,3)" :key="index" style="width:30%">
@@ -64,12 +64,12 @@
     <b-colxx xxs="12">
         <template v-if="isSong">
           <template v-if="!moreSong">
-            <h2>곡><a href="#" v-if="songs.length>10" @click="showMoreSong" style="font-size:0.7em; float:right">더보기∨</a></h2>
+            <h2>곡><a v-if="songs.length>5" @click="showMoreSong" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
           </template>
           <template v-else>
-            <h2>곡><a href="#" v-if="songs.length>10" @click="showMoreSong" style="font-size:0.7em; float:right">접기∧</a></h2>
+            <h2>곡><a v-if="songs.length>5" @click="showMoreSong" style="font-size:0.7em; float:right; cursor:pointer">접기∧</a></h2>
           </template>
-        <b-card  :class="{'d-flex flex-row':true}" no-body v-for="(song, index) in songs.slice(0,10)" v-bind:key="index">
+        <b-card  :class="{'d-flex flex-row':true}" no-body v-for="(song, index) in songs.slice(0,5)" v-bind:key="index">
           <img :src="song.img" class="list-thumbnail responsive border-0"/>
           <div class="pl-2 d-flex flex-grow-1 min-width-zero">
               <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
@@ -81,7 +81,7 @@
           </div>
         </b-card>
         <template v-if="moreSong">
-          <b-card  :class="{'d-flex flex-row':true}" no-body v-for="(song, index) in songs.slice(10,songs.length)" v-bind:key="index">
+          <b-card  :class="{'d-flex flex-row':true}" no-body v-for="(song, index) in songs.slice(5,songs.length)" v-bind:key="index">
             <img :src="song.img" class="list-thumbnail responsive border-0"/>
             <div class="pl-2 d-flex flex-grow-1 min-width-zero">
                 <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
@@ -101,10 +101,10 @@
     <b-colxx xxs="12">
       <template v-if="isAlbum">
         <template v-if="!moreAlbum">
-            <h2>앨범><a href="#" v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right">더보기∨</a></h2>
+            <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
           </template>
           <template v-else>
-            <h2>앨범><a href="#" v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right">접기∧</a></h2>
+            <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right">접기∧</a></h2>
           </template>
             <b-colxx xxs="12" class="mb-4 pl-0 pr-0" style="display: inline-flex;">
                 <b-card no-body v-for="(album, index) in albums.slice(0,5)" v-bind:key="index" style="width:15%;margin-right:3%;">
