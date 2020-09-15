@@ -1,7 +1,7 @@
 <template>
   <div id="app-container" :class="getMenuType">
     <topnav />
-    <!-- <sidebar /> -->
+    <!-- <sideba  r /> -->
     <main>
       <div class="container-fluid">
         <slot></slot>
@@ -21,7 +21,7 @@ export default {
   components: {
     topnav: Topnav,
     // sidebar: Sidebar,
-    "footer-component": Footer
+    "footer-component": Footer,
   },
   data() {
     return {
