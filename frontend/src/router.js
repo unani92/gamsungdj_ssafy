@@ -34,7 +34,7 @@ const routes = [
             // meta: { roles: [UserRole.Admin, UserRole.Editor] },
           },
           {
-            path: 'search',
+            path: 'search/:keyword',
             component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Search')
             // meta: { roles: [UserRole.Admin, UserRole.Editor] },
           },
