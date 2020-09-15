@@ -1,7 +1,7 @@
 <template>
   <div id="app-container" :class="getMenuType">
     <topnav />
-    <sidebar />
+    <!-- <sidebar /> -->
     <main>
       <div class="container-fluid">
         <slot></slot>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Sidebar from "../containers/navs/Sidebar";
+// import Sidebar from "../containers/navs/Sidebar";
 import Topnav from "../containers/navs/Topnav";
 import Footer from "../containers/navs/Footer";
 import { mapGetters } from "vuex";
@@ -20,7 +20,7 @@ import { mapGetters } from "vuex";
 export default {
   components: {
     topnav: Topnav,
-    sidebar: Sidebar,
+    // sidebar: Sidebar,
     "footer-component": Footer
   },
   data() {
