@@ -8,9 +8,9 @@
       </div>
     </main>
     <transition name="slide-up">
-      <maskmask id="mask" v-show="this.$store.state.visiblePlaylist" />
+      <maskmask id="mask" v-show="this.$store.state.visiblePlaylist" :msg="msg" />
     </transition>
-    <footer-component />
+    <footer-component @action="action" />
   </div>
 </template>
 
@@ -30,7 +30,8 @@ export default {
   },
   data() {
     return {
-      show: false
+      show: false,
+      msg: ''
     };
   },
   computed: {
@@ -40,6 +41,11 @@ export default {
     setTimeout(() => {
       document.body.classList.add("default-transition");
     }, 100);
+  },
+  methods: {
+    action(msg){
+      this.msg = msg
+    }
   }
 };
 </script>

@@ -9,9 +9,9 @@
                 <center>
                 <p class="mb-0 text-muted">
                     <font size="20px">
-                        <span class="glyph-icon iconsminds-back-music" style="cursor:pointer"></span>
-                        <span class="glyph-icon iconsminds-play-music" style="padding:0px 20px 0px 20px; cursor:pointer;"></span>
-                        <span class="glyph-icon iconsminds-next-music" style="cursor:pointer">  </span>
+                        <span class="glyph-icon iconsminds-back-music" style="cursor:pointer" @click="action('prev')"></span>
+                        <span class="glyph-icon iconsminds-play-music" style="padding:0px 20px 0px 20px; cursor:pointer;" @click="action('play')"></span>
+                        <span class="glyph-icon iconsminds-next-music" style="cursor:pointer" @click="action('next')">  </span>
                     </font>
                 </p>
                 </center>
@@ -32,7 +32,10 @@ export default {
     methods:{
         togglePlaylist(){
             this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
-        }
+        },
+        action(msg) {
+            this.$emit('action', msg)
+        },
     }
 }
 </script>
