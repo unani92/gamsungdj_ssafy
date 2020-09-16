@@ -27,7 +27,9 @@ import VueScrollTo from 'vue-scrollto'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import { getCurrentLanguage } from './utils'
+import GSignInButton from 'vue-google-signin-button'
 
+Vue.use(GSignInButton)
 Vue.use(BootstrapVue);
 Vue.use(VueI18n);
 const messages = { en: en, es: es };

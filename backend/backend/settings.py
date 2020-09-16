@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'konlpy',
     'sklearn',
     'numpy',
-    'pandas'
+    'pandas',
     'django.contrib.sites',
 
     # DRF
