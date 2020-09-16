@@ -106,9 +106,12 @@ export default {
                 if(this.playlistData.length == 0) {
                     alert("playist is empty")
                 }
-                else {
+                else if(this.videoid === '') {
                     this.playing = 0
                     this.videoid = this.playlistData[0].src
+                    this.player.playVideo()
+                }
+                else {
                     this.player.playVideo()
                 }
             }

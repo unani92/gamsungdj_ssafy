@@ -1,7 +1,6 @@
 <template>
   <nav class="navbar fixed-top">
     <div class="d-flex align-items-center navbar-left">
-      <!-- 햄버거 메뉴버튼 시작 -->
       <!-- <a
         href="#"
         class="menu-button d-none d-md-block"
@@ -16,7 +15,6 @@
       >
         <mobile-menu-icon />
       </a> -->
-      <!-- 햄버거 메뉴 버튼 끝 -->
       <div
         :class="{'search':true, 'mobile-view':isMobileSearch}"
         ref="searchContainer"
@@ -32,7 +30,7 @@
           <i class="simple-icon-magnifier"></i>
         </span>
       </div>
-      <div class="d-inline-block">
+      <!-- <div class="d-inline-block">
         <b-dropdown
           id="langddm"
           class="ml-2"
@@ -56,8 +54,9 @@
           target="_top"
           :href="buyUrl"
         >{{$t('user.buy')}}</a>
-      </div>
+      </div> -->
     </div>
+    <!-- 로고 -->
     <router-link class="navbar-logo" tag="a" :to="adminRoot">
       <span class="logo d-none d-xs-block"></span>
       <span class="logo-mobile d-block d-xs-none"></span>
