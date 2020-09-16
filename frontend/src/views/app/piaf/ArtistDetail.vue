@@ -2,63 +2,25 @@
 <div>
   <b-row>
     <b-colxx xxs="12">
-      <h1> '{{keyword}}' 검색 결과</h1>
       <div class="separator mb-5"></div>
     </b-colxx>
   </b-row>
   <b-row>
     <b-colxx xxs="12">
-        <template v-if="isArtist">
-          <template v-if="!moreArtist">
-            <h2>아티스트><a v-if="artists.length>3" @click="showMoreArtist" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
-          </template>
-          <template v-else>
-            <h2>아티스트><a v-if="artists.length>3" @click="showMoreArtist" style="font-size:0.7em; float:right; cursor:pointer">접기∧</a></h2>
-          </template>
-          <b-colxx xxs="12" class="mb-4 pl-0 pr-0" style="display: inline-flex;">
-                  <div class="pr-3 pl-3 mb-4 glide__slide" v-for="(artist, index) in artists.slice(0,3)" :key="index" style="width:30%" @click="detailArtist(artist.id)">
-                      <b-card class="flex-row" no-body style=" cursor:pointer;">
-                          <div class="w-50 position-relative">
-                              <img class="card-img-left" :src="artist.img" style="height:100%"/>
-                              <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
-                          </div>
-                          <div class="w-50">
-                              <b-card-body>
-                                  <h3 class="mb-4 card-subtitle" style="font-weight :bold"><br>{{artist.name}}</h3>
-                                  <h4 class="mb-4 card-subtitle"><a style="font-size:16px;">활동유형: </a>{{artist.type}}</h4>
-                                  <h6 class="mb-4 card-subtitle">데뷔: {{artist.released}}</h6>
-                              </b-card-body>
-                          </div>
-                      </b-card>
-                  </div>
-          </b-colxx>
-          <template v-if="moreArtist">
-            <div v-for="n in parseInt((artists.length-1)/3)" v-bind:key="n">
-              <b-colxx xxs="12" class="mb-4 pl-0 pr-0" style="display: inline-flex;">
-                      <div class="pr-3 pl-3 mb-4 glide__slide" v-for="(artist, index) in artists.slice(n*3,(n+1)*3)" v-bind:key="index" style="width:30%; height:30%" @click="detailArtist(artist.id)">
-                          <b-card class="flex-row" no-body style=" cursor:pointer;">
-                              <div class="w-50 position-relative">
-                                  <img class="card-img-left" :src="artist.img" alt="Card cap" />
-                                  <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
-                              </div>
-                              <div class="w-50">
-                                  <b-card-body>
-                                      <h3 class="mb-4 card-subtitle" style="font-weight :bold"><br>{{artist.name}}</h3>
-                                      <h4 class="mb-4 card-subtitle"><a style="font-size:16px;">활동유형: </a>{{artist.type}}</h4>
-                                      <h6 class="mb-4 card-subtitle">데뷔: {{artist.released}}</h6>
-                                  </b-card-body>
-                              </div>
-                          </b-card>
-                      </div>
-              </b-colxx>
-            </div>
-          </template>
-          <br><div class="separator mb-5"></div>
-        </template>
-        <template v-else>
-          <div class="loading"></div>
-        </template>
+        <b-colxx xxs="12" class="mb-4 pl-0 pr-0" style="display: inline-flex;">
+                <div xxs="4" class="card mb-4"  style="width:30%; margin-right:3%">
+                  <img class="card-img-top" :src="artist.img" style="border-top-left-radius:initial; border-top-right-radius:initial"/>
+                </div>
+                <div xxs="8" style="width:70%;">
+                  <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{artist.name}}</h1><br>
+                  <h1 class="mb-0 truncate text-large">{{artist.type}}</h1><br>
+                  <h3 class="mb-0 truncate">데뷔: {{artist.released}}</h3><br>
+                </div>
+        </b-colxx>
     </b-colxx>
+    <b-colxx xxs="12">
+        <div class="separator mb-5"></div>
+      </b-colxx>
   </b-row>
   <b-row>
     <b-colxx xxs="12">
@@ -168,16 +130,13 @@ export default {
     return {
       isArtist: true,
       isSong: true,
-      isAlbum: false,
-      moreArtist: false,
+      isAlbum: true,
       moreSong: false,
       moreAlbum: false,
       keyword: '',
       // currentPage: 1,
-      artists: [{ id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
-      { id: 1, name: '멜로망스1', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
-      { id: 1, name: '멜로망스2', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
-      { id: 1, name: '멜로망스3', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},],
+      artistID: 0,
+      artist: { id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
       songs: [{ id: 1, name: '선물', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
       { id: 1, name: '선물1', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
       { id: 1, name: '선물2', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
@@ -207,41 +166,11 @@ export default {
     }
   },
   methods: {
-    loadItems() {
-        this.isAlbum = false;
-        this.isAlbum = true;
-    //   axios
-    //     .get(this.apiUrl)
-    //     .then(response => {
-    //       return response.data;
-    //     })
-    //     .then(res => {
-    //       this.total = res.total;
-    //       this.from = res.from;
-    //       this.to = res.to;
-    //       this.items = res.data.map(x => {
-    //         return {
-    //           ...x,
-    //           img: x.img.replace("/img/", "/img/products/")
-    //         };
-    //       });
-    //       this.perPage = res.per_page;
-    //       this.selectedItems = [];
-    //       this.lastPage = res.last_page;
-    //       this.isLoad = true;
-    //     });
-    },
-    showMoreArtist: function() {
-      this.moreArtist = !this.moreArtist;
-    },
     showMoreSong: function() {
       this.moreSong = !this.moreSong;
     },
     showMoreAlbum: function() {
       this.moreAlbum = !this.moreAlbum;
-    },
-    detailArtist: function(id){
-      this.$router.push('/app/piaf/ArtistDetail/'+id)
     },
     detailSong: function(id){
       this.$router.push('/app/piaf/songDetail/'+id)
@@ -251,8 +180,7 @@ export default {
     },
   },
   mounted() {
-    this.loadItems();
-    this.keyword = this.$route.params.keyword;
+    this.artistID = this.$route.params.artistID;
   },
 
 }
