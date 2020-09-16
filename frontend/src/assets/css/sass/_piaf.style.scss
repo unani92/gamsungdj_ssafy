@@ -7732,6 +7732,12 @@ footer.page-footer-extend {
   opacity: 0.8;
   background-color: $background-color;
 }
+#mask{
+  position: fixed;
+  top:100px;
+  width:100%;
+  background-color: $background-color;
+}
 .right-menu {
   footer.page-footer {
     padding-right: $app-menu-width;

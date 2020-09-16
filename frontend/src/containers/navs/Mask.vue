@@ -1,9 +1,13 @@
 <template>
+    <!--
+        !참고
+        https://developers.google.com/youtube/iframe_api_reference#Events 
+        https://www.npmjs.com/package/vue-youtube
+    -->
     <div class="row aligner">
-
         <!-- youtube video 시작 -->
         <div class="col-sm-7 aligner">
-            <youtube :video-id="videoid" :player-vars="playerVars" ref="youtube"></youtube>
+            <youtube id="youtube" :video-id="videoid" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
         </div>
         <!-- youtube video 끝 -->
 
@@ -11,13 +15,12 @@
         <div class="col-sm-5">
             <h1>Play List</h1>
             <vue-perfect-scrollbar
-            class="scroll dashboard-list-with-thumbs"
             :settings="{ suppressScrollX: true, wheelPropagation: false }"
             >
                 <!-- 리스트 아이템 시작 -->
                 <div class="d-flex flex-row mb-3" v-for="(data, index) in playlistData" :key="index">
                     <img :src="data.img" :alt="data.title" class="list-thumbnail border-0"
-                    @click="playVideo(data.src)" style="cursor:pointer" />
+                    @click="playVideo(data.src, index)" style="cursor:pointer" />
                     <b-badge pill class="position-absolute badge-top-left"> playing </b-badge>
                     <div class="pl-3 pt-2 pr-2 pb-2">
                         <p class="list-item-heading">{{ data.title }}</p>
@@ -43,6 +46,8 @@ export default {
             playerVars: {
                 autoplay: 1
             },
+            plying: '',
+            playerState: '',
             playlistData: [
 				{
 					img: "https://cdnimg.melon.co.kr/cm2/album/images/104/79/150/10479150_20200821103346_500.jpg?21a0dfff48264f87bb4120d95578e9ee/melon/quality/80/optimize",
@@ -89,31 +94,71 @@ export default {
             return this.$refs.youtube.player
         }
     },
-    watch: {
-        msg : function() {
-            if(this.msg === "play") {
+    methods: {
+        playVideo(videoid, index) {
+            this.playing = index
+            this.videoid = videoid
+            this.$store.state.visiblePlayButton = false
+            this.$store.state.visiblePauseButton = true
+        },
+        play(msg) {
+            if(msg === "play") {
+                if(this.playlistData.length == 0) {
+                    alert("playist is empty")
+                }
+                else {
+                    this.playing = 0
+                    this.videoid = this.playlistData[0].src
+                    this.player.playVideo()
+                }
+            }
+            else if(msg === "pause") {
+                this.player.pauseVideo()
+            }
+            else if(msg === "prev") {
+                if(this.playing == 0) {
+                    this.playing = this.playlistData.length-1
+                    this.videoid = this.playlistData[this.playing].src
+                    this.player.playVideo()
+                }
+                else {
+                    this.playing = this.playing-1
+                    this.videoid = this.playlistData[this.playing].src
+                    this.player.playVideo()
+                }
+            }
+            else if(msg === "next") {
+                if(this.playing == this.playlistData.length-1) {
+                    this.playing = 0
+                    this.videoid = this.playlistData[this.playing].src
+                    this.player.playVideo()
+                }
+                else {
+                    this.playing = this.playing+1
+                    this.videoid = this.playlistData[this.playing].src
+                    this.player.playVideo()
+                }
+            }
+        },
+        ended() {
+            if(this.playing == this.playlistData.length-1) {
+                this.playing = 0
+                this.videoid = this.playlistData[this.playing].src
                 this.player.playVideo()
             }
-            else if(this.msg === "prev") {
-                
+            else {
+                this.playing = this.playing+1
+                this.videoid = this.playlistData[this.playing].src
+                this.player.playVideo()
             }
-            else if(this.msg === "next") {
-
-            }
-        }
-    },
-    methods: {
-        playVideo(videoid) {
-            this.videoid = videoid;
-            this.play
-        },
-        play() {
-            this.player.playVideo()
         }
     }
 }
 </script>
 <style>
+/* #youtube{
+    display:none;
+} */
 .aligner {
   display: flex;
   align-items: center;

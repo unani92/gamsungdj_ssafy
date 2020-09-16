@@ -2,24 +2,27 @@
 <footer class="page-footer">
     <div class="footer-content">
         <div class="row" style="height:100%; align-items:center;">
-            <div class="col-12 col-sm-4">
-                <p class="mb-0 text-muted">앨범 사진 들어갈 자리</p>
+            <div class="col-12 col-sm-3">
+                <p class="mb-0 text-muted">
+                    album image
+                </p>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <center>
                 <p class="mb-0 text-muted">
-                    <font size="20px">
-                        <span class="glyph-icon iconsminds-back-music" style="cursor:pointer" @click="action('prev')"></span>
-                        <span class="glyph-icon iconsminds-play-music" style="padding:0px 20px 0px 20px; cursor:pointer;" @click="action('play')"></span>
-                        <span class="glyph-icon iconsminds-next-music" style="cursor:pointer" @click="action('next')">  </span>
+                    <font class="button" size="10px">
+                        <span class="glyph-icon simple-icon-control-rewind" @click="action('prev')"></span>
+                        <span class="glyph-icon simple-icon-control-play" @click="action('play')"  v-show="this.$store.state.visiblePlayButton" style="padding:0px 20px 0px 20px;"></span>
+                        <span class="glyph-icon simple-icon-control-pause" @click="action('pause')" v-show="this.$store.state.visiblePauseButton" style="padding:0px 20px 0px 20px;"></span>
+                        <span class="glyph-icon simple-icon-control-forward" @click="action('next')">  </span>
                     </font>
                 </p>
                 </center>
             </div>
-            <div class="col-sm-4 d-none d-sm-block">
+            <div class="col-sm-3 d-none d-sm-block">
                 <p class="mb-0 text-muted float-right">
                     <font size="20px">
-                        <span class="glyph-icon simple-icon-playlist" style="cursor:pointer" @click="togglePlaylist"></span>
+                        <span class="glyph-icon simple-icon-playlist" @click="togglePlaylist"></span>
                     </font>
                 </p>
             </div>
@@ -31,11 +34,42 @@
 export default {
     methods:{
         togglePlaylist(){
+            if(!this.$store.state.visiblePlaylist) {
+                let height = window.innerHeight;
+                let height_topnav = document.getElementById('topnav').offsetHeight;
+                let height_footer = document.getElementById('footer').offsetHeight;
+                let height_mask = height - height_topnav - height_footer;
+                document.getElementById('mask').style.height = height_mask + "px";
+            }
             this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
         },
         action(msg) {
+            if(msg === "play") {
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
+            }
+            else if(msg === "pause") {
+                this.$store.state.visiblePlayButton = true
+                this.$store.state.visiblePauseButton = false
+            }
+            else if(msg === "prev") {
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
+            }
+            else if(msg === "next") {
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
+            }
             this.$emit('action', msg)
         },
     }
 }
 </script>
+<style scoped>
+.glyph-icon{
+    cursor:pointer;
+}
+.glyph-icon:hover {
+    filter:brightness(200%)
+}
+</style>>

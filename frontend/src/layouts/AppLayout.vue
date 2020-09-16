@@ -1,21 +1,19 @@
 <template>
   <div id="app-container" :class="getMenuType">
-    <topnav />  
-    <!-- <sidebar /> -->
+    <topnav id="topnav" />
     <main>
       <div class="container-fluid">
         <slot></slot>
       </div>
     </main>
     <transition name="slide-up">
-      <maskmask id="mask" v-show="this.$store.state.visiblePlaylist" :msg="msg" />
+      <maskLayer id="mask" v-show="this.$store.state.visiblePlaylist" ref="maskref" />
     </transition>
-    <footer-component @action="action" />
+    <footer-component id="footer" @action="action" />
   </div>
 </template>
 
 <script>
-// import Sidebar from "../containers/navs/Sidebar";
 import Topnav from "../containers/navs/Topnav";
 import Mask from "../containers/navs/Mask";
 import Footer from "../containers/navs/Footer";
@@ -24,15 +22,8 @@ import { mapGetters } from "vuex";
 export default {
   components: {
     topnav: Topnav,
-    // sidebar: Sidebar,
-    "maskmask": Mask,
+    "maskLayer": Mask,
     "footer-component": Footer,
-  },
-  data() {
-    return {
-      show: false,
-      msg: ''
-    };
   },
   computed: {
     ...mapGetters(["getMenuType"])
@@ -44,19 +35,12 @@ export default {
   },
   methods: {
     action(msg){
-      this.msg = msg
+      this.$refs.maskref.play(msg)
     }
   }
 };
 </script>
 <style scope>
-#mask{
-  position: fixed;
-  top:100px;
-  width:100%;
-  height:80%;
-  background-color:black;
-}
 .slide-up {
     transition: all 0.5s;
 }

@@ -11,6 +11,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     visiblePlaylist: false,
+    visiblePlayButton: true,
+    visibelPauseButton: false,
   },
   mutations: {
     changeLang(state, payload) {
