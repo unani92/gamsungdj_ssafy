@@ -28,6 +28,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import { getCurrentLanguage } from './utils'
 import GSignInButton from 'vue-google-signin-button'
+import VueYoutube from 'vue-youtube'
 
 Vue.use(GSignInButton)
 Vue.use(BootstrapVue);
@@ -39,6 +40,7 @@ const i18n = new VueI18n({
   fallbackLocale: 'en',
   messages
 });
+Vue.use(VueYoutube);
 Vue.use(Notifications);
 Vue.use(require('vue-shortkey'));
 Vue.use(contentmenu);
@@ -54,7 +56,6 @@ Vue.component('vue-perfect-scrollbar', vuePerfectScrollbar);
 
 firebase.initializeApp(firebaseConfig);
 Vue.config.productionTip = false
-
 export default new Vue({
   i18n,
   router,

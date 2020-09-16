@@ -1,7 +1,8 @@
 <template>
   <nav class="navbar fixed-top">
     <div class="d-flex align-items-center navbar-left">
-      <a
+      <!-- 햄버거 메뉴버튼 시작 -->
+      <!-- <a
         href="#"
         class="menu-button d-none d-md-block"
         @click.prevent.stop="changeSideMenuStatus({step :menuClickCount+1,classNames:menuType,selectedMenuHasSubItems})"
@@ -14,7 +15,8 @@
         @click.prevent.stop="changeSideMenuForMobile(menuType)"
       >
         <mobile-menu-icon />
-      </a>
+      </a> -->
+      <!-- 햄버거 메뉴 버튼 끝 -->
       <div
         :class="{'search':true, 'mobile-view':isMobileSearch}"
         ref="searchContainer"

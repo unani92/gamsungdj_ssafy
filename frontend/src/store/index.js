@@ -13,7 +13,9 @@ const baseURL = 'http://localhost:8000/'
 export default new Vuex.Store({
   state: {
     authorization:sessionStorage.getItem("authorization"),
-
+    visiblePlaylist: false,
+    visiblePlayButton: true,
+    visibelPauseButton: false,
   },
   getters: {
     config: (state) => ({headers: { Authorization: state.authorization }}),
