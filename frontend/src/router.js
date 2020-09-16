@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import AuthGuard from "./utils/auth.guard";
 import { adminRoot } from "./constants/config";
 import { UserRole } from "./utils/auth.roles";
+import Login from "@/components/User/Login.vue"
 
 Vue.use(VueRouter);
 
@@ -88,7 +89,11 @@ const routes = [
   {
     path: "*",
     component: () => import(/* webpackChunkName: "error" */ "./views/Error")
-  }
+  },
+  {
+    path: "/login",
+    component: Login
+  },
 ];
 
 const router = new VueRouter({
