@@ -9,3 +9,4 @@ class GoogleLogin(SocialLoginView):
 
 class KakaoLogin(SocialLoginView):
     adapter_class = KakaoOAuth2Adapter
+
