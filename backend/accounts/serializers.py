@@ -8,5 +8,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email')
-        # write_only_fields = ('password',)
+        fields = ('id', 'email', 'avatar', 'username', 'age', 'gender')
+
+
