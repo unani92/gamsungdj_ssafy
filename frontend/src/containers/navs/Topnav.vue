@@ -161,7 +161,9 @@
           </div>
         </div>
       </div>
-      <div class="user d-inline-block">
+
+      <!-- logged in -->
+      <div class="user d-inline-block" v-if="authorization">
         <b-dropdown
           class="dropdown-menu-right"
           right
@@ -171,17 +173,44 @@
           no-caret
         >
           <template slot="button-content">
-            <span class="name mr-1">{{currentUser.title}}</span>
-            <span>
-              <img :alt="currentUser.title" :src="currentUser.img" />
+            <span class="name mr-1">{{user.username}}</span>
+            <span v-if="user.avatar">
+              <img :alt="user.username" :src="user.avatar" />
             </span>
+            <span v-else>
+              <b-avatar></b-avatar>
+            </span>
+            
           </template>
           <b-dropdown-item>Account</b-dropdown-item>
           <b-dropdown-item>Features</b-dropdown-item>
           <b-dropdown-item>History</b-dropdown-item>
           <b-dropdown-item>Support</b-dropdown-item>
           <b-dropdown-divider />
-          <b-dropdown-item @click="logout">Sign out</b-dropdown-item>
+          <b-dropdown-item @click="signout">로그아웃</b-dropdown-item>
+        </b-dropdown>
+      </div>
+      <!-- not logged in -->
+      <div class="user d-inline-block" v-else>
+        <b-dropdown
+          class="dropdown-menu-right"
+          right
+          variant="empty"
+          toggle-class="p-0"
+          menu-class="mt-3"
+          no-caret
+        >
+          <template slot="button-content">
+            <span class="name mr-1">로그인을 해주세요</span>
+            <span>
+              <b-avatar></b-avatar>
+            </span>
+          </template>
+          <b-dropdown-item>회원가입</b-dropdown-item>
+          <b-dropdown-item>로그인</b-dropdown-item>
+          <b-dropdown-divider />
+          <b-dropdown-item id="socialBtn"><GoogleLoginBtn/></b-dropdown-item>
+          <b-dropdown-item id="socialBtn"><KakaoLoginBtn/></b-dropdown-item>
         </b-dropdown>
       </div>
     </div>
@@ -191,8 +220,9 @@
 <script>
 import Switches from "vue-switches";
 import notifications from "../../data/notifications";
-
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import GoogleLoginBtn from "@/components/User/GoogleLoginBtn.vue"
+import KakaoLoginBtn from "@/components/User/KakaoLoginBtn.vue"
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 import { MenuIcon, MobileMenuIcon } from "../../components/Svg";
 import {
   searchPath,
@@ -206,7 +236,9 @@ export default {
   components: {
     "menu-icon": MenuIcon,
     "mobile-menu-icon": MobileMenuIcon,
-    switches: Switches
+    switches: Switches,
+    GoogleLoginBtn,
+    KakaoLoginBtn,
   },
   data() {
     return {
@@ -225,7 +257,7 @@ export default {
   },
   methods: {
     ...mapMutations(["changeSideMenuStatus", "changeSideMenuForMobile"]),
-    ...mapActions(["setLang", "signOut"]),
+    ...mapActions(["setLang", "signOut", 'logout']),
     search() {
       this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`);
       this.searchKeyword = "";
@@ -257,10 +289,8 @@ export default {
 
       this.setLang(locale);
     },
-    logout() {
-      this.signOut().then(() => {
-        this.$router.push("/user/login");
-      });
+    signout() {
+      this.logout()
     },
 
     toggleFullScreen() {
@@ -307,7 +337,8 @@ export default {
       menuType: "getMenuType",
       menuClickCount: "getMenuClickCount",
       selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
-    })
+    }),
+    ...mapState(['authorization', 'user'])
   },
   beforeDestroy() {
     document.removeEventListener("click", this.handleDocumentforMobileSearch);
@@ -352,3 +383,6 @@ export default {
   }
 };
 </script>
+<style scoped>
+
+</style>
