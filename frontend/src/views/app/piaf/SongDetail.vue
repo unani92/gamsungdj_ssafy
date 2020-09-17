@@ -7,7 +7,7 @@
     </b-row>
     <b-row>
       <b-colxx xxs="12">
-        <b-colxx xxs="12" class="mb-4 pl-0 pr-0" style="display: inline-flex;">
+        <b-colxx xxs="12" class="mb-4 pl-3 pr-3" style="display: inline-flex;">
                 <div xxs="4" class="card mb-4"  style="width:30%; margin-right:3%">
                   <img class="card-img-top" :src="song.img" style="border-top-left-radius:initial; border-top-right-radius:initial"/>
                 </div>
@@ -29,7 +29,9 @@
     <b-row>
       <b-colxx xxs="12">
         <h2>가사></h2>
-        <h4 v-for="(lyric, index) in song.lyrics" v-bind:key="index">{{lyric}}</h4>
+        <b-colxx xxs="12" class="mb-4 pl-3 pr-3">
+          <h4 v-for="(lyric, index) in song.lyrics" v-bind:key="index">{{lyric}}</h4>
+        </b-colxx>
       </b-colxx>
       <b-colxx xxs="12">
 
