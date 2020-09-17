@@ -99,6 +99,9 @@ export default {
     showMoreSong: function() {
       this.moreSong = !this.moreSong;
     },
+    detailSong: function(id){
+      this.$router.push('/app/piaf/songDetail/'+id)
+    },
 
   },
   mounted() {
