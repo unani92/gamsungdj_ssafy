@@ -2,8 +2,6 @@
 <div>
     Login
     <div>
-        <button @click="signUp">회원가입</button>
-        <button @click="login">로그인</button>
         <br>
         <img :src="require('@/assets/img/user/kakao_login_large_narrow.png')" width="150" alt="kakao_login_button" @click="kakaoLogin"/>
         <g-signin-button
@@ -78,17 +76,7 @@ export default {
                 this.setAuth("token " + response.data.token)  
             })
         },
-        signUp() {
 
-        },
-        login() {
-
-        },
-
-
-    },
-    computed: {
-        
     },
     created() {
         if (!window.Kakao.isInitialized()) {
@@ -102,8 +90,8 @@ export default {
 
 <style scoped>
 #googleBtn {
-    width: 150px;
-    height: 36.88px;
+    
+    
     border: none;
     border-radius: 6px;
     background-color: white;
