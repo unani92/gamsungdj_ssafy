@@ -33,7 +33,28 @@ const routes = [
             path: 'start',
             component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Start')
             // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          }
+          },
+          {
+            path: 'search/:keyword',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Search')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          {
+            path: 'songDetail/:songID',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/SongDetail')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          {
+            path: 'albumDetail/:albumID',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/AlbumDetail')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          {
+            path: 'artistDetail/:artistID',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/ArtistDetail')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          
         ]
       },
       {
