@@ -13,12 +13,14 @@ const baseURL = 'http://localhost:8000/'
 export default new Vuex.Store({
   state: {
     authorization:sessionStorage.getItem("authorization"),
+    user : sessionStorage.getItem('user')?JSON.parse(sessionStorage.getItem("user")):[],
     visiblePlaylist: false,
     visiblePlayButton: true,
     visibelPauseButton: false,
   },
   getters: {
     config: (state) => ({headers: { Authorization: state.authorization }}),
+    currentUser: (state) =>  state.user
   },
 
   mutations: {
@@ -28,13 +30,17 @@ export default new Vuex.Store({
     },
     SET_AUTH(state, value){
       sessionStorage.setItem("authorization", value)
-      
       state.authorization = value
+    },
+    SET_USER(state, value) {
+      sessionStorage.setItem("user", value)
+      state.user = value
     },
     LOGOUT(state){
       state.authorization=""
-
+      state.user=[]
       sessionStorage.removeItem("authorization")
+      sessionStorage.removeItem("user")
     },
   },
   actions: {
@@ -43,6 +49,9 @@ export default new Vuex.Store({
     },
     setAuth({commit},value){
       commit('SET_AUTH',value)
+    },
+    setUser( { commit }, value) {
+      commit('SET_USER', value)
     },
     logout({commit}){
       commit("LOGOUT")

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 
 // BootstrapVue add
-import BootstrapVue from 'bootstrap-vue'
+import { BootstrapVue, IconsPlugin }from 'bootstrap-vue'
 // Router & Store add
 import router from './router'
 import store from './store'
@@ -30,6 +30,7 @@ import { getCurrentLanguage } from './utils'
 import GSignInButton from 'vue-google-signin-button'
 import VueYoutube from 'vue-youtube'
 
+Vue.use(IconsPlugin)
 Vue.use(GSignInButton)
 Vue.use(BootstrapVue);
 Vue.use(VueI18n);
