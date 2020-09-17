@@ -39,7 +39,12 @@ export default {
                 let height_topnav = document.getElementById('topnav').offsetHeight;
                 let height_footer = document.getElementById('footer').offsetHeight;
                 let height_mask = height - height_topnav - height_footer;
+                console.log(height)
+                console.log(height_topnav)
+                console.log(height_footer)
+                console.log(height_mask)
                 document.getElementById('mask').style.height = height_mask + "px";
+                document.getElementById('mask').style.top = height_topnav + "px";
             }
             this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
         },

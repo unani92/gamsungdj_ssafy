@@ -5,7 +5,7 @@
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideSingleOption">
                 <!-- 카테고리1 시작 -->
-                <div class="pr-3 pl-3 mb-4 glide__slide" style="height:500px">
+                <!-- <div class="pr-3 pl-3 mb-4 glide__slide" style="height:500px">
                     <b-card class="flex-row" style="align-items: center;" no-body>
                         <div class="col-sm-4">
 							<h1>정렬되나</h1>
@@ -15,7 +15,7 @@
 								<b-card class="flex-row listing-card-container" no-body>
 									<div class="w-40 position-relative">
 										<img class="card-img-left" :src="data.src" alt="Card cap" />
-										<!-- <b-badge v-if="blogItem.badge" variant="primary" pill class="position-absolute badge-top-left">{{blogItem.badge}}</b-badge> -->
+										<b-badge v-if="blogItem.badge" variant="primary" pill class="position-absolute badge-top-left">{{blogItem.badge}}</b-badge>
 									</div>
 									<div class="w-60 d-flex align-items-center">
 										<b-card-body>
@@ -27,7 +27,7 @@
 							</b-colxx>
                         </div>
                     </b-card>
-                </div>
+                </div> -->
                 <!-- 카테고리1 끝 -->
 
                 <!-- 카테고리2 시작 -->
