@@ -308,8 +308,3 @@ export default {
 	}
 }
 </script>
-<style scoped>
-/* .card-img-top:hover {
-    opacity: 0.3 !important;
-} */
-</style>

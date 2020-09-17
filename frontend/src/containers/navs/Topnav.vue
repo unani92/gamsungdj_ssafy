@@ -15,21 +15,7 @@
       >
         <mobile-menu-icon />
       </a> -->
-      <div
-        :class="{'search':true, 'mobile-view':isMobileSearch}"
-        ref="searchContainer"
-        @mouseenter="isSearchOver=true"
-        @mouseleave="isSearchOver=false"
-      >
-        <b-input
-          :placeholder="$t('menu.search')"
-          @keypress.native.enter="search"
-          v-model="searchKeyword"
-        />
-        <span class="search-icon" @click="searchClick">
-          <i class="simple-icon-magnifier"></i>
-        </span>
-      </div>
+      
       <!-- <div class="d-inline-block">
         <b-dropdown
           id="langddm"
@@ -56,11 +42,27 @@
         >{{$t('user.buy')}}</a>
       </div> -->
     </div>
+
     <!-- 로고 -->
-    <router-link class="navbar-logo" tag="a" :to="adminRoot">
+    <div
+        :class="{'search':true, 'mobile-view':isMobileSearch}"
+        ref="searchContainer"
+        @mouseenter="isSearchOver=true"
+        @mouseleave="isSearchOver=false"
+      >
+        <b-input
+          :placeholder="$t('menu.search')"
+          @keypress.native.enter="search"
+          v-model="searchKeyword"
+        />
+        <span class="search-icon" @click="searchClick">
+          <i class="simple-icon-magnifier"></i>
+        </span>
+      </div>
+    <!-- <router-link class="navbar-logo" tag="a" :to="adminRoot">
       <span class="logo d-none d-xs-block"></span>
       <span class="logo-mobile d-block d-xs-none"></span>
-    </router-link>
+    </router-link> -->
 
     <div class="navbar-right">
       <div class="d-none d-md-inline-block align-middle mr-3">
@@ -73,7 +75,7 @@
         />
         <b-tooltip target="tool-mode-switch" placement="left" title="Dark Mode"></b-tooltip>
       </div>
-      <div class="header-icons d-inline-block align-middle">
+      <!-- <div class="header-icons d-inline-block align-middle">
         <div class="position-relative d-none d-sm-inline-block">
           <b-dropdown
             variant="empty"
@@ -160,7 +162,7 @@
             </b-button>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="user d-inline-block">
         <b-dropdown
           class="dropdown-menu-right"
@@ -176,10 +178,8 @@
               <img :alt="currentUser.title" :src="currentUser.img" />
             </span>
           </template>
-          <b-dropdown-item>Account</b-dropdown-item>
-          <b-dropdown-item>Features</b-dropdown-item>
-          <b-dropdown-item>History</b-dropdown-item>
-          <b-dropdown-item>Support</b-dropdown-item>
+          <b-dropdown-item>My Page</b-dropdown-item>
+          <b-dropdown-item>Music DNA</b-dropdown-item>
           <b-dropdown-divider />
           <b-dropdown-item @click="logout">Sign out</b-dropdown-item>
         </b-dropdown>

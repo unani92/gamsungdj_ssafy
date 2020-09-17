@@ -32,20 +32,24 @@
 </template>
 <script>
 export default {
+    watch:{
+        mask_height : function() {
+            console.log("test")
+        }
+    },
+    mounted(){
+        window.addEventListener("resize", this.handleResize);
+    },
     methods:{
+        handleResize(e){
+            let height = window.innerHeight;
+            let height_topnav = document.getElementById('topnav').offsetHeight;
+            let height_footer = document.getElementById('footer').offsetHeight;
+            let height_mask = height - height_topnav - height_footer;
+            document.getElementById('mask').style.height = height_mask+1 + "px";
+            document.getElementById('mask').style.top = height_topnav + "px";
+        },
         togglePlaylist(){
-            if(!this.$store.state.visiblePlaylist) {
-                let height = window.innerHeight;
-                let height_topnav = document.getElementById('topnav').offsetHeight;
-                let height_footer = document.getElementById('footer').offsetHeight;
-                let height_mask = height - height_topnav - height_footer;
-                console.log(height)
-                console.log(height_topnav)
-                console.log(height_footer)
-                console.log(height_mask)
-                document.getElementById('mask').style.height = height_mask + "px";
-                document.getElementById('mask').style.top = height_topnav + "px";
-            }
             this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
         },
         action(msg) {
