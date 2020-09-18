@@ -28,12 +28,13 @@ class Album(models.Model):
     )
     img = models.URLField(null=True)
     released_date = models.CharField(max_length=200)
+    songs = models.TextField(null=True)
 
 class Song(models.Model):
     # song_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=200)
     like = models.IntegerField()
-    genre = models.ManyToManyField(
+    genres = models.ManyToManyField(
         Genre,
         related_name="song_genres"
     )
