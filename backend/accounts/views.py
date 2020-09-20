@@ -1,21 +1,12 @@
-from django.shortcuts import get_object_or_404
-
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import status
-
-from django.contrib.auth import get_user_model
-from .serializers import UserSerializer
-from rest_framework.viewsets import GenericViewSet
-from rest_framework.mixins import CreateModelMixin
-from django.contrib.auth import get_user_model
-from .serializers import UserSerializer
-
-User = get_user_model()
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.kakao.views import KakaoOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
 
 
-# 회원 가입
-class CreateUserView(CreateModelMixin, GenericViewSet):
-    queryset = get_user_model().objects.all()
-    serializer_class = UserSerializer
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+
+
+class KakaoLogin(SocialLoginView):
+    adapter_class = KakaoOAuth2Adapter
 

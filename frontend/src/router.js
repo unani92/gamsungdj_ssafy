@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import AuthGuard from "./utils/auth.guard";
 import { adminRoot } from "./constants/config";
 import { UserRole } from "./utils/auth.roles";
+import Login from "@/components/User/Login.vue"
 
 Vue.use(VueRouter);
 
@@ -32,7 +33,28 @@ const routes = [
             path: 'start',
             component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Start')
             // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          }
+          },
+          {
+            path: 'search/:keyword',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Search')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          {
+            path: 'songDetail/:songID',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/SongDetail')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          {
+            path: 'albumDetail/:albumID',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/AlbumDetail')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          {
+            path: 'artistDetail/:artistID',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/ArtistDetail')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
+          
         ]
       },
       {
@@ -88,7 +110,11 @@ const routes = [
   {
     path: "*",
     component: () => import(/* webpackChunkName: "error" */ "./views/Error")
-  }
+  },
+  {
+    path: "/login",
+    component: Login
+  },
 ];
 
 const router = new VueRouter({

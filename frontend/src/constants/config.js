@@ -1,6 +1,6 @@
 import { UserRole } from "../utils/auth.roles";
 
-export const defaultMenuType = 'menu-default' // 'menu-default', 'menu-sub-hidden', 'menu-hidden';
+export const defaultMenuType = 'menu-hidden' // 'menu-default', 'menu-sub-hidden', 'menu-hidden';
 export const adminRoot = '/app';
 export const searchPath = `${adminRoot}/#`
 export const buyUrl = 'https://1.envato.market/nEyZa'
@@ -32,8 +32,10 @@ export const firebaseConfig = {
 
 export const currentUser = {
   id: 1,
-  title: 'Sarah Kortney',
-  img: '/assets/img/profiles/l-1.jpg',
+  // title: 'Sarah Kortney',
+  // img: '/assets/img/profiles/l-1.jpg',
+  title: '정윤환',
+  img: 'https://avatars2.githubusercontent.com/u/53211781?s=460&u=997a6d5a5d89795776510214230bef36e1e66884&v=4',
   date: 'Last seen today 15:24',
   role: UserRole.Admin
 }

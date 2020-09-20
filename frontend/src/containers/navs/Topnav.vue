@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar fixed-top">
     <div class="d-flex align-items-center navbar-left">
-      <a
+      <!-- <a
         href="#"
         class="menu-button d-none d-md-block"
         @click.prevent.stop="changeSideMenuStatus({step :menuClickCount+1,classNames:menuType,selectedMenuHasSubItems})"
@@ -14,23 +14,9 @@
         @click.prevent.stop="changeSideMenuForMobile(menuType)"
       >
         <mobile-menu-icon />
-      </a>
-      <div
-        :class="{'search':true, 'mobile-view':isMobileSearch}"
-        ref="searchContainer"
-        @mouseenter="isSearchOver=true"
-        @mouseleave="isSearchOver=false"
-      >
-        <b-input
-          :placeholder="$t('menu.search')"
-          @keypress.native.enter="search"
-          v-model="searchKeyword"
-        />
-        <span class="search-icon" @click="searchClick">
-          <i class="simple-icon-magnifier"></i>
-        </span>
-      </div>
-      <div class="d-inline-block">
+      </a> -->
+      
+      <!-- <div class="d-inline-block">
         <b-dropdown
           id="langddm"
           class="ml-2"
@@ -54,12 +40,29 @@
           target="_top"
           :href="buyUrl"
         >{{$t('user.buy')}}</a>
-      </div>
+      </div> -->
     </div>
-    <router-link class="navbar-logo" tag="a" :to="adminRoot">
+
+    <!-- 로고 -->
+    <div
+        :class="{'search':true, 'mobile-view':isMobileSearch}"
+        ref="searchContainer"
+        @mouseenter="isSearchOver=true"
+        @mouseleave="isSearchOver=false"
+      >
+        <b-input
+          :placeholder="$t('menu.search')"
+          @keypress.native.enter="search"
+          v-model="searchKeyword"
+        />
+        <span class="search-icon" @click="searchClick">
+          <i class="simple-icon-magnifier"></i>
+        </span>
+      </div>
+    <!-- <router-link class="navbar-logo" tag="a" :to="adminRoot">
       <span class="logo d-none d-xs-block"></span>
       <span class="logo-mobile d-block d-xs-none"></span>
-    </router-link>
+    </router-link> -->
 
     <div class="navbar-right">
       <div class="d-none d-md-inline-block align-middle mr-3">
@@ -72,7 +75,7 @@
         />
         <b-tooltip target="tool-mode-switch" placement="left" title="Dark Mode"></b-tooltip>
       </div>
-      <div class="header-icons d-inline-block align-middle">
+      <!-- <div class="header-icons d-inline-block align-middle">
         <div class="position-relative d-none d-sm-inline-block">
           <b-dropdown
             variant="empty"
@@ -159,8 +162,10 @@
             </b-button>
           </div>
         </div>
-      </div>
-      <div class="user d-inline-block">
+      </div> -->
+
+      <!-- logged in -->
+      <div class="user d-inline-block" v-if="authorization">
         <b-dropdown
           class="dropdown-menu-right"
           right
@@ -170,17 +175,42 @@
           no-caret
         >
           <template slot="button-content">
-            <span class="name mr-1">{{currentUser.title}}</span>
+            <span class="name mr-1">{{user.username}}</span>
+            <span v-if="user.avatar">
+              <img :alt="user.username" :src="user.avatar" />
+            </span>
+            <span v-else>
+              <b-avatar></b-avatar>
+            </span>
+            
+          </template>
+          <b-dropdown-item>My Page</b-dropdown-item>
+          <b-dropdown-item>Music DNA</b-dropdown-item>
+          <b-dropdown-divider />
+          <b-dropdown-item @click="signout">로그아웃</b-dropdown-item>
+        </b-dropdown>
+      </div>
+      <!-- not logged in -->
+      <div class="user d-inline-block" v-else>
+        <b-dropdown
+          class="dropdown-menu-right"
+          right
+          variant="empty"
+          toggle-class="p-0"
+          menu-class="mt-3"
+          no-caret
+        >
+          <template slot="button-content">
+            <span class="name mr-1">로그인을 해주세요</span>
             <span>
-              <img :alt="currentUser.title" :src="currentUser.img" />
+              <b-avatar></b-avatar>
             </span>
           </template>
-          <b-dropdown-item>Account</b-dropdown-item>
-          <b-dropdown-item>Features</b-dropdown-item>
-          <b-dropdown-item>History</b-dropdown-item>
-          <b-dropdown-item>Support</b-dropdown-item>
+          <b-dropdown-item>회원가입</b-dropdown-item>
+          <b-dropdown-item>로그인</b-dropdown-item>
           <b-dropdown-divider />
-          <b-dropdown-item @click="logout">Sign out</b-dropdown-item>
+          <b-dropdown-item id="socialBtn"><GoogleLoginBtn/></b-dropdown-item>
+          <b-dropdown-item id="socialBtn"><KakaoLoginBtn/></b-dropdown-item>
         </b-dropdown>
       </div>
     </div>
@@ -190,8 +220,9 @@
 <script>
 import Switches from "vue-switches";
 import notifications from "../../data/notifications";
-
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import GoogleLoginBtn from "@/components/User/GoogleLoginBtn.vue"
+import KakaoLoginBtn from "@/components/User/KakaoLoginBtn.vue"
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 import { MenuIcon, MobileMenuIcon } from "../../components/Svg";
 import {
   searchPath,
@@ -205,7 +236,9 @@ export default {
   components: {
     "menu-icon": MenuIcon,
     "mobile-menu-icon": MobileMenuIcon,
-    switches: Switches
+    switches: Switches,
+    GoogleLoginBtn,
+    KakaoLoginBtn,
   },
   data() {
     return {
@@ -224,7 +257,7 @@ export default {
   },
   methods: {
     ...mapMutations(["changeSideMenuStatus", "changeSideMenuForMobile"]),
-    ...mapActions(["setLang", "signOut"]),
+    ...mapActions(["setLang", "signOut", 'logout']),
     search() {
       this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`);
       this.searchKeyword = "";
@@ -256,10 +289,8 @@ export default {
 
       this.setLang(locale);
     },
-    logout() {
-      this.signOut().then(() => {
-        this.$router.push("/user/login");
-      });
+    signout() {
+      this.logout()
     },
 
     toggleFullScreen() {
@@ -306,7 +337,8 @@ export default {
       menuType: "getMenuType",
       menuClickCount: "getMenuClickCount",
       selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
-    })
+    }),
+    ...mapState(['authorization', 'user'])
   },
   beforeDestroy() {
     document.removeEventListener("click", this.handleDocumentforMobileSearch);
@@ -351,3 +383,6 @@ export default {
   }
 };
 </script>
+<style scoped>
+
+</style>

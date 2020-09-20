@@ -136,7 +136,6 @@ body {
   font-weight: 400;
   color: $primary-color;
   background: $background-color;
-
   &.background {
     height: 100%;
 
@@ -7674,16 +7673,16 @@ body {
     }
   }
 }
-
 footer.page-footer {
-  padding-top: 2.2rem;
-  padding-bottom: 2.2rem;
+  // padding-top: 2.2rem;
+  // padding-bottom: 2.2rem;
   border-top: 1px solid $separator-color;
   width: 100%;
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  width: 100%;
   height: 90px;
+  background-color: $background-color;
+  
 
   @include respond-below(xs) {
     height: 60px;
@@ -7703,6 +7702,7 @@ footer.page-footer {
   .footer-content {
     margin-left: $sub-menu-width + $main-menu-width + $main-margin;
     margin-right: $main-margin;
+    height:100%;
 
     @include respond-below(xl) {
       margin-left: $sub-menu-width-lg + $main-menu-width-lg + $main-margin-lg;
@@ -7720,7 +7720,23 @@ footer.page-footer {
     }
   }
 }
-
+footer.page-footer-extend {
+  
+  // padding-top: 2.2rem;
+  // padding-bottom: 2.2rem;
+  border-top: 1px solid $separator-color;
+  width: 100%;
+  position: fixed;
+  bottom: 90px;
+  height: 100%;
+  opacity: 0.8;
+  background-color: $background-color;
+}
+#mask{
+  position: fixed;
+  width:100%;
+  background-color: $background-color;
+}
 .right-menu {
   footer.page-footer {
     padding-right: $app-menu-width;
@@ -7731,6 +7747,8 @@ footer.page-footer {
 }
 
 #app-container {
+  display: flex;
+  flex-direction: column;
   &.sub-hidden .footer-content,
   &.menu-sub-hidden .footer-content,
   &.menu-hidden .footer-content {
