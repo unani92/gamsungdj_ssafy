@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import settings
-from music.models import Song
 
 class User(AbstractUser):
     GENDER_CHOICES = (
@@ -23,5 +22,5 @@ class User(AbstractUser):
 
 class UserPlayList(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    song = models.ManyToManyField(Song)
+    song = models.ManyToManyField('music.Song')
     name = models.CharField(max_length=128)

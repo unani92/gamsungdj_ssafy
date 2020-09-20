@@ -27,6 +27,10 @@ class Album(models.Model):
         Artist,
         related_name="artist_albums",
     )
+    user_like = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='like_albums',
+    )
     img = models.URLField(null=True)
     released_date = models.CharField(max_length=200)
     songs = models.TextField(null=True)
@@ -44,6 +48,10 @@ class Song(models.Model):
         related_name='album_songs',
         on_delete=models.CASCADE
     )
+    user_like = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='like_songs',
+    )
     artist = models.ManyToManyField(
         Artist,
         related_name='artist_songs',
@@ -54,6 +62,11 @@ class Song(models.Model):
     type = models.CharField(max_length=200, null=True)
 
 class Log(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='user_logs',
+        on_delete=models.CASCADE
+    )
     song = models.ForeignKey(
         Song,
         related_name='song_logs',
@@ -84,7 +97,7 @@ class SongComment(models.Model):
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='user_album_comments',
+        related_name='user_song_comments',
         on_delete=models.CASCADE
     )
     content = models.TextField()
