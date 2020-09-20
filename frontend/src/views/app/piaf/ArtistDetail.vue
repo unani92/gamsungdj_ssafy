@@ -31,41 +31,36 @@
         <template v-else>
           <h2>곡><a v-if="songs.length>5" @click="showMoreSong" style="font-size:0.7em; float:right; cursor:pointer">접기∧</a></h2>
         </template>
-        <b-colxx xxs="12" class="mb-4 pl-3 pr-3">
-          <b-card  :class="{'d-flex flex-row':true}" no-body v-for="(song, index) in songs.slice(0,5)" v-bind:key="index">
-            <img :src="song.img" class="list-thumbnail responsive border-0"/>
-            <div class="pl-2 d-flex flex-grow-1 min-width-zero">
-                <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-                    <p class="list-item-heading mb-0 truncate">{{song.name}}</p>
-                    <p class="mb-0 text-muted text-small w-15 w-sm-100">{{song.artist}}</p>
-                    <p class="mb-0 text-muted text-small w-15 w-sm-100">{{song.genre}}</p>
-                    <div class="glyph-icon simple-icon-control-play"/>
-                    <div class="glyph-icon simple-icon-playlist"/>
-                    <div class="glyph-icon simple-icon-magnifier-add" @click="detailSong(song.id)" style="cursor:pointer;"/>
-                    <div class="glyph-icon simple-icon-heart"/>
-                    <div class="separator mb-5"></div>
-                </div>
-            </div>
-          </b-card>
-          <template v-if="moreSong">
-            <b-card  :class="{'d-flex flex-row':true}" no-body v-for="(song, index) in songs.slice(5,songs.length)" v-bind:key="index">
-              <img :src="song.img" class="list-thumbnail responsive border-0"/>
-              <div class="pl-2 d-flex flex-grow-1 min-width-zero">
-                  <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-                      <p class="list-item-heading mb-0 truncate">{{song.name}}</p>
-                      <p class="mb-0 text-muted text-small w-15 w-sm-100">{{song.artist}}</p>
-                      <p class="mb-0 text-muted text-small w-15 w-sm-100">{{song.genre}}</p>
-                      <div class="glyph-icon simple-icon-control-play"/>
-                      <div class="glyph-icon simple-icon-playlist"/>
-                      <div class="glyph-icon simple-icon-magnifier-add" @click="detailSong(song.id)" style="cursor:pointer;"/>
-                      <div class="glyph-icon simple-icon-heart"/>
-                      
-                      <div class="separator mb-5"></div>
-                  </div>
-              </div>
+        <b-colxx xxs="12" class="pl-0 pr-3">
+          <b-colxx xxs="12" class="mb-4 pl-3 pr-3">
+            <b-card class="mb-0" style="text-align: center;">
+              <table  class="table table-sm" style="margin-bottom:0px;">
+                  <thead style="font-size: initial;">
+                    <th></th>
+                    <th>곡</th>
+                    <th>가수</th>
+                    <th>장르</th>
+                    <th>재생</th>
+                    <th>추가</th>
+                    <th>상세정보</th>
+                    <th>좋아요</th>
+                  </thead>
+                  <tbody style="font-size: x-large;">
+                    <tr :class="{'flex-row':true}" v-for="(song, index) in songs.slice(0,songListSize)" v-bind:key="index">
+                      <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" /></td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.name}}</td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.artist}}</td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.genre}}</td>
+                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-control-play"/></td>
+                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-playlist"/></td>
+                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-magnifier-add" @click="detailSong(song.id)" style="cursor:pointer;"/></td>
+                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-heart"/></td>
+                    </tr>
+                  </tbody>
+              </table>
             </b-card>
-          </template>
-         </b-colxx>
+          </b-colxx>
+        </b-colxx>
         <br><div class="separator mb-5"></div>
       </template>
     </b-colxx>
@@ -80,10 +75,10 @@
             <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right">접기∧</a></h2>
           </template>
           <b-colxx xxs="12" class="pl-0 pr-0">
-            <b-colxx xxs="12" class="mb-4 pl-0 pr-0" style="display: inline-flex;">
-                <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(0,5)" v-bind:key="index" style="width:20%; cursor:pointer;" @click="detailAlbum(album.id)">
+            <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;">
+                <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(0,5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
                     <div class="position-relative">
-                        <img :src="album.img" class="card-img-top" style="width:100%;height:100%"/>
+                        <img :src="album.img" class="card-img-top"/>
                     </div>
                     <b-card-body style="padding: 1rem;">
                         <b-row>
@@ -97,10 +92,10 @@
                 </b-card>
               </b-colxx>
               <template v-if="moreAlbum">
-                <b-colxx xxs="12" class="mb-4 pl-0 pr-0" style="display: inline-flex;" v-for="n in parseInt((albums.length-1)/5)" v-bind:key="n">
-                  <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(n*5,(n+1)*5)" v-bind:key="index" style="width:20%; cursor:pointer;" @click="detailAlbum(album.id)">
+                <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;" v-for="n in parseInt((albums.length-1)/5)" v-bind:key="n">
+                  <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(n*5,(n+1)*5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
                     <div class="position-relative">
-                      <img :src="album.img" class="card-img-top" style="width:100%;height:100%"/>
+                      <img :src="album.img" class="card-img-top"/>
                     </div>
                     <b-card-body style="padding: 1rem;">
                         <b-row>
@@ -138,6 +133,7 @@ export default {
       moreSong: false,
       moreAlbum: false,
       keyword: '',
+      songListSize: 5,
       // currentPage: 1,
       artistID: 0,
       artist: { id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
@@ -172,6 +168,11 @@ export default {
   methods: {
     showMoreSong: function() {
       this.moreSong = !this.moreSong;
+      if (this.songListSize == 5){
+        this.songListSize = this.songs.length;
+      }else{
+        this.songListSize = 5;
+      }
     },
     showMoreAlbum: function() {
       this.moreAlbum = !this.moreAlbum;
