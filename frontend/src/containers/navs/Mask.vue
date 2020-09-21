@@ -18,6 +18,8 @@
                     </div>
                     <div style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
                         <img :src="selectedSongImg">
+                        <player />
+                        <analyze />
                     </div>
                 </b-tab>
                 <b-tab title="Music Analyze" title-item-class="w-50 text-center">
@@ -67,12 +69,16 @@
 </template>
 
 <script>
-import MusicBar from "../../components/Playlist/musicbar2"
+import MusicBar from "../../components/Playlist/Musicbar2"
+import Player from "../../components/Playlist/Player"
+import Analyze from "../../components/Playlist/Analyze"
 import { playlistData } from "../../data/playlist"
 export default {
     props: ['msg'],
     components:{
         'music-bar': MusicBar,
+        'player': Player,
+        'analyze': Analyze
     },
     data() {
         return {
