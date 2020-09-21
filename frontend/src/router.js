@@ -54,6 +54,11 @@ const routes = [
             component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/ArtistDetail')
             // meta: { roles: [UserRole.Admin, UserRole.Editor] },
           },
+          {
+            path: 'profile',
+            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Profile')
+            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
+          },
           
         ]
       },
