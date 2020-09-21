@@ -13,8 +13,8 @@
                 </div>
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{song.name}}</h1><br>
-                  <h1 class="mb-0 truncate text-large"><router-link :to="'/app/piaf/artistDetail/'+song.artistId" style="color: ghostwhite;">{{song.artist}}</router-link></h1><br>
-                  <h3 class="mb-0 truncate">앨범: <router-link :to="'/app/piaf/albumDetail/'+song.albumId" style="color: ghostwhite;">{{song.album}}</router-link></h3><br>
+                  <h1 class="mb-0 truncate text-large"><router-link :to="'/app/piaf/artistDetail/'+song.artistId" class="text-primary">{{song.artist}}</router-link></h1><br>
+                  <h3 class="mb-0 truncate">앨범: <router-link :to="'/app/piaf/albumDetail/'+song.albumId" class="text-primary">{{song.album}}</router-link></h3><br>
                   <h3 class="mb-0 truncate">장르: {{song.genre}}</h3><br>
                   <h3 class="mb-0 truncate">감정: 슬픔</h3>
                 </div>
