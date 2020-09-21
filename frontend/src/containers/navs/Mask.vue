@@ -17,7 +17,7 @@
                     <div class="player" v-show="changePlayer">
                         <youtube id="youtube" :video-id="videoid" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
                     </div>
-                    <!-- <player v-show="!changePlayer" /> -->
+                    <player v-show="!changePlayer" />
                 </b-tab>
                 <b-tab title="Analyze" title-item-class="w-50 text-center">
                         <analyze />
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import MusicBar from "../../components/Playlist/Musicbar2"
+import MusicBar from "../../components/Playlist/Musicbar"
 import Player from "../../components/Playlist/Player"
 import Analyze from "../../components/Playlist/Analyze"
 import { playlistData } from "../../data/playlist"

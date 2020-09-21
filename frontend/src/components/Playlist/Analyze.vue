@@ -6,10 +6,10 @@
 </template>
 
 <script>
-import Musicbar3 from './Musicbar3'
+import Musicbar from './Musicbar'
 export default {
     components:{
-        'music-bar': Musicbar3
+        'music-bar': Musicbar
     }
 }
 </script>
