@@ -13,11 +13,15 @@
         <div class="col-sm-9 aligner" style="height:inherit;">
             <b-tabs card no-fade style="height:100%; width:100%;">
                 <b-tab title="Player" active title-item-class="w-50 text-center">
+                    <div class="player-wrapper">
+                    <div class="float-right">
                     <switches v-model="changePlayer" theme="custom" color="primary-inverse"></switches>
+                    </div>
                     <div class="player" v-show="changePlayer">
                         <youtube id="youtube" :video-id="videoid" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
                     </div>
                     <player v-show="!changePlayer" />
+                    </div>
                 </b-tab>
                 <b-tab title="Analyze" title-item-class="w-50 text-center">
                         <analyze />
@@ -195,5 +199,19 @@ export default {
 .playlist-item-wrapper:hover {
     background: rgba(0,0,0,.7);
     opacity: .7;
+}
+.player-wrapper {
+  height: 460px;
+  width: 640px;
+  position: absolute;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
 }
 </style>
