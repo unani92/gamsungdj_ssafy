@@ -12,17 +12,15 @@
     <div class="row aligner">
         <div class="col-sm-9 aligner" style="height:inherit;">
             <b-tabs card no-fade style="height:100%; width:100%;">
-                <b-tab title="Music Player" active title-item-class="w-50 text-center">
-                    <div style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
-                        <youtube id="youtube" :video-id="videoid" :player-vars="playerVars" @ended="ended" ref="youtube" style="display:none"></youtube>
+                <b-tab title="Player" active title-item-class="w-50 text-center">
+                    <switches v-model="changePlayer" theme="custom" color="primary-inverse"></switches>
+                    <div class="player" v-show="changePlayer">
+                        <youtube id="youtube" :video-id="videoid" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
                     </div>
-                    <div style="display:flex; flex-direction:column; justify-content: center; align-items: center;">
-                        <img :src="selectedSongImg">
-                        <player />
-                        <analyze />
-                    </div>
+                    <!-- <player v-show="!changePlayer" /> -->
                 </b-tab>
-                <b-tab title="Music Analyze" title-item-class="w-50 text-center">
+                <b-tab title="Analyze" title-item-class="w-50 text-center">
+                        <analyze />
                 </b-tab>
             </b-tabs>
         </div>
@@ -73,12 +71,14 @@ import MusicBar from "../../components/Playlist/Musicbar2"
 import Player from "../../components/Playlist/Player"
 import Analyze from "../../components/Playlist/Analyze"
 import { playlistData } from "../../data/playlist"
+import Switches from "vue-switches";
 export default {
     props: ['msg'],
     components:{
         'music-bar': MusicBar,
         'player': Player,
-        'analyze': Analyze
+        'analyze': Analyze,
+        switches: Switches
     },
     data() {
         return {
@@ -93,7 +93,7 @@ export default {
             selectedSong: {},
             selectedSongImg: '',
             playlistData,
-            
+            changePlayer: true
         }
     },
     computed: {

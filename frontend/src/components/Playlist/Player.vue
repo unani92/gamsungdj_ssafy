@@ -1,158 +1,294 @@
 <template>
+  <div class="player">
+   <ul>
+      <li class="cover"><img src="http://i1285.photobucket.com/albums/a583/TheGreatOzz1/Hosted-Images/Noisy-Freeks-Image_zps4kilrxml.png"/></li>
+      <li class="info">
+         <h1>The Noisy Freaks</h1>
+         <h4>Premiere</h4>
+         <h2>I Need You Back</h2>
 
+         <div class="button-items">
+            <audio id="music" preload="auto" loop="false">
+               <source src="https://dl.dropbox.com/s/oswkgcw749xc8xs/The-Noisy-Freaks.mp3?dl=1" type="audio/mp3">
+                  <source src="https://dl.dropbox.com/s/75jpngrgnavyu7f/The-Noisy-Freaks.ogg?dl=1" type="audio/ogg">
+            </audio>
+            <div id="slider"><div id="elapsed"></div></div>
+            <p id="timer">0:00</p>
+            <div class="controls">
+               <span class="expend"><svg class="step-backward" viewBox="0 0 25 25" xml:space="preserve">
+                  <g><polygon points="4.9,4.3 9,4.3 9,11.6 21.4,4.3 21.4,20.7 9,13.4 9,20.7 4.9,20.7"/></g>
+               </svg></span>
 
-<!-- Inspired By This Dribble post https://dribbble.com/shots/2321025-Music-Player-Freebie <3 <3 <3-->
-<div class="player">
-    <!-- <img class="cover" src="http://images.genius.com/2216a21a5494b153cb4c24005370d031.700x700x1.jpg" alt="Cover"/> -->
-    <div class="icons">
-        <div class="fa fa-heart"></div>
-        <div class="fa fa-random"></div>
-    </div>
-    <div class="info">
-        <p class="title">Leave Your Lover</p>
-        <p class="artist">Artist - Echos</p>
-        <p class="album">Album - Echos</p>
-    </div>
-    <div class="line"></div>
-    <div class="playtime"></div>
-    <div class="played"><img class="forward" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjEyOHB4IiBoZWlnaHQ9IjEyOHB4IiB2aWV3Qm94PSIwIDAgNDM5LjM1NyA0MzkuMzU3IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0MzkuMzU3IDQzOS4zNTc7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8cGF0aCBkPSJNMzYwLjQyNyw1LjgzM2MtMy42MTMtMy42MTctNy44OTgtNS40MjQtMTIuODQ3LTUuNDI0aC0zNi41NDVjLTQuOTQ1LDAtOS4yMzMsMS44MDctMTIuODQ3LDUuNDI0ICAgYy0zLjYxNCwzLjYyMS01LjQyOCw3LjkwMi01LjQyOCwxMi44NXYxOTMuNTc0Yy0wLjk0OC0yLjA5MS0yLjE5LTMuOTAxLTMuNzE3LTUuNDI0TDg2LjM0Myw0LjEyNSAgIGMtMy42MTctMy42MTctNi42NjMtNC44NTYtOS4xMzYtMy43MTNjLTIuNDc0LDEuMTQzLTMuNzExLDQuMTg5LTMuNzExLDkuMTM3djQyMC4yNjJjMCw0Ljk0OCwxLjIzNyw3Ljk5NCwzLjcxMSw5LjEzOCAgIGMyLjQ3MywxLjE0LDUuNTE5LTAuMSw5LjEzNi0zLjcyNEwyODkuMDQ4LDIzMi41MmMxLjUyOS0xLjcxMSwyLjc2NS0zLjUyMSwzLjcyLTUuNDI0VjQyMC42NmMwLDQuOTQ4LDEuODEsOS4yMzksNS40MjEsMTIuODQ3ICAgYzMuNjIsMy42Miw3LjkwNCw1LjQyOCwxMi44NDcsNS40MjhoMzYuNTUyYzQuOTQ4LDAsOS4yMzYtMS44MDgsMTIuODQ3LTUuNDI4YzMuNjE0LTMuNjA3LDUuNDI4LTcuODk4LDUuNDI4LTEyLjg0N1YxOC42ODMgICBDMzY1Ljg1NCwxMy43MywzNjQuMDM3LDkuNDUsMzYwLjQyNyw1LjgzM3oiIGZpbGw9IiNGRkZGRkYiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K"/></div><img class="backward" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjEyOHB4IiBoZWlnaHQ9IjEyOHB4IiB2aWV3Qm94PSIwIDAgNDM5LjM2MiA0MzkuMzYyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0MzkuMzYyIDQzOS4zNjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8cGF0aCBkPSJNMzYyLjE0NiwwLjQxMmMtMi40NzEtMS4xNDMtNS41MTcsMC4wOTQtOS4xMzgsMy43MDlMMTUwLjMwOCwyMDYuODI4Yy0xLjcxOCwxLjUyNC0yLjk1NSwzLjMzMy0zLjcxNSw1LjQyNFYxOC42NzkgICBjMC00Ljk1Mi0xLjgwOS05LjIzNC01LjQyNC0xMi44NWMtMy42MTctMy42MTctNy45LTUuNDI2LTEyLjg0Ny01LjQyNkg5MS43NzVjLTQuOTUyLDAtOS4yMzMsMS44MDktMTIuODUsNS40MjYgICBDNzUuMzA4LDkuNDQ4LDczLjUsMTMuNzMsNzMuNSwxOC42Nzl2NDAxLjk4NmMwLDQuOTQ4LDEuODA3LDkuMjM2LDUuNDI0LDEyLjg0N2MzLjYyMSwzLjYyLDcuOTAyLDUuNDI4LDEyLjg1LDUuNDI4aDM2LjU0MyAgIGM0Ljk0NywwLDkuMjI5LTEuODA4LDEyLjg0Ny01LjQyOGMzLjYxNS0zLjYxLDUuNDI0LTcuODk4LDUuNDI0LTEyLjg0N1YyMjcuMDk3YzAuNzYzLDEuOTAzLDIsMy43MTcsMy43MTUsNS40MjVsMjAyLjcwNSwyMDIuNzEyICAgYzMuNjIxLDMuNjE3LDYuNjY3LDQuODU5LDkuMTM4LDMuNzJjMi40NzgtMS4xNDQsMy43MTYtNC4xODksMy43MTYtOS4xMzhWOS41NDdDMzY1Ljg2Miw0LjU5OSwzNjQuNjI0LDEuNTUzLDM2Mi4xNDYsMC40MTJ6IiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg=="/>
-    <div class="fa fa-volume-up fa-2x"></div>
-    <p class="songtime">4:20</p>
-    <p class="timeleft">1:44</p>
-    <svg id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512px" height="512px">
-        <path d="M256,0C114.617,0,0,114.615,0,256s114.617,256,256,256s256-114.615,256-256S397.383,0,256,0z M344.48,269.57l-128,80  c-2.59,1.617-5.535,2.43-8.48,2.43c-2.668,0-5.34-0.664-7.758-2.008C195.156,347.172,192,341.82,192,336V176  c0-5.82,3.156-11.172,8.242-13.992c5.086-2.836,11.305-2.664,16.238,0.422l128,80c4.676,2.93,7.52,8.055,7.52,13.57  S349.156,266.641,344.48,269.57z" fill="#72e6cf"></path>
-    </svg>
+               <svg id="play" viewBox="0 0 25 25" xml:space="preserve">
+                   <defs><rect x="-49.5" y="-132.9" width="446.4" height="366.4"/></defs>
+                  <g><circle fill="none" cx="12.5" cy="12.5" r="10.8"/>
+                       <path fill-rule="evenodd" clip-rule="evenodd" d="M8.7,6.9V18c0,0,0.2,1.4,1.8,0l8.1-4.8c0,0,1.2-1.1-1-2L9.8,6.5 C9.8,6.5,9.1,6,8.7,6.9z"/>
+                  </g>
+               </svg>
+              
+
+               <svg id="pause" viewBox="0 0 25 25" xml:space="preserve">
+                  <g>
+                     <rect x="6" y="4.6" width="3.8" height="15.7"/>
+                     <rect x="14" y="4.6" width="3.9" height="15.7"/>
+                  </g>
+               </svg>
+
+               <span class="expend"><svg class="step-foreward" viewBox="0 0 25 25" xml:space="preserve">
+                  <g><polygon points="20.7,4.3 16.6,4.3 16.6,11.6 4.3,4.3 4.3,20.7 16.7,13.4 16.6,20.7 20.7,20.7"/></g>
+                </svg></span>
+            </div>
+         </div>
+      </li>
+   </ul>
 </div>
-
 </template>
 
 <script>
 export default {
+// var music = document.getElementById("music");
+// var playButton = document.getElementById("play");
+// var pauseButton = document.getElementById("pause");
+// var playhead = document.getElementById("elapsed");
+// var timeline = document.getElementById("slider");
+// var timer = document.getElementById("timer");
+// var duration;
+// pauseButton.style.visibility = "hidden";
 
+// var timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+// music.addEventListener("timeupdate", timeUpdate, false);
+
+// function timeUpdate() {
+// 	var playPercent = timelineWidth * (music.currentTime / duration);
+// 	playhead.style.width = playPercent + "px";
+
+// 	var secondsIn = Math.floor(((music.currentTime / duration) / 3.5) * 100);
+// 	if (secondsIn <= 9) {
+// 		timer.innerHTML = "0:0" + secondsIn;
+// 	} else {
+// 		timer.innerHTML = "0:" + secondsIn;
+// 	}
+// }
+
+// playButton.onclick = function() {
+// 	music.play();
+// 	playButton.style.visibility = "hidden";
+// 	pause.style.visibility = "visible";
+// }
+
+// pauseButton.onclick = function() {
+// 	music.pause();
+// 	playButton.style.visibility = "visible";
+// 	pause.style.visibility = "hidden";
+// }
+
+// music.addEventListener("canplaythrough", function () {
+// 	duration = music.duration;
+// }, false
 }
 </script>
 
-<style scoped>
-body {
-  height: 700px;
-  width: 100vw;
-  display: -webkit-box;
-  display: flex;
-  -webkit-box-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-          justify-content: center;
-}
+<style>
 .player {
-  width: 800px;
-  height: 529px;
-  background: #6b6d83;
-  box-shadow: 0px 24px 54px -12px #5e6178;
+  height: 360px;
+  width: 640px;
+  background-color: #1E2125;
   position: absolute;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  top: 50%;
   left: 50%;
-  -webkit-transform: translateX(-400px);
-          transform: translateX(-400px);
-  top: 20%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
 }
-.player .cover {
-  width: 230px;
+.player ul {
+  list-style: none;
+}
+.player ul li {
+  display: inline-block;
+}
+
+.cover {
   position: absolute;
-  left: 50%;
-  -webkit-transform: translateX(-115px);
-          transform: translateX(-115px);
-  top: -40px;
-  box-shadow: 5px 20px 50px 0px rgba(17,17,17,0.4);
+  top: 0;
+  left: 0;
 }
-.player .icons {
-  position: absolute;
-  right: 40px;
-  top: 40px;
+.cover img {
+  height: 360px;
+  width: 360px;
 }
-.player .icons .fa {
-  color: #72e6cf;
-  margin-left: 15px;
-  font-size: 20px;
+
+.info h1 {
+  margin-top: 15px;
+  margin-left: 360px;
+  line-height: 0;
 }
-.player .info {
-  position: absolute;
-  top: 240px;
-  left: 20%;
-  color: #fff;
-  font-family: Open Sans;
-  letter-spacing: 1px;
+.info h4 {
+  margin-left: 360px;
+  line-height: 20px;
+  color: #636367;
 }
-.player .info .title {
-  font-size: 2em;
-  margin: 0;
+.info h2 {
+  margin-left: 360px;
 }
-.player .info .artist {
-  color: #bdbdbd;
+
+.button-items {
+  margin-left: 360px;
 }
-.player .line {
-  height: 3px;
-  width: 100%;
-  background-color: #525363;
-  position: absolute;
-  top: 400px;
+
+#slider {
+  width: 182px;
+  height: 4px;
+  background: #151518;
+  border-radius: 2px;
 }
-.player .playtime {
-  background-color: rgba(114,230,207,0.3);
-  height: 5px;
-  width: 100%;
-  position: absolute;
-  bottom: 0px;
+#slider div {
+  width: 4px;
+  height: 4px;
+  margin-top: 1px;
+  background: #EF6DBC;
+  border-radius: 2px;
 }
-.player .played {
-  background-color: #72e6cf;
-  height: 5px;
-  width: 300px;
-  position: absolute;
-  bottom: 0px;
+
+#timer {
+  color: #494B4E;
+  line-height: 0;
+  font-size: 9pt;
+  float: right;
+  font-family: Arial, Sans-Serif;
 }
-.player svg {
-  width: 85px;
-  background-color: #fff;
-  border-radius: 50%;
-  height: 85px;
-  position: absolute;
-  left: 50%;
-  -webkit-transform: translateX(-42.5px);
-          transform: translateX(-42.5px);
-  bottom: 25px;
-  box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.4);
+
+.controls {
+  margin-top: 20px;
 }
-.player .forward {
+.controls svg:nth-child(2) {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+#play {
+  padding: 0 3px;
   width: 30px;
-  position: absolute;
-  bottom: 55px;
-  right: -70%;
+  height: 30px;
+  x: 0px;
+  y: 0px;
+  enable-background: new 0 0 25 25;
 }
-.player .backward {
+#play g {
+  stroke: #FEFEFE;
+  stroke-width: 1;
+  stroke-miterlimit: 10;
+}
+#play g path {
+  fill: #FEFEFE;
+}
+
+#play:hover {
+  cursor: pointer;
+}
+#play:hover g {
+  stroke: #8F4DA9;
+  cursor: pointer;
+}
+#play:hover g path {
+  fill: #9b59b6;
+  cursor: pointer;
+}
+
+.step-backward {
+  width: 18px;
+  height: 18px;
+  x: 0px;
+  y: 0px;
+  enable-background: new 0 0 25 25;
+  margin-bottom: 5px;
+}
+.step-backward g polygon {
+  fill: #FEFEFE;
+}
+
+.step-foreward {
+  width: 18px;
+  height: 18px;
+  x: 0px;
+  y: 0px;
+  enable-background: new 0 0 25 25;
+  margin-bottom: 5px;
+}
+.step-foreward g polygon {
+  fill: #FEFEFE;
+}
+
+#pause {
+  x: 0px;
+  y: 0px;
+  enable-background: new 0 0 25 25;
   width: 30px;
+  height: 30px;
   position: absolute;
-  bottom: 55px;
-  left: 36%;
+  margin-left: -38px;
+  cursor: pointer;
 }
-.player .fa.fa-volume-up {
-  color: #fff;
-  position: absolute;
-  bottom: 53px;
-  right: 28%;
+#pause rect {
+  fill: white;
 }
-.player p.songtime {
-  color: #fff;
-  position: absolute;
-  right: 20px;
-  bottom: 45px;
+
+#pause:hover rect {
+  fill: #8F4DA9;
 }
-.player p.timeleft {
-  color: #fff;
-  position: absolute;
-  left: 20px;
-  bottom: 45px;
+
+.step-backward g polygon:hover, .step-foreward g polygon:hover {
+  fill: #EF6DBC;
+  cursor: pointer;
 }
-.player .fa.fa-heart.liked {
-  color: #ff749f;
+
+.social {
+  text-align: center;
+}
+
+.twitter {
+  color: #BDBDBD;
+  font-family: sans-serif;
+  text-decoration: none;
+}
+.twitter:hover {
+  color: #ecf0f1;
+}
+
+.github {
+  color: #BDBDBD;
+  font-family: sans-serif;
+  text-decoration: none;
+}
+.github:hover {
+  color: #ecf0f1;
+}
+
+p {
+  color: #BDBDBD;
+}
+
+#skip {
+  float: right;
+  margin-top: 10px;
+}
+#skip p {
+  color: #2980b9;
+}
+#skip p:hover {
+  color: #e74c3c;
+  cursor: pointer;
+}
+
+.expend {
+  padding: 0.5px;
+  cursor: pointer;
+}
+.expend svg:hover g polygon {
+  fill: #EF6DBC;
 }
 
 </style>
