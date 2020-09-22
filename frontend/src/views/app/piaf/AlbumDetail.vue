@@ -40,24 +40,24 @@
               <table  class="table table-sm" style="margin-bottom:0px;">
                   <thead style="font-size: initial;">
                     <th></th>
-                    <th>곡</th>
-                    <th>가수</th>
+                    <th id='song' @click="changeSortValue('name')" style="cursor:pointer">곡</th>
+                    <th id='artist' @click="changeSortValue('artist')" style="cursor:pointer">가수</th>
                     <th>장르</th>
-                    <th>재생</th>
-                    <th>추가</th>
-                    <th>상세정보</th>
-                    <th>좋아요</th>
+                    <th style="width:10%">재생</th>
+                    <th style="width:10%">추가</th>
+                    <th style="width:10%">좋아요</th>
                   </thead>
                   <tbody style="font-size: x-large;">
-                    <tr :class="{'flex-row':true}" v-for="(song, index) in songs.slice(0,songListSize)" v-bind:key="index">
-                      <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" /></td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.name}}</td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.artist}}</td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.genre}}</td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-control-play"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-playlist"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-magnifier-add" @click="detailSong(song.id)" style="cursor:pointer;"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-heart"/></td>
+                    <tr :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice(0,songListSize)" v-bind:key="index" style="cursor:pointer;">
+                      <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.name}}</td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.artist}}</td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.genre}}</td>
+                      <td style="vertical-align: middle;" @click.prevent="playSong(song.id)"><div class="glyph-icon simple-icon-control-play"/></td>
+                      <td style="vertical-align: middle;" @click.prevent="addSong(song.id)"><div class="glyph-icon simple-icon-playlist"/></td>
+                      <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td>
+                      <!-- <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td> -->
                     </tr>
                   </tbody>
               </table>
@@ -81,6 +81,8 @@ export default {
 
   data () {
     return {
+      sort_value : "",
+	  	sort_type : 'asc',
       isSong: true,
       moreSong: false,
       songListSize: 5,
@@ -102,11 +104,77 @@ export default {
     detailSong: function(id){
       this.$router.push('/app/piaf/songDetail/'+id)
     },
+    changeSortValue(value) {
+      if(this.sort_value != value){
+        this.sort_value=value;
+        this.sort_type = 'asc';
+      }else{
+        if(this.sort_type =='asc'){
+          this.sort_type = 'desc';
+        }else if(this.sort_type =='desc'){
+          this.sort_value = '';
+          this.sort_type = 'none';
+        }else{
+          this.sort_type = 'asc'
+        }
+      }
+
+      var tag1 = document.getElementById('song');
+      var tag2 = document.getElementById('artist');
+      if(this.sort_value=='name'){
+        tag1.style.color = "#236591";
+      }else {
+        tag1.style.color = "";
+      }
+
+      if(this.sort_value=='artist'){
+        tag2.style.color = "#236591";
+      }else {
+        tag2.style.color = "";
+      }
+    },
 
   },
   mounted() {
     this.albumID = this.$route.params.albumID;
   },
+  computed: {
+    sortSongs() {
+		if(this.sort_value=='name'){
+			if(this.sort_type=='asc'){
+			return this.songs.sort((a, b) => {
+				if( a.name > b.name) return 1;
+				else if ( a.name < b.name ) return -1;
+				else return 0;
+			})
+			}else if(this.sort_type=='desc'){
+				return this.songs.sort((a, b) => {
+					if( a.name < b.name) return 1;
+					else if ( a.name > b.name ) return -1;
+					else return 0;
+				})
+			}
+		}else if(this.sort_value=='artist'){
+			if(this.sort_type=='asc'){
+			return this.songs.sort((a, b) => {
+				if( a.artist > b.artist) return 1;
+				else if ( a.artist < b.artist ) return -1;
+				else return 0;
+			})
+			}else if(this.sort_type=='desc'){
+				return this.songs.sort((a, b) => {
+					if( a.artist < b.artist) return 1;
+					else if ( a.artist > b.artist ) return -1;
+					else return 0;
+				})
+			}
+		}
+		return this.songs.sort((a, b) => {
+			return a.id - b.id
+		})
+
+    },
+  }
 
 }
 </script>
