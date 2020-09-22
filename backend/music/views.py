@@ -51,3 +51,12 @@ class SearchResult(APIView):
                 "status": 401,
                 "msg": "invalid approach"
             })
+
+class CreateLog(APIView):
+    # @permission_classes([IsAuthenticated])
+
+    def post(self, request):
+        pk = request.data
+        print(pk)
+        print(True)
+        return Response({"data": 'true'})
