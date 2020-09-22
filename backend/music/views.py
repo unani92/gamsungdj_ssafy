@@ -2,8 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import Song, Album, Artist
-from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer
+from .models import Song, Album, Artist, Log
+from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer
+
 # Create your views here.
 
 class SongType(APIView):
@@ -12,7 +13,7 @@ class SongType(APIView):
         serializer = SongSerializer(songs, many=True)
         return Response(serializer.data)
 
-class SongDetail(APIView):
+class CategoryDetail(APIView):
     def get(self, request, category, pk):
         if category == 'song':
             song = get_object_or_404(Song, pk=pk)
@@ -53,10 +54,24 @@ class SearchResult(APIView):
             })
 
 class CreateLog(APIView):
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
+    def get(self, request):
+        logs = Log.objects.filter(user=request.user)
+        serializer = LogSerializer(logs, many=True)
+        return Response(serializer.data)
 
+    @permission_classes([IsAuthenticated])
     def post(self, request):
-        pk = request.data
-        print(pk)
-        print(True)
-        return Response({"data": 'true'})
+        pk = request.data['song']
+        song = get_object_or_404(Song, pk=pk)
+        log = Log.objects.create(song=song, user=request.user)
+        log.save()
+        serializer = LogSerializer(log)
+        return Response(serializer.data)
+
+    @permission_classes([IsAuthenticated])
+    def delete(self, request):
+        pk = request.data['id']
+        log = get_object_or_404(Log, pk=pk)
+        log.delete()
+        return Response({'msg': 'deleted'})

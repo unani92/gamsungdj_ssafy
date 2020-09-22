@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Genre, Album, Song, Artist
+from .models import Genre, Album, Song, Artist, Log
 from accounts.serializers import UserSerializer
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -30,4 +30,11 @@ class SongSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Song
+        fields = '__all__'
+
+class LogSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    song = SongSerializer()
+    class Meta:
+        model = Log
         fields = '__all__'
