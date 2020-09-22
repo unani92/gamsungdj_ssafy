@@ -13,7 +13,7 @@ class SongType(APIView):
         serializer = SongSerializer(songs, many=True)
         return Response(serializer.data)
 
-class SongDetail(APIView):
+class CategoryDetail(APIView):
     def get(self, request, category, pk):
         if category == 'song':
             song = get_object_or_404(Song, pk=pk)
