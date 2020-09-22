@@ -13,14 +13,41 @@ class SongType(APIView):
         return Response(serializer.data)
 
 class SongDetail(APIView):
-    def get(self, request,category, pk):
+    def get(self, request, category, pk):
         if category == 'song':
             song = get_object_or_404(Song, pk=pk)
             serializer = SongSerializer(song)
+            return Response(serializer.data)
         elif category == 'album':
             album = get_object_or_404(Album, pk=pk)
             serializer = AlbumSerializer(album)
-        else:
+            return Response(serializer.data)
+        elif category == 'artist':
             artist = get_object_or_404(Artist, pk=pk)
             serializer = ArtistSerializer(artist)
-        return Response(serializer.data)
+            return Response(serializer.data)
+        else:
+            return Response({
+                "status": 401,
+                "msg": "invalid approach"
+            })
+
+class SearchResult(APIView):
+    def get(self, request, category, keyword):
+        if category == 'song':
+            songs = Song.objects.filter(name__contains=keyword)
+            serializer = SongSerializer(songs, many=True)
+            return Response(serializer.data)
+        elif category == 'album':
+            albums = Album.objects.filter(name__contains=keyword)
+            serializer = AlbumSerializer(albums, many=True)
+            return Response(serializer.data)
+        elif category == 'artist':
+            artists = Artist.objects.filter(name__contains=keyword)
+            serializer = ArtistSerializer(artists, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({
+                "status": 401,
+                "msg": "invalid approach"
+            })
