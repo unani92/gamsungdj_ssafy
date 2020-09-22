@@ -16,14 +16,9 @@ export default {
 
 <style>
 .music-bar {
-  width: 50px;
-  height: 50px;
-  display: block;
-  border-radius: 10px;
-  background-color: ffffff;
-  position: relative;
-  margin: 50px auto;
-  border: 1px solid #dddddd;
+  position: absolute;
+  left:26px;
+  top:26px;
 }
 
 .bar {

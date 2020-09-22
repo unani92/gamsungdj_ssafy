@@ -1,7 +1,8 @@
 <template>
   <div class="player">
     <span>
-      <img class="cover" :src="selectedSong.img" />
+      <img v-if="selectedSong.img" class="cover" :src="selectedSong.img" />
+      <img v-else class="cover" src="https://cdn.manzlab.com/news/photo/201808/1459_2985_4311.jpg">
     </span>
     <span>
     <span class="songInfo">

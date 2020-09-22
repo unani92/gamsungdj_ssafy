@@ -1,16 +1,11 @@
 <template>
-    <div>
-        <music-bar />
-    </div>
-  
+  <div>
+      <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+  </div>
 </template>
 
 <script>
-import Musicbar from './Musicbar'
 export default {
-    components:{
-        'music-bar': Musicbar
-    }
 }
 </script>
 

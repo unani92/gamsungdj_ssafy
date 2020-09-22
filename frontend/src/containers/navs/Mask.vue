@@ -46,9 +46,11 @@
 
                         <!-- 바디 시작 -->
                         <div class="playlist-item-wrapper" v-for="(data, index) in selectedPlaylist" :key="index">
-                            <!-- <div class="d-flex flex-row" style="padding:10px; cursor:pointer; position:absolute;">
+                            <!-- 재생 중인 곡 표시 시작-->
+                            <!-- <div class="d-flex flex-row" style="padding:10px; cursor:pointer; position:absolute; width:100%">
                                 <music-bar />
                             </div> -->
+                            <!-- 재생 중인 곡 표시 끝 -->
                             <div class="d-flex flex-row" style="padding:10px; cursor:pointer" @click="selectSong(index, data.img, data.title, data.artist, data.src)">
                                 <img :src="data.img" :alt="data.title" class="list-thumbnail border-0" />
                                 <div class="pl-3 pt-2 pr-2 pb-2">
@@ -117,6 +119,7 @@ export default {
             this.selectedSong.src = src
             this.$store.state.visiblePlayButton = false
             this.$store.state.visiblePauseButton = true
+            console.log(this.selectedLayer)
         },
         play(msg) {
             if(msg === "play") {
