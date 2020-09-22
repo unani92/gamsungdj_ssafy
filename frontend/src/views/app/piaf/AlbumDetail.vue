@@ -74,11 +74,19 @@
   </div>
 </template>
 <script>
-
+import http from "../../../utils/http-common";
 export default {
+  
   components: {
   },
-
+  created() {
+    http
+      .get("/album/10489013/")
+      .then((rest) => {
+       
+        this.test = rest.data;
+      })
+  },
   data () {
     return {
       sort_value : "",
@@ -90,6 +98,7 @@ export default {
       album: { id:1, name:"축제", artistId:1, img: "https://cdnimg.melon.co.kr/cm2/album/images/103/48/325/10348325_500.jpg?679a781c2d3687f2aefffaeb310614d5/melon/resize/282/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
       songs: [{ id: 1, name: '선물', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
       ],
+      test:[],
     }
   },
   methods: {
