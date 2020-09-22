@@ -75,3 +75,37 @@ class CreateLog(APIView):
         log = get_object_or_404(Log, pk=pk)
         log.delete()
         return Response({'msg': 'deleted'})
+
+class Like(APIView):
+    @permission_classes([IsAuthenticated])
+    def post(self, request, category, pk):
+        user = request.user
+        if category == 'song':
+            song = get_object_or_404(Song, pk=pk)
+            if user in song.user_like.all():
+                song.user_like.remove(user)
+                liked = False
+            else:
+                song.user_like.add(user)
+                liked = True
+            return Response({
+                "status": 200,
+                "liked": liked
+            })
+        elif category == 'album':
+            album = get_object_or_404(Album, pk=pk)
+            if user in album.user_like.all():
+                album.user_like.remove(user)
+                liked = False
+            else:
+                album.user_like.add(user)
+                liked = True
+            return Response({
+                "status": 200,
+                "liked": liked
+            })
+        else:
+            return Response({
+                "status": 400,
+                "msg": "잘못된 접근입니다."
+            })
