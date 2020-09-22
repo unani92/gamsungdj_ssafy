@@ -15,12 +15,12 @@
                 <b-tab title="Player" active title-item-class="w-50 text-center">
                     <div class="player-wrapper">
                     <div class="float-right">
-                    <switches v-model="changePlayer" theme="custom" color="primary-inverse"></switches>
+                    <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
                     </div>
-                    <div class="player" v-show="changePlayer">
-                        <youtube id="youtube" :video-id="videoid" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
+                    <div class="player" v-show="playerToggleFlag">
+                        <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
                     </div>
-                    <player v-show="!changePlayer" />
+                    <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
                     </div>
                 </b-tab>
                 <b-tab title="Analyze" title-item-class="w-50 text-center">
@@ -49,7 +49,7 @@
                             <!-- <div class="d-flex flex-row" style="padding:10px; cursor:pointer; position:absolute;">
                                 <music-bar />
                             </div> -->
-                            <div class="d-flex flex-row" style="padding:10px; cursor:pointer" @click="playVideo(data.src, index, data.img)">
+                            <div class="d-flex flex-row" style="padding:10px; cursor:pointer" @click="selectSong(index, data.img, data.title, data.artist, data.src)">
                                 <img :src="data.img" :alt="data.title" class="list-thumbnail border-0" />
                                 <div class="pl-3 pt-2 pr-2 pb-2">
                                     <p class="list-item-heading">{{ data.title }}</p>
@@ -86,18 +86,21 @@ export default {
     },
     data() {
         return {
-            videoid: '',
             playerVars: {
                 autoplay: 1
             },
-            playing: '',
             selectedPlaylistIndex: '-1',
             selectedPlaylistTitle: '재생 목록',
             selectedPlaylist: '',
-            selectedSong: {},
-            selectedSongImg: '',
+            selectedSong: {
+                index: '',
+                img: '',
+                title: '',
+                artist: '',
+                src: '',
+            },
             playlistData,
-            changePlayer: true
+            playerToggleFlag: false
         }
     },
     computed: {
@@ -106,16 +109,14 @@ export default {
         }
     },
     methods: {
-        playVideo(videoid, index, img) {
-            this.videoid = videoid
-            this.playing = index
+        selectSong(index, img, title, artist, src) {
+            this.selectedSong.index = index
+            this.selectedSong.img = img
+            this.selectedSong.title = title
+            this.selectedSong.artist = artist
+            this.selectedSong.src = src
             this.$store.state.visiblePlayButton = false
             this.$store.state.visiblePauseButton = true
-            this.selectedSongImg = img
-            for(let i=0; i<this.selectedPlaylist.length; i++) {
-                this.selectedSong[i] = false
-            }
-            this.selectedSong[index] = true
         },
         play(msg) {
             if(msg === "play") {
@@ -124,9 +125,9 @@ export default {
                     this.$store.state.visiblePlayButton = true
                     this.$store.state.visiblePauseButton = false
                 }
-                else if(this.videoid === ''){
-                    this.playing = 0;
-                    this.videoid = this.selectedPlaylist[this.playing].src
+                else if(this.selectedSong.src === ''){
+                    this.selectedSong.selectedSong.index = 0;
+                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else
@@ -135,49 +136,49 @@ export default {
             else if(msg === "pause")
                 this.player.pauseVideo()
             else if(msg === "prev") {
-                if(this.playing == 0) {
-                    this.playing = this.selectedPlaylist[length-1].src
-                    this.videoid = this.selectedPlaylist[this.playing].src
+                if(this.selectedSong.index == 0) {
+                    this.selectedSong.index = this.selectedPlaylist[length-1].src
+                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
-                else if(this.videoid === ''){
-                    this.playing = 0;
-                    this.videoid = this.selectedPlaylist[this.playing].src
+                else if(this.selectedSong.src === ''){
+                    this.selectedSong.index = 0;
+                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else {
-                    this.playing = this.playing-1
-                    this.videoid = this.selectedPlaylist[this.playing].src
+                    this.selectedSong.index = this.selectedSong.index-1
+                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
             }
             else if(msg === "next") {
-                if(this.playing == this.selectedPlaylist.length-1) {
-                    this.playing = 0
-                    this.videoid = this.selectedPlaylist[this.playing].src
+                if(this.selectedSong.index == this.selectedPlaylist.length-1) {
+                    this.selectedSong.index = 0
+                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
-                else if(this.videoid === ''){
-                    this.playing = 0;
-                    this.videoid = this.selectedPlaylist[this.playing].src
+                else if(this.selectedSong.src === ''){
+                    this.selectedSong.index = 0;
+                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else {
-                    this.playing = this.playing+1
-                    this.videoid = this.selectedPlaylist[this.playing].src
+                    this.selectedSong.index = this.selectedSong.index+1
+                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
             }
         },
         ended() {
-            if(this.playing >= this.selectedPlaylist.length-1) {
-                this.playing = 0
-                this.videoid = this.selectedPlaylist[0].src
+            if(this.selectedSong.index >= this.selectedPlaylist.length-1) {
+                this.selectedSong.index = 0
+                this.selectedSong.src = this.selectedPlaylist[0].src
                 this.player.playVideo()
             }
             else {
-                this.playing = this.playing+1
-                this.videoid = this.selectedPlaylist[this.playing].src
+                this.selectedSong.index = this.selectedSong.index+1
+                this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                 this.player.playVideo()
             }
         },
