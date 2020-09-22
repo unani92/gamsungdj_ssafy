@@ -1,16 +1,26 @@
 <template>
-    <div>
-        <music-bar />
-    </div>
-  
 </template>
 
 <script>
-import Musicbar3 from './Musicbar3'
 export default {
-    components:{
-        'music-bar': Musicbar3
-    }
+  data() {
+    return {
+      dummyData: [
+        {
+            icon: 'iconsminds-male',
+            title: 'DEVELOPER',
+            price: '$11',
+            detail: 'User/Month',
+            link: '#',
+            features: [
+                'Number of end products 1',
+                'Free updates',
+                'Forum support'
+            ]
+        },
+      ],
+    } 
+  }
 }
 </script>
 
