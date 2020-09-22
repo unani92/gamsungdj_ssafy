@@ -20,34 +20,23 @@
 <script>
 export default {
   props: ['selectedSong'],
+  data() {
+    return {
+      dummyData: [
+        {
+            icon: 'iconsminds-male',
+            title: 'DEVELOPER',
+            price: '$11',
+            detail: 'User/Month',
+            link: '#',
+            features: [
+                'Number of end products 1',
+                'Free updates',
+                'Forum support'
+            ]
+        },
+      ],
+    } 
+  }
 }
 </script>
-
-<style>
-.player {
-  height: 360px;
-  width: 640px;
-  background-color: #1E2125;
-  position: absolute;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-}
-
-.cover {
-  height: 360px;
-  width: 360px;
-}
-.songInfo {
-  position:absolute;
-  bottom: 25%;
-  display: inline-block;
-  width: 270px;
-}
-</style>
