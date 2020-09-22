@@ -4,16 +4,30 @@ from .models import Genre, Album, Song, Artist
 from accounts.serializers import UserSerializer
 
 class GenreSerializer(serializers.ModelSerializer):
-    pass
+    class Meta:
+        model = Genre
+        fields = ['name']
 
 class ArtistSerializer(serializers.ModelSerializer):
-    pass
+    class Meta:
+        model = Artist
+        fields = '__all__'
 
 class AlbumSerializer(serializers.ModelSerializer):
-    artist = UserSerializer(many=True)
+    artist = ArtistSerializer(many=True)
+    genres = GenreSerializer(many=True)
+    user_like = UserSerializer(many=True)
+
     class Meta:
         model = Album
         fields = '__all__'
 
 class SongSerializer(serializers.ModelSerializer):
-    pass
+    genres = GenreSerializer(many=True)
+    album = AlbumSerializer()
+    artist = ArtistSerializer(many=True)
+    user_like = UserSerializer(many=True)
+
+    class Meta:
+        model = Song
+        fields = '__all__'
