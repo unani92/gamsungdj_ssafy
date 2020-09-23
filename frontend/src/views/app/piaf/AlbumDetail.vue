@@ -13,9 +13,10 @@
                 </div>
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{album.name}}</h1><br>
-                  <h1 class="mb-0 truncate text-large"><router-link :to="'/app/piaf/artistDetail/'+album.artistId" class="text-primary">{{album.artist}}</router-link></h1><br>
-                  <h3 class="mb-0 truncate">장르: {{album.genre}}</h3><br>
-                  <h3 class="mb-0 truncate">감정: 슬픔</h3>
+                  <h1 class="mb-0 truncate text-large"><router-link :to="'/app/piaf/artistDetail/'+album.artist[0].id" class="text-primary">{{album.artist[0].name}}</router-link></h1><br>
+                  <h3 class="mb-0 truncate " style="display: inline-flex;">장르:<h3 class="ml-1" v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</h3></h3><br>
+                  <h3 class="mb-0 truncate">발매일: {{album.released_date}}</h3><br>
+                  <h1 class="mb-0 truncate glyph-icon simple-icon-heart mt-5 text-large"> {{album.like}}</h1>
                 </div>
         </b-colxx>
       </b-colxx>
@@ -49,8 +50,8 @@
                   </thead>
                   <tbody style="font-size: x-large;">
                     <tr :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice(0,songListSize)" v-bind:key="index" style="cursor:pointer;">
-                      <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.name}}</td>
+                      <td style="width:85px;"><img :src="album.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song}}</td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.artist}}</td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.genre}}</td>
                       <td style="vertical-align: middle;" @click.prevent="playSong(song.id)"><div class="glyph-icon simple-icon-control-play"/></td>
@@ -80,11 +81,13 @@ export default {
   components: {
   },
   created() {
+    this.albumID = this.$route.params.albumID;
     http
-      .get("/album/10489013/")
+      .get("/album/"+this.albumID)
       .then((rest) => {
-       
-        this.test = rest.data;
+        this.album = rest.data;
+        this.album.released_date = rest.data.released_date.substr(0,4) + "-" + rest.data.released_date.substr(4,2) + "-" + rest.data.released_date.substr(6,2);
+        this.songs = rest.data.songs.split(",");
       })
   },
   data () {
@@ -95,10 +98,9 @@ export default {
       moreSong: false,
       songListSize: 5,
       albumID: 0,
-      album: { id:1, name:"축제", artistId:1, img: "https://cdnimg.melon.co.kr/cm2/album/images/103/48/325/10348325_500.jpg?679a781c2d3687f2aefffaeb310614d5/melon/resize/282/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
-      songs: [{ id: 1, name: '선물', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      ],
-      test:[],
+      dummy_album: { id:1, name:"축제", artistId:1, img: "https://cdnimg.melon.co.kr/cm2/album/images/103/48/325/10348325_500.jpg?679a781c2d3687f2aefffaeb310614d5/melon/resize/282/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
+      songs: [],
+      album:[],
     }
   },
   methods: {
@@ -143,9 +145,6 @@ export default {
       }
     },
 
-  },
-  mounted() {
-    this.albumID = this.$route.params.albumID;
   },
   computed: {
     sortSongs() {
