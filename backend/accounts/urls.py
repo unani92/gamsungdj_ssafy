@@ -7,5 +7,6 @@ urlpatterns = [
     path('google/', views.GoogleLogin.as_view(), name='google_login'),
     path('kakao/', views.KakaoLogin.as_view(), name='kakao_login'),
     # user
-    # path('', )
+    path('', views.UserAPI.as_view()),
+    
 ]
