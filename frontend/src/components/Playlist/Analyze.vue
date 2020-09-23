@@ -22,10 +22,6 @@ export default {
             myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
             defaultWords: [
                 {
-                    "name": "가나다라",
-                    "value": 150
-                },
-                {
                     "name": "마바사",
                     "value": 120
                 },

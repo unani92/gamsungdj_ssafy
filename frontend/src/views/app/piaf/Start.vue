@@ -4,7 +4,7 @@
     <b-row>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideSingleOption">
-                <!-- 카테	고리1 시작 -->
+                <!-- 카테고리1 시작 -->
                 <div class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card class="flex-row" no-body>
 						<div class="col-sm-4 main-carousel-bg1">
@@ -12,22 +12,32 @@
 						<div class="col-sm-8">
 							<b-row>
 								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData1.data.slice(0,5)" :key="index">
-								<b-card class="text-white" no-body>
+								<b-card class="text-white" no-body  @mouseover="showOverlay(index)" @mouseout="hideOverlay(index)">
 									<img :src="data.img" class="card-img" />
-									<div class="card-img-overlay" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis;">
-										<h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text">{{ data.artist[0].name }}</p>
+									<div class="card-img-overlay" :class="'overlayClass'+(index+0)">
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
+										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
 								</b-colxx>
 							</b-row>
 							<b-row>
 								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData1.data.slice(5,10)" :key="index">
-								<b-card class="text-white" no-body>
+								<b-card class="text-white" no-body @mouseover="showOverlay(index+5)" @mouseout="hideOverlay(index+5)">
 									<img :src="data.img" class="card-img" />
-									<div class="card-img-overlay" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis;">
+									<div class="card-img-overlay" :class="'overlayClass'+(index+5)">
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                        </div>
 										<h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text">{{ data.artist[0].name }}</p>
+										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -46,22 +56,32 @@
 						<div class="col-sm-8">
 							<b-row>
 								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData2.data.slice(0,5)" :key="index">
-								<b-card class="text-white" no-body>
+								<b-card class="text-white" no-body  @mouseover="showOverlay(index+10)" @mouseout="hideOverlay(index+10)">
 									<img :src="data.img" class="card-img" />
-									<div class="card-img-overlay" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis;">
-										<h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text">{{ data.artist[0].name }}</p>
+									<div class="card-img-overlay" :class="'overlayClass'+(index+10)">
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
+										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
 								</b-colxx>
 							</b-row>
 							<b-row>
 								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData2.data.slice(5,10)" :key="index">
-								<b-card class="text-white" no-body>
+								<b-card class="text-white" no-body @mouseover="showOverlay(index+15)" @mouseout="hideOverlay(index+15)">
 									<img :src="data.img" class="card-img" />
-									<div class="card-img-overlay" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis;">
-										<h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text">{{ data.artist[0].name }}</p>
+									<div class="card-img-overlay" :class="'overlayClass'+(index+15)">
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
+										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -79,22 +99,32 @@
 						<div class="col-sm-8">
 							<b-row>
 								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData3.data.slice(0,5)" :key="index">
-								<b-card class="text-white" no-body>
+								<b-card class="text-white" no-body  @mouseover="showOverlay(index+20)" @mouseout="hideOverlay(index+20)">
 									<img :src="data.img" class="card-img" />
-									<div class="card-img-overlay" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis;">
-										<h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text">{{ data.artist[0].name }}</p>
+									<div class="card-img-overlay" :class="'overlayClass'+(index+20)">
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
+										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
 								</b-colxx>
 							</b-row>
 							<b-row>
 								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData3.data.slice(5,10)" :key="index">
-								<b-card class="text-white" no-body>
+								<b-card class="text-white" no-body @mouseover="showOverlay(index+25)" @mouseout="hideOverlay(index+25)">
 									<img :src="data.img" class="card-img" />
-									<div class="card-img-overlay" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis;">
-										<h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text">{{ data.artist[0].name }}</p>
+									<div class="card-img-overlay tempclass" :class="'overlayClass'+(index+25)">
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
+										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -104,12 +134,6 @@
                 </div>
                 <!-- 카테고리3 끝 -->
 
-                <!-- 카테고리4 시작 -->
-                <!-- <div class="pr-3 pl-3 mb-4 glide__slide" style="min-height:500px">
-                    <b-card class="flex-row" no-body>
-                    </b-card>
-                </div> -->
-                <!-- 카테고리4 끝 -->
             </glide-component>
         </b-colxx>
     </b-row>
@@ -250,18 +274,37 @@ export default {
 			dummyData3 ,
 			carouselData1: '',
 			carouselData2: '',
-			carouselData3: '',
-			
+            carouselData3: '',   
         }
-	},
+    },
 	methods:{
-		tempFunction(){
+		tempFunction() {
 			alert("페이지 준비중입니다.");
-		}
+        },
+        showOverlay(index) {
+            // document.getElementById('card-img-overlay'+index).style.display="block"
+            const el = document.getElementsByClassName('overlayClass'+index)
+            for(var i=0; i<el.length; i++){
+                el[i].style.display="block"
+            }
+        },
+        hideOverlay(index) {
+            // document.getElementById('card-img-overlay'+index).style.display="none"
+            const el = document.getElementsByClassName('overlayClass'+index)
+            for(var i=0; i<el.length; i++){
+                el[i].style.display="none"
+            }
+        }
 	}
 }
 </script>
 <style scoped>
+.card-img-overlay {
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:none;
+}
 .main-carousel-bg1 {
 	background: url('/assets/img/wordcloud/wc01.png') no-repeat;
 	background-size: contain;

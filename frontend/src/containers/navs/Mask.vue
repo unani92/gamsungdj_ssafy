@@ -36,7 +36,7 @@
                 <b-colxx xxs="12" class="mt-3">
                     <b-card class="mb-3">
                         <!-- 헤더 시작 -->
-                        <h3 style="display:inline-block; margin-top:12px">{{ selectedPlaylistTitle }}</h3><!-- 가로 중앙 정렬 필요 -->
+                        <h3 style="display:inline-block; margin-top:12px">재생 목록</h3>
                         <b-dropdown id="ddown1" text="재생 목록 불러오기" variant="outline-secondary" class="float-right">
                             <b-dropdown-header>나의 재생 목록</b-dropdown-header>
                             <b-dropdown-divider></b-dropdown-divider>
@@ -93,7 +93,6 @@ export default {
                 autoplay: 1
             },
             selectedPlaylistIndex: '-1',
-            selectedPlaylistTitle: '재생 목록',
             selectedPlaylist: '',
             selectedSong: {
                 index: '',
@@ -212,7 +211,6 @@ export default {
         },
         selectPlaylist(index) {
             this.selectedPlaylistIndex = index
-            this.selectedPlaylistTitle = this.playlistData[index].title
             this.selectedPlaylist = this.playlistData[index].playlist
         }
     }
