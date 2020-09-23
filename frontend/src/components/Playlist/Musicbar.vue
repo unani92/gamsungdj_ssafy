@@ -1,10 +1,10 @@
 <template>
- <div class="now playing" id="music">
-  <span class="bar n1">A</span>
-  <span class="bar n2">B</span>
-  <span class="bar n3">c</span>
-  <span class="bar n4">D</span>
-  <span class="bar n5">E</span>
+<div class="music-bar">
+    <span class="bar bar-0">0</span>
+    <span class="bar bar-1">1</span>
+    <span class="bar bar-2">2</span>
+    <span class="bar bar-3">3</span>
+    <span class="bar bar-4">4</span>
 </div>
 </template>
 
@@ -15,106 +15,86 @@ export default {
 </script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: "Lato", sans-serif;
-  font-weight: 100;
-  font-size: 16px;
-  color: #333;
-  text-align: center;
-  background: #eee;
-}
-.playing {
+.music-bar {
   position: absolute;
-  top: 70px;
-  left: 17px;
-  /* left: 50%; */
-  /* width: auto; */
-  /* transform: translateX(-50%) translateY(-50%); */
+  left:26px;
+  top:26px;
 }
-.playing:after {
-  /* content: "Now Playing."; */
+
+.bar {
   display: block;
-  width: 100%;
-  margin-top: 10px;
+  background-color: #00b4ff;
+  height: 25px;
+  width: 3px;
+  text-indent: -9999px;
+  position: absolute;
+  top: 13px;
+  -webkit-animation: bar 0ms -1000ms linear infinite alternate running;
+  animation: bar 0ms -1000ms linear infinite alternate running;
 }
-.now.playing .bar {
-  display: inline-block;
-  position: relative;
-  margin-right: 1px;
-  width: 10px;
-  height: 1px;
-  overflow: hidden;
-  background: linear-gradient(to bottom, #900604,#900604);
-  color: transparent;
-  animation-name: pulse;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-}
-.paused.playing .bar {
-  animation-iteration-count: 1;
-}
-.paused.playing:after {
-  content: "Paused (Lame)"
-}
-.n1 {
-  animation-delay: 0.5s;
-}
-.n2 {
-  animation-delay: 0.2s;
-}
-.n3 {
-  animation-delay: 1.2s;
-}
-.n4 {
-  animation-delay: 0.9s;
-}
-.n5 {
-  animation-delay: 2.3s;
-}
-.n6 {
-  animation-delay: 1.3s;
-}
-.n7 {
-  animation-delay: 3.1s;
-}
-.n8 {
-  animation-delay: 1.9s;
-}
-@keyframes pulse {
+
+@-webkit-keyframes bar {
   0% {
-    height: 1px;
-    margin-top: 0;
+    transform: scale(1, 0.25);
   }
-  10% {
-    height: 40px;
-    margin-top: -40px;
+  25% {
+    transform: scale(1, 0.5);
   }
   50% {
-    height: 20px;
-    margin-top: -20px;
+    transform: scale(1, 0.75);
   }
-  60% {
-    height: 30px;
-    margin-top: -30px;
-  }
-  80% {
-    height: 60px;
-    margin-top: -60px;
+  75% {
+    transform: scale(1, 1);
   }
   100% {
-    height: 1px;
-    margin-top: 0;
+    transform: scale(1, 1.25);
   }
 }
-button {
-  border: none;
-  background: none;
-  cursor: pointer;
+@keyframes bar {
+  0% {
+    transform: scale(1, 0.25);
+  }
+  25% {
+    transform: scale(1, 0.5);
+  }
+  50% {
+    transform: scale(1, 0.75);
+  }
+  75% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 1.25);
+  }
 }
+.bar-0 {
+  left: 7px;
+  -webkit-animation-duration: 337ms;
+  animation-duration: 337ms;
+}
+
+.bar-1 {
+  left: 16px;
+  -webkit-animation-duration: 321ms;
+  animation-duration: 321ms;
+}
+
+.bar-2 {
+  left: 25px;
+  -webkit-animation-duration: 353ms;
+  animation-duration: 353ms;
+}
+
+.bar-3 {
+  left: 34px;
+  -webkit-animation-duration: 341ms;
+  animation-duration: 341ms;
+}
+
+.bar-4 {
+  left: 42px;
+  -webkit-animation-duration: 327ms;
+  animation-duration: 327ms;
+}
+
 </style>

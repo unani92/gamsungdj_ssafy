@@ -14,7 +14,8 @@
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{artist.name}}</h1><br>
                   <h1 class="mb-0 truncate text-large">{{artist.type}}</h1><br>
-                  <h3 class="mb-0 truncate">데뷔: {{artist.released}}</h3><br>
+                  <h3 class="mb-0 truncate" v-if="artist.member">멤버: {{artist.member}}</h3><br>
+                  <h3 class="mb-0 truncate">데뷔: {{artist.debue}}</h3><br>
                 </div>
         </b-colxx>
     </b-colxx>
@@ -120,11 +121,18 @@
   </div>
 </template>
 <script>
-
+import http from "../../../utils/http-common";
 export default {
   components: {
   },
-
+  created() {
+    this.artistID = this.$route.params.artistID;
+    http
+      .get("/artist/"+this.artistID)
+      .then((rest) => {
+        this.artist = rest.data;
+      })
+  },
   data () {
     return {
       sort_value : "",
@@ -134,11 +142,11 @@ export default {
       isAlbum: true,
       moreSong: false,
       moreAlbum: false,
-      keyword: '',
+
       songListSize: 5,
       // currentPage: 1,
       artistID: 0,
-      artist: { id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
+      artist: {},
       songs: [{ id: 1, name: '선물', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
       { id: 1, name: '선물1', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
       { id: 1, name: '선물2', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
@@ -214,9 +222,6 @@ export default {
         tag2.style.color = "";
       }
     },
-  },
-  mounted() {
-    this.artistID = this.$route.params.artistID;
   },
   computed: {
     sortSongs() {

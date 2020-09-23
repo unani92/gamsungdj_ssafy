@@ -17,6 +17,7 @@ export default new Vuex.Store({
     visiblePlaylist: false,
     visiblePlayButton: true,
     visibelPauseButton: false,
+    isLoggedin: false,
   },
   getters: {
     config: (state) => ({headers: { Authorization: state.authorization }}),
@@ -35,10 +36,12 @@ export default new Vuex.Store({
     SET_USER(state, value) {
       sessionStorage.setItem("user", value)
       state.user = value
+      state.isLoggedin = true
     },
     LOGOUT(state){
       state.authorization=""
       state.user=[]
+      state.isLoggedin = false
       sessionStorage.removeItem("authorization")
       sessionStorage.removeItem("user")
     },
