@@ -21,8 +21,23 @@ class CategoryDetail(APIView):
             return Response(serializer.data)
         elif category == 'album':
             album = get_object_or_404(Album, pk=pk)
+            songs = [song for song in album.songs.split(',')]
+            print(songs)
+            artist = album.artist.name
+            arr = []
+            for idx,song in enumerate(songs):
+                try:
+                    s = Song.objects.filter(name__exact=song, album=album)[0]
+                    serializer = SongSerializer(s)
+                    arr.append({idx: serializer.data})
+                except:
+                    arr.append({idx: ''})
+
             serializer = AlbumSerializer(album)
-            return Response(serializer.data)
+            return Response({
+                "data": serializer.data,
+                "songs": arr
+            })
         elif category == 'artist':
             artist = get_object_or_404(Artist, pk=pk)
             serializer = ArtistSerializer(artist)
@@ -36,15 +51,15 @@ class CategoryDetail(APIView):
 class SearchResult(APIView):
     def get(self, request, category, keyword):
         if category == 'song':
-            songs = Song.objects.filter(name__contains=keyword)
+            songs = Song.objects.filter(name__contains=keyword).order_by('-pk')
             serializer = SongSerializer(songs, many=True)
             return Response(serializer.data)
         elif category == 'album':
-            albums = Album.objects.filter(name__contains=keyword)
+            albums = Album.objects.filter(name__contains=keyword).order_by('-pk')
             serializer = AlbumSerializer(albums, many=True)
             return Response(serializer.data)
         elif category == 'artist':
-            artists = Artist.objects.filter(name__contains=keyword)
+            artists = Artist.objects.filter(name__contains=keyword).order_by('-pk')
             serializer = ArtistSerializer(artists, many=True)
             return Response(serializer.data)
         else:
