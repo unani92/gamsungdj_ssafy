@@ -14,13 +14,13 @@
             <b-tabs card no-fade style="height:100%; width:100%;">
                 <b-tab title="Player" active title-item-class="w-50 text-center">
                     <div class="player-wrapper">
-                    <div class="float-right">
-                    <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
-                    </div>
-                    <div class="player" v-show="playerToggleFlag">
-                        <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
-                    </div>
-                    <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
+                        <div class="float-right">
+                            <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
+                        </div>
+                        <div class="player" v-show="playerToggleFlag">
+                            <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
+                        </div>
+                        <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
                     </div>
                 </b-tab>
                 <b-tab title="Analyze" title-item-class="w-50 text-center">
@@ -36,7 +36,7 @@
                 <b-colxx xxs="12" class="mt-3">
                     <b-card class="mb-3">
                         <!-- 헤더 시작 -->
-                        <h3 style="display:inline-block; margin-top:12px">{{ selectedPlaylistTitle }}</h3><!-- 가로 중앙 정렬 필요 -->
+                        <h3 style="display:inline-block; margin-top:12px">재생 목록</h3>
                         <b-dropdown id="ddown1" text="재생 목록 불러오기" variant="outline-secondary" class="float-right">
                             <b-dropdown-header>나의 재생 목록</b-dropdown-header>
                             <b-dropdown-divider></b-dropdown-divider>
@@ -78,6 +78,7 @@ import Player from "../../components/Playlist/Player"
 import Analyze from "../../components/Playlist/Analyze"
 import { playlistData } from "../../data/playlist"
 import Switches from "vue-switches";
+import http from "../../utils/http-common"
 export default {
     props: ['msg'],
     components:{
@@ -92,7 +93,6 @@ export default {
                 autoplay: 1
             },
             selectedPlaylistIndex: '-1',
-            selectedPlaylistTitle: '재생 목록',
             selectedPlaylist: '',
             selectedSong: {
                 index: '',
@@ -120,7 +120,6 @@ export default {
             this.selectedSong.src = src
             this.$store.state.visiblePlayButton = false
             this.$store.state.visiblePauseButton = true
-            console.log(this.selectedLayer)
         },
         play(msg) {
             if(msg === "play") {
@@ -130,7 +129,10 @@ export default {
                     this.$store.state.visiblePauseButton = false
                 }
                 else if(this.selectedSong.src === ''){
-                    this.selectedSong.selectedSong.index = 0;
+                    this.selectedSong.index = 0;
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
@@ -142,11 +144,17 @@ export default {
             else if(msg === "prev") {
                 if(this.selectedSong.index == 0) {
                     this.selectedSong.index = this.selectedPlaylist[length-1].src
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0;
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
@@ -159,16 +167,25 @@ export default {
             else if(msg === "next") {
                 if(this.selectedSong.index == this.selectedPlaylist.length-1) {
                     this.selectedSong.index = 0
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0;
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else {
                     this.selectedSong.index = this.selectedSong.index+1
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
@@ -177,18 +194,23 @@ export default {
         ended() {
             if(this.selectedSong.index >= this.selectedPlaylist.length-1) {
                 this.selectedSong.index = 0
+                this.selectedSong.img = this.selectedPlaylist[0].img
+                this.selectedSong.title = this.selectedPlaylist[0].title
+                this.selectedSong.artist = this.selectedPlaylist[0].artist
                 this.selectedSong.src = this.selectedPlaylist[0].src
                 this.player.playVideo()
             }
             else {
                 this.selectedSong.index = this.selectedSong.index+1
+                this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                 this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                 this.player.playVideo()
             }
         },
         selectPlaylist(index) {
             this.selectedPlaylistIndex = index
-            this.selectedPlaylistTitle = this.playlistData[index].title
             this.selectedPlaylist = this.playlistData[index].playlist
         }
     }
@@ -214,7 +236,7 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
