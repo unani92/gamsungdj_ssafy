@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Genre, Album, Song, Artist, Log
+from .models import Genre, Album, Song, Artist, Log, AlbumComment, SongComment
 from accounts.serializers import UserSerializer
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -38,3 +38,18 @@ class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Log
         fields = '__all__'
+
+class AlbumCommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False)
+    album = AlbumSerializer(required=False)
+    class Meta:
+        model = AlbumComment
+        fields = ['user', 'album', 'content', 'updated_at']
+
+class SongCommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False)
+    song = SongSerializer(required=False)
+    class Meta:
+        model = SongComment
+        fields = ['user', 'song', 'content', 'updated_at']
+
