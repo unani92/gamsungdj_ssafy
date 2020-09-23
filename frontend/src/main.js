@@ -30,6 +30,7 @@ import { getCurrentLanguage } from './utils'
 import GSignInButton from 'vue-google-signin-button'
 import VueYoutube from 'vue-youtube'
 
+const SERVER_URL = "http://localhost:8000/api/music/";
 Vue.use(IconsPlugin)
 Vue.use(GSignInButton)
 Vue.use(BootstrapVue);

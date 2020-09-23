@@ -2,8 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import Song, Album, Artist
-from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer
+from .models import Song, Album, Artist, Log, AlbumComment, SongComment
+from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
+
 # Create your views here.
 
 class SongType(APIView):
@@ -12,7 +13,7 @@ class SongType(APIView):
         serializer = SongSerializer(songs, many=True)
         return Response(serializer.data)
 
-class SongDetail(APIView):
+class CategoryDetail(APIView):
     def get(self, request, category, pk):
         if category == 'song':
             song = get_object_or_404(Song, pk=pk)
@@ -53,10 +54,166 @@ class SearchResult(APIView):
             })
 
 class CreateLog(APIView):
-    # @permission_classes([IsAuthenticated])
+    @permission_classes([IsAuthenticated])
+    def get(self, request):
+        logs = Log.objects.filter(user=request.user)
+        serializer = LogSerializer(logs, many=True)
+        return Response(serializer.data)
 
+    @permission_classes([IsAuthenticated])
     def post(self, request):
-        pk = request.data
-        print(pk)
-        print(True)
-        return Response({"data": 'true'})
+        pk = request.data['song']
+        song = get_object_or_404(Song, pk=pk)
+        log = Log.objects.create(song=song, user=request.user)
+        log.save()
+        serializer = LogSerializer(log)
+        return Response(serializer.data)
+
+    @permission_classes([IsAuthenticated])
+    def delete(self, request):
+        pk = request.data['id']
+        log = get_object_or_404(Log, pk=pk)
+        log.delete()
+        return Response({'msg': 'deleted'})
+
+class Like(APIView):
+    @permission_classes([IsAuthenticated])
+    def post(self, request, category, pk):
+        user = request.user
+        if category == 'song':
+            song = get_object_or_404(Song, pk=pk)
+            if user in song.user_like.all():
+                song.user_like.remove(user)
+                liked = False
+            else:
+                song.user_like.add(user)
+                liked = True
+            return Response({
+                "status": 200,
+                "liked": liked
+            })
+        elif category == 'album':
+            album = get_object_or_404(Album, pk=pk)
+            if user in album.user_like.all():
+                album.user_like.remove(user)
+                liked = False
+            else:
+                album.user_like.add(user)
+                liked = True
+            return Response({
+                "status": 200,
+                "liked": liked
+            })
+        else:
+            return Response({
+                "status": 400,
+                "msg": "잘못된 접근입니다."
+            })
+
+class AlbumCommentList(APIView):
+    def get(self, request, pk):
+        album = get_object_or_404(Album, pk=pk)
+        comments = AlbumComment.objects.filter(album=album)
+        serializer = AlbumCommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+    @permission_classes([IsAuthenticated])
+    def post(self, request, pk):
+        album = get_object_or_404(Album, pk=pk)
+        serializer = AlbumCommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user, album=album)
+            return Response(serializer.data)
+        else:
+            return Response({"msg": 'error'})
+
+    @permission_classes([IsAuthenticated])
+    def put(self, request, pk):
+        comment = get_object_or_404(AlbumComment, pk=pk)
+        if request.user.username == comment.user.username:
+            serializer = AlbumCommentSerializer(comment, data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response({
+                    "status": 200,
+                    "data": serializer.data
+                })
+            else:
+                return Response({
+                    "status": 500,
+                    "msg": "댓글 수정에 실패했습니다."
+                })
+        else:
+            return Response({
+                "status": 401,
+                "msg": "게시글 수정 권한이 없습니다."
+            })
+
+    @permission_classes([IsAuthenticated])
+    def delete(self, request, pk):
+        comment = get_object_or_404(AlbumComment, pk=pk)
+        if request.user.username == comment.user.username:
+            comment.delete()
+            return Response({
+                "status": 200,
+                "msg": "deleted"
+            })
+        else:
+            return Response({
+                "status": 401,
+                "msg": "게시글 삭제 권한이 없습니다."
+            })
+
+class SongCommentList(APIView):
+    def get(self, request, pk):
+        song = get_object_or_404(Song, pk=pk)
+        comments = SongComment.objects.filter(song=song)
+        serializer = SongCommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+    @permission_classes([IsAuthenticated])
+    def post(self, request, pk):
+        song = get_object_or_404(Song, pk=pk)
+        serializer = SongCommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user, song=song)
+            return Response(serializer.data)
+        else:
+            return Response({"msg": 'error'})
+
+    @permission_classes([IsAuthenticated])
+    def put(self, request, pk):
+        comment = get_object_or_404(SongComment, pk=pk)
+        if request.user.username == comment.user.username:
+            serializer = SongCommentSerializer(comment, data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response({
+                    "status": 200,
+                    "data": serializer.data
+                })
+            else:
+                return Response({
+                    "status": 500,
+                    "msg": "댓글 수정에 실패했습니다."
+                })
+        else:
+            return Response({
+                "status": 401,
+                "msg": "게시글 수정 권한이 없습니다."
+            })
+
+    @permission_classes([IsAuthenticated])
+    def delete(self, request, pk):
+        comment = get_object_or_404(SongComment, pk=pk)
+        if request.user.username == comment.user.username:
+            comment.delete()
+            return Response({
+                "status": 200,
+                "msg": "deleted"
+            })
+        else:
+            return Response({
+                "status": 401,
+                "msg": "게시글 삭제 권한이 없습니다."
+            })
