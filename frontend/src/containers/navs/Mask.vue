@@ -14,13 +14,13 @@
             <b-tabs card no-fade style="height:100%; width:100%;">
                 <b-tab title="Player" active title-item-class="w-50 text-center">
                     <div class="player-wrapper">
-                    <div class="float-right">
-                    <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
-                    </div>
-                    <div class="player" v-show="playerToggleFlag">
-                        <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
-                    </div>
-                    <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
+                        <div class="float-right">
+                            <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
+                        </div>
+                        <div class="player" v-show="playerToggleFlag">
+                            <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
+                        </div>
+                        <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
                     </div>
                 </b-tab>
                 <b-tab title="Analyze" title-item-class="w-50 text-center">
@@ -78,6 +78,7 @@ import Player from "../../components/Playlist/Player"
 import Analyze from "../../components/Playlist/Analyze"
 import { playlistData } from "../../data/playlist"
 import Switches from "vue-switches";
+import http from "../../utils/http-common"
 export default {
     props: ['msg'],
     components:{
@@ -120,7 +121,6 @@ export default {
             this.selectedSong.src = src
             this.$store.state.visiblePlayButton = false
             this.$store.state.visiblePauseButton = true
-            console.log(this.selectedLayer)
         },
         play(msg) {
             if(msg === "play") {
@@ -214,7 +214,7 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
