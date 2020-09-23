@@ -11,14 +11,14 @@
 						</div>
 						<div class="col-sm-8">
 							<b-row>
-								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData1.data.slice(0,5)" :key="index">
+								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData1_1" :key="index">
 								<b-card class="text-white" no-body  @mouseover="showOverlay(index)" @mouseout="hideOverlay(index)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+0)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -27,14 +27,14 @@
 								</b-colxx>
 							</b-row>
 							<b-row>
-								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData1.data.slice(5,10)" :key="index">
+								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData1_2" :key="index">
 								<b-card class="text-white" no-body @mouseover="showOverlay(index+5)" @mouseout="hideOverlay(index+5)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+5)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
 										<h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -45,7 +45,6 @@
 						</div>
                     </b-card>
                 </div>
-
                 <!-- 카테고리1 끝 -->
 
                 <!-- 카테고리2 시작 -->
@@ -55,14 +54,14 @@
 						</div>
 						<div class="col-sm-8">
 							<b-row>
-								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData2.data.slice(0,5)" :key="index">
+								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData2_1" :key="index">
 								<b-card class="text-white" no-body  @mouseover="showOverlay(index+10)" @mouseout="hideOverlay(index+10)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+10)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -71,14 +70,14 @@
 								</b-colxx>
 							</b-row>
 							<b-row>
-								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData2.data.slice(5,10)" :key="index">
+								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData2_2" :key="index">
 								<b-card class="text-white" no-body @mouseover="showOverlay(index+15)" @mouseout="hideOverlay(index+15)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+15)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -98,14 +97,14 @@
 						</div>
 						<div class="col-sm-8">
 							<b-row>
-								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData3.data.slice(0,5)" :key="index">
+								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData3_1" :key="index">
 								<b-card class="text-white" no-body  @mouseover="showOverlay(index+20)" @mouseout="hideOverlay(index+20)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+20)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -114,14 +113,14 @@
 								</b-colxx>
 							</b-row>
 							<b-row>
-								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData3.data.slice(5,10)" :key="index">
+								<b-colxx class="mb-4 mt-2" v-for="(data, index) in carouselData3_2" :key="index">
 								<b-card class="text-white" no-body @mouseover="showOverlay(index+25)" @mouseout="hideOverlay(index+25)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay tempclass" :class="'overlayClass'+(index+25)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -223,26 +222,30 @@
 import GlideComponent from '../../../components/Carousel/GlideComponent'
 import http from '../../../utils/http-common'
 import { dummyData1, dummyData2, dummyData3 } from "../../../data/dummyData"
+import { mapState } from 'vuex'
 
 export default {
     components: {
         'glide-component': GlideComponent,
     },
-	created(){
+	mounted(){
         http
         .get('sad')
         .then((data) => {
-			this.carouselData1 = data;
+            this.carouselData1_1 = data.data.slice(0, 5)
+            this.carouselData1_2 = data.data.slice(5, 10)
 		})
 		http
 		.get('joy')
         .then((data) => {
-			this.carouselData2 = data;
+			this.carouselData2_1 = data.data.slice(0, 5)
+            this.carouselData2_2 = data.data.slice(5, 10)
 		})
 		http
 		.get('love')
         .then((data) => {
-			this.carouselData3 = data;
+			this.carouselData3_1 = data.data.slice(0, 5)
+            this.carouselData3_2 = data.data.slice(5, 10)
         })
     },
     data() {
@@ -272,29 +275,44 @@ export default {
 			dummyData1 ,
 			dummyData2 ,
 			dummyData3 ,
-			carouselData1: '',
-			carouselData2: '',
-            carouselData3: '',   
+			carouselData1_1: '',
+			carouselData1_2: '',
+			carouselData2_1: '',
+			carouselData2_2: '',
+			carouselData3_1: '',
+			carouselData3_2: '', 
         }
+    },
+    computed: {
+        ...mapState([
+            'playlist'
+        ]),
     },
 	methods:{
 		tempFunction() {
 			alert("페이지 준비중입니다.");
         },
         showOverlay(index) {
-            // document.getElementById('card-img-overlay'+index).style.display="block"
-            const el = document.getElementsByClassName('overlayClass'+index)
+            let el = document.getElementsByClassName('overlayClass'+index)
             for(var i=0; i<el.length; i++){
                 el[i].style.display="block"
             }
         },
         hideOverlay(index) {
-            // document.getElementById('card-img-overlay'+index).style.display="none"
-            const el = document.getElementsByClassName('overlayClass'+index)
+            let el = document.getElementsByClassName('overlayClass'+index)
             for(var i=0; i<el.length; i++){
                 el[i].style.display="none"
             }
-        }
+        },
+        addToPlaylistAndPlay(data) {
+            this.playlist.unshift(data)
+            this.$store.state.playerControl = "add"
+            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+        },
+        addToPlaylist(data) {
+            this.playlist.push(data)
+            this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+        },
 	}
 }
 </script>

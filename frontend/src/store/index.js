@@ -16,11 +16,14 @@ export default new Vuex.Store({
     user : sessionStorage.getItem('user')?JSON.parse(sessionStorage.getItem("user")):[],
     visiblePlaylist: false,
     visiblePlayButton: true,
-    visibelPauseButton: false,
+    visiblePauseButton: false,
+    playlist: [],
+    playerControl: '',
   },
   getters: {
     config: (state) => ({headers: { Authorization: state.authorization }}),
-    currentUser: (state) =>  state.user
+    currentUser: (state) => state.user,
+    currentPlaylist: (state) => state.playlist
   },
 
   mutations: {

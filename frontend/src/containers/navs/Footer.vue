@@ -32,11 +32,6 @@
 </template>
 <script>
 export default {
-    watch:{
-        mask_height : function() {
-            console.log("test")
-        }
-    },
     mounted(){
         window.addEventListener("resize", this.handleResize);
     },
@@ -77,7 +72,7 @@ export default {
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
             }
-            this.$emit('action', msg)
+            this.$store.state.playerControl = msg
         },
     }
 }

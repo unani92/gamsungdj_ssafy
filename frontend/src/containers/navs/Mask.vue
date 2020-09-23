@@ -37,28 +37,30 @@
                     <b-card class="mb-3">
                         <!-- 헤더 시작 -->
                         <h3 style="display:inline-block; margin-top:12px">재생 목록</h3>
+                        <span v-if="this.$store.state.user">
                         <b-dropdown id="ddown1" text="재생 목록 불러오기" variant="outline-secondary" class="float-right">
                             <b-dropdown-header>나의 재생 목록</b-dropdown-header>
                             <b-dropdown-divider></b-dropdown-divider>
                             <b-dropdown-item v-for="(data, index) in playlistData" :key="index" @click="selectPlaylist(index)">{{ data.title }}</b-dropdown-item>
                         </b-dropdown>
+                        </span>
                         <!-- 헤더 끝 --><hr>
 
                         <!-- 바디 시작 -->
-                        <div class="playlist-item-wrapper" v-for="(data, index) in selectedPlaylist" :key="index">
+                        <div class="playlist-item-wrapper" v-for="(data, index) in playlist" :key="index">
                             <!-- 재생 중인 곡 표시 시작-->
                             <!-- <div class="d-flex flex-row" style="padding:10px; cursor:pointer; position:absolute; width:100%">
                                 <music-bar />
                             </div> -->
                             <!-- 재생 중인 곡 표시 끝 -->
-                            <div class="d-flex flex-row" style="padding:10px; cursor:pointer" @click="selectSong(index, data.img, data.title, data.artist, data.src)">
-                                <img :src="data.img" :alt="data.title" class="list-thumbnail border-0" />
+                            <div class="d-flex flex-row" style="padding:10px; cursor:pointer" @click="selectSong(index, data)">
+                                <img :src="data.img" :alt="data.name" class="list-thumbnail border-0" />
                                 <div class="pl-3 pt-2 pr-2 pb-2">
-                                    <p class="list-item-heading">{{ data.title }}</p>
+                                    <p class="list-item-heading">{{ data.name }}</p>
                                     <div class="pr-4">
-                                        <p class="text-muted mb-1 text-small">{{ data.artist }}</p>
+                                        <p class="text-muted mb-1 text-small">{{ data.artist[0].name }}</p>
                                     </div>
-                                    <!-- <div class="text-primary text-small font-weight-medium d-none d-sm-block">{{ data.artist }}</div> -->
+                                    <!-- <div class="text-primary text-small font-weight-medium d-none d-sm-block">{{ data.artist[0].name }}</div> -->
                                 </div>
                             </div>
                         </div>
@@ -77,10 +79,12 @@ import MusicBar from "../../components/Playlist/Musicbar"
 import Player from "../../components/Playlist/Player"
 import Analyze from "../../components/Playlist/Analyze"
 import { playlistData } from "../../data/playlist"
+import { mapState } from "vuex"
 import Switches from "vue-switches";
 import http from "../../utils/http-common"
+
 export default {
-    props: ['msg'],
+    props: ['state'],
     components:{
         'music-bar': MusicBar,
         'player': Player,
@@ -92,8 +96,6 @@ export default {
             playerVars: {
                 autoplay: 1
             },
-            selectedPlaylistIndex: '-1',
-            selectedPlaylist: '',
             selectedSong: {
                 index: '',
                 img: '',
@@ -102,116 +104,134 @@ export default {
                 src: '',
             },
             playlistData,
-            playerToggleFlag: false
+            playerToggleFlag: false,
         }
     },
     computed: {
+        ...mapState([
+            'playlist',
+            'playerControl'
+        ]),
         player() {
             return this.$refs.youtube.player
         }
-        
     },
-    methods: {
-        selectSong(index, img, title, artist, src) {
-            this.selectedSong.index = index
-            this.selectedSong.img = img
-            this.selectedSong.title = title
-            this.selectedSong.artist = artist
-            this.selectedSong.src = src
-            this.$store.state.visiblePlayButton = false
-            this.$store.state.visiblePauseButton = true
-        },
-        play(msg) {
-            if(msg === "play") {
-                if(this.selectedPlaylist.length == 0){
-                    alert("playlist is empty")
+    watch: {
+        playerControl: function(state) {
+            if(state === "play") {
+                if(this.playlist.length == 0) {
+                    this.$notify('info', "재생 목록이 비어있습니다.", "", "",{ duration: 5000, permanent: false })
                     this.$store.state.visiblePlayButton = true
                     this.$store.state.visiblePauseButton = false
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0;
-                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
-                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
-                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
-                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
-                else
+                else{
                     this.player.playVideo()
+                }
             }
-            else if(msg === "pause")
+            else if(state === "pause")
                 this.player.pauseVideo()
-            else if(msg === "prev") {
+            else if(state === "prev") {
                 if(this.selectedSong.index == 0) {
-                    this.selectedSong.index = this.selectedPlaylist[length-1].src
-                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
-                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
-                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
-                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
+                    this.selectedSong.index = this.playlist.length-1
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0;
-                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
-                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
-                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
-                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else {
                     this.selectedSong.index = this.selectedSong.index-1
-                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
             }
-            else if(msg === "next") {
-                if(this.selectedSong.index == this.selectedPlaylist.length-1) {
+            else if(state === "next") {
+                if(this.selectedSong.index == this.playlist.length-1) {
                     this.selectedSong.index = 0
-                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
-                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
-                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
-                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0;
-                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
-                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
-                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
-                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else {
                     this.selectedSong.index = this.selectedSong.index+1
-                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
-                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
-                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
-                    this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
             }
+            else if(state === "add") {
+                this.selectedSong.index = 0;
+                this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                this.selectedSong.src = this.playlist[this.selectedSong.index].src
+            }
+            this.$store.state.playerControl = ''
+        }
+    },
+    methods: {
+        selectSong(index, data) {
+            this.selectedSong.index = index
+            this.selectedSong.img = data.img
+            this.selectedSong.title = data.name
+            this.selectedSong.artist = data.artist[0].name
+            this.selectedSong.src = data.src
+            this.$store.state.visiblePlayButton = false
+            this.$store.state.visiblePauseButton = true
         },
         ended() {
-            if(this.selectedSong.index >= this.selectedPlaylist.length-1) {
+            if(this.selectedSong.index >= this.playlist.length-1) {
                 this.selectedSong.index = 0
-                this.selectedSong.img = this.selectedPlaylist[0].img
-                this.selectedSong.title = this.selectedPlaylist[0].title
-                this.selectedSong.artist = this.selectedPlaylist[0].artist
-                this.selectedSong.src = this.selectedPlaylist[0].src
+                this.selectedSong.img = this.playlist[0].img
+                this.selectedSong.title = this.playlist[0].name
+                this.selectedSong.artist = this.playlist[0].artist[0].name
+                this.selectedSong.src = this.playlist[0].src
                 this.player.playVideo()
             }
             else {
                 this.selectedSong.index = this.selectedSong.index+1
-                this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
-                this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
-                this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
-                this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
+                this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 this.player.playVideo()
             }
         },
         selectPlaylist(index) {
-            this.selectedPlaylistIndex = index
-            this.selectedPlaylist = this.playlistData[index].playlist
+            for(let i=0; i<this.playlistData[index].playlist.length; i++){
+                this.playlist.push(this.playlistData[index].playlist[i])
+            }
         }
     }
 }
