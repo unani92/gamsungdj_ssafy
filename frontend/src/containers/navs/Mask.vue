@@ -130,7 +130,10 @@ export default {
                     this.$store.state.visiblePauseButton = false
                 }
                 else if(this.selectedSong.src === ''){
-                    this.selectedSong.selectedSong.index = 0;
+                    this.selectedSong.index = 0;
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
@@ -142,11 +145,17 @@ export default {
             else if(msg === "prev") {
                 if(this.selectedSong.index == 0) {
                     this.selectedSong.index = this.selectedPlaylist[length-1].src
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0;
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
@@ -159,16 +168,25 @@ export default {
             else if(msg === "next") {
                 if(this.selectedSong.index == this.selectedPlaylist.length-1) {
                     this.selectedSong.index = 0
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0;
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
                 else {
                     this.selectedSong.index = this.selectedSong.index+1
+                    this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                    this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                    this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                     this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                     this.player.playVideo()
                 }
@@ -177,11 +195,17 @@ export default {
         ended() {
             if(this.selectedSong.index >= this.selectedPlaylist.length-1) {
                 this.selectedSong.index = 0
+                this.selectedSong.img = this.selectedPlaylist[0].img
+                this.selectedSong.title = this.selectedPlaylist[0].title
+                this.selectedSong.artist = this.selectedPlaylist[0].artist
                 this.selectedSong.src = this.selectedPlaylist[0].src
                 this.player.playVideo()
             }
             else {
                 this.selectedSong.index = this.selectedSong.index+1
+                this.selectedSong.img = this.selectedPlaylist[this.selectedSong.index].img
+                this.selectedSong.title = this.selectedPlaylist[this.selectedSong.index].title
+                this.selectedSong.artist = this.selectedPlaylist[this.selectedSong.index].artist
                 this.selectedSong.src = this.selectedPlaylist[this.selectedSong.index].src
                 this.player.playVideo()
             }
