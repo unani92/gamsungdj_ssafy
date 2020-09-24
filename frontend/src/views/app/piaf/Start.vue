@@ -311,7 +311,7 @@ export default {
         },
         addToPlaylist(data) {
             this.playlist.push(data)
-            this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+            this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
         },
 	}
 }

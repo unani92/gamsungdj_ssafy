@@ -208,10 +208,15 @@ export default {
             else if(state === "add") {
                 if(this.selectedSong.index!='')
                     this.unmarkPlayingIndex(this.selectedSong.index+1)
+                console.log("1")
                 this.selectedSong.index = 0
+                console.log("2")
                 this.markPlayingIndex(this.selectedSong.index)
+                console.log("3")
                 this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                console.log("4")
                 this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                console.log("5")
                 this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                 this.selectedSong.src = this.playlist[this.selectedSong.index].src
             }
@@ -265,9 +270,11 @@ export default {
             document.getElementById('playlist-item-overlay'+index).style.display = "none"
         },
         markPlayingIndex(index) {
+            console.log(index+"unmarked")
             document.getElementById('playlist-item-playing'+index).style.display = "block"
         },
         unmarkPlayingIndex(index) {
+            console.log(index+"marked")
             document.getElementById('playlist-item-playing'+index).style.display = "none"
         }
     }
