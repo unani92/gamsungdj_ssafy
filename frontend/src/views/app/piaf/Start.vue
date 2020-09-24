@@ -15,12 +15,13 @@
 								<b-card class="text-white" no-body @mouseover="showOverlay(index)" @mouseout="hideOverlay(index)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+0)">
-                                        <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                            <span :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
-                                        </div>
-                                        <h5 class="card-title">{{ data.name }}</h5>
+                    <div style="position:absolute; bottom:10%;">
+                      <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                      <span v-if="$store.state.isLoggedin && $store.state.user.like_songs.includes(Number(data.id))" :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer; color: red" @click="songLike"></span>
+                      <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                      <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                    </div>
+                    <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
@@ -294,7 +295,7 @@ export default {
     },
 	methods:{
     async songLike(e) {
-      const { id } = e.target
+      const { id, style } = e.target
       const authToken = this.$store.state.authorization
       const config = {
         headers: {
@@ -302,8 +303,8 @@ export default {
         }
       }
       try {
-        const res = await http.post(`song/${id}/like/`, '',config)
-        console.log(res.data)
+        const { data } = await http.post(`song/${id}/like/`, '',config)
+        e.target.classList.toggle('liked')
       } catch (e) {
         console.log(e)
       }
@@ -392,5 +393,8 @@ export default {
 	background: url('/assets/img/wordcloud/wc04.png') no-repeat;
     background-size: contain;
 	background-position: center center;
+}
+.liked {
+  color: red;
 }
 </style>
