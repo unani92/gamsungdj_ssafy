@@ -306,8 +306,8 @@ export default {
         },
         addToPlaylistAndPlay(data) {
             this.playlist.unshift(data)
+            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false }) 
             this.$store.state.playerControl = "add"
-            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
         },
         addToPlaylist(data) {
             this.playlist.push(data)
