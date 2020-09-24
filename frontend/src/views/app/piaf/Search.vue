@@ -84,14 +84,14 @@
                   <tbody style="font-size: x-large;">
                     <tr :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice(0,songListSize)" v-bind:key="index" style="cursor:pointer;">
                       <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.name}}</td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{limitString(song.name)}}</td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                       <td style="vertical-align: middle;" @click.prevent="playSong(song.id)"><div class="glyph-icon simple-icon-control-play"/></td>
                       <td style="vertical-align: middle;" @click.prevent="addSong(song.id)"><div class="glyph-icon simple-icon-playlist"/></td>
-                      <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td>
-                      <!-- <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                      <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td> -->
+                      <!-- <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td> -->
+                      <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
                   </tbody>
               </table>
@@ -106,52 +106,52 @@
     <b-colxx xxs="12">
       <template v-if="isAlbum">
         <template v-if="!moreAlbum">
-            <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
-          </template>
-          <template v-else>
-            <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right  cursor:pointer">접기∧</a></h2>
-          </template>
-            <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;">
-                <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(0,5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
-                    <div class="position-relative">
-                        <img :src="album.img" class="card-img-top"/>
-                    </div>
-                    <b-card-body>
-                        <b-row>
-                            <b-colxx>
-                                <h4 style="font-weight :bold">{{album.name}}</h4>
-                                <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
-                                <h6 v-if="album.genre">장르:<a v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</a></h6>
-                                <h6>발매일: {{album.released_date}}</h6>
-                            </b-colxx>
-                        </b-row>
-                    </b-card-body>
-                </b-card>
-            </b-colxx>
-            <template v-if="moreAlbum">
-                <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;" v-for="n in parseInt((albums.length-1)/5)" v-bind:key="n">
-                  <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(n*5,(n+1)*5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
-                    <div class="position-relative">
-                      <img :src="album.img" class="card-img-top"/>
-                    </div>
-                    <b-card-body>
-                        <b-row>
-                            <b-colxx xxs="10" class="mb-3">
-                                <h4 style="font-weight :bold">{{album.name}}</h4>
-                                <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
-                                <h6 v-if="album.genre">장르: {{album.genre}}</h6>
-                                <h6>발매일: {{album.released_date}}</h6>
-                                <h1> {{album.like}}</h1>
-                            </b-colxx>
-                        </b-row>
-                    </b-card-body>
-                  </b-card>
-                </b-colxx>
-              </template>
-          </template>
-        <template v-else>
-          <div class="loading"></div>
+          <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
         </template>
+        <template v-else>
+          <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right; cursor:pointer">접기∧</a></h2>
+        </template>
+        <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;">
+            <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(0,5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
+                <div class="position-relative">
+                    <img :src="album.img" class="card-img-top"/>
+                </div>
+                <b-card-body>
+                    <b-row>
+                        <b-colxx>
+                            <h4 style="font-weight :bold">{{album.name}}</h4>
+                            <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
+                            <h6 v-if="album.genre">장르:<a v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</a></h6>
+                            <h6>발매일: {{dateformat(album.released_date)}}</h6>
+                            <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                            <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                        </b-colxx>
+                    </b-row>
+                </b-card-body>
+            </b-card>
+        </b-colxx>
+        <template v-if="moreAlbum">
+          <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;" v-for="n in parseInt((albums.length-1)/5)" v-bind:key="n">
+            <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(n*5,(n+1)*5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
+              <div class="position-relative">
+                <img :src="album.img" class="card-img-top"/>
+              </div>
+              <b-card-body>
+                <b-row>
+                    <b-colxx xxs="10" class="mb-3">
+                        <h4 style="font-weight :bold">{{album.name}}</h4>
+                        <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
+                        <h6 v-if="album.genre">장르: {{album.genre}}</h6>
+                        <h6>발매일: {{dateformat(album.released_date)}}</h6>
+                        <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                        <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                    </b-colxx>
+                </b-row>
+              </b-card-body>
+            </b-card>
+          </b-colxx>
+        </template>
+      </template>
     </b-colxx>
   </b-row>
 
@@ -159,6 +159,7 @@
 </template>
 <script>
 import http from "../../../utils/http-common";
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 export default {
   components: {
   },
@@ -184,15 +185,12 @@ export default {
         this.albums = rest.data;
         if(this.albums.length!=0){
           this.isAlbum=true;
-          var i=0; 
-          for(i=0;i<this.albums.length;i++){
-            this.albums[i].released_date = rest.data[i].released_date.substr(0,4) + "-" + rest.data[i].released_date.substr(4,2) + "-" + rest.data[i].released_date.substr(6,2);
-          }
         }
     })
   },
   data () {
     return {
+      clickAlbumLike: false,
       sort_value : "",
 	  	sort_type : 'asc',
       isArtist: false,
@@ -232,7 +230,12 @@ export default {
       this.$router.push('/app/piaf/songDetail/'+id)
     },
     detailAlbum: function(id){
-      this.$router.push('/app/piaf/albumDetail/'+id)
+      if(!this.clickAlbumLike){
+        this.$router.push('/app/piaf/albumDetail/'+id)
+      }else{
+        this.clickAlbumLike=false;
+      }
+      
     },
     playSong: function(id) {
       alert(id+"실행");
@@ -241,7 +244,51 @@ export default {
       alert(id+"추가");
     },
     likeSong: function(id) {
-      alert(id+"좋아요");
+      console.log(this.$store.state.authorization)
+      if(this.user.like_songs){
+        http.post(`song/${id}/like/`,'',{
+          headers: {
+            Authorization: this.$store.state.authorization
+          },
+        })
+        .then((rest) => {
+          console.log(rest.data)
+          if(rest.data.liked){
+            this.user.like_songs.push(id);
+          }else{
+            for(var i=0;i<this.user.like_songs.length;i++){
+              if(this.user.like_songs[i]==id){
+                this.user.like_songs.splice(i, 1);
+                break;
+              }
+            }
+          }
+      })
+      }
+    },
+    likeAlbum: function(id) {
+      this.clickAlbumLike = true;
+      console.log(this.$store.state.authorization)
+      if(this.user.like_albums){
+        http.post(`album/${id}/like/`,'',{
+          headers: {
+            Authorization: this.$store.state.authorization
+          },
+        })
+        .then((rest) => {
+          console.log(rest.data)
+          if(rest.data.liked){
+            this.user.like_albums.push(id);
+          }else{
+            for(var i=0;i<this.user.like_albums.length;i++){
+              if(this.user.like_albums[i]==id){
+                this.user.like_albums.splice(i, 1);
+                break;
+              }
+            }
+          }
+      })
+      }
     },
     changeSortValue(value) {
       if(this.sort_value != value){
@@ -272,6 +319,38 @@ export default {
         tag2.style.color = "";
       }
     },
+    limitString(songName) {
+      if(songName.length>26){
+        return songName.substr(0,22) + "...";
+      }else{
+        return songName;
+      }
+    },
+    dateformat(albumDate) {
+      return albumDate.substr(0,4) + "-" + albumDate.substr(4,2) + "-" + albumDate.substr(6,2);
+    },
+    checkLikeSong(songID){
+      if(this.user.like_songs){
+        for(var i=0;i<this.user.like_songs.length;i++){
+          if(this.user.like_songs[i]==songID){
+            return true;
+          }
+        }
+        return false;
+      }
+      return false;
+    },
+    checkLikeAlbum(albumID){
+       if(this.user.like_albums){
+         for(var i=0;i<this.user.like_albums.length;i++){
+          if(this.user.like_albums[i]==albumID){
+            return true;
+          }
+        }
+        return false;
+       }
+      return false;
+    }
 
   },
   computed: {
@@ -306,11 +385,17 @@ export default {
 			}
 		}
 		return this.songs.sort((a, b) => {
-			return a.id - b.id
+			return b.id - a.id
 		})
 
     },
-  }
-
+    ...mapGetters({
+      currentUser: "currentUser",
+      // menuType: "getMenuType",
+      // menuClickCount: "getMenuClickCount",
+      // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
+    }),
+    ...mapState(['authorization', 'user', 'isLoggedin'])
+  },
 }
 </script>

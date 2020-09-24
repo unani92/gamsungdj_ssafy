@@ -13,11 +13,12 @@
                 </div>
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{song.name}}</h1><br>
-                  <h1 class="mb-0 truncate text-large"><router-link :to="'/app/piaf/artistDetail/'+song.artist[0].id" class="text-primary">{{song.artist[0].name}}</router-link></h1><br>
+                  <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in song.artist" v-bind:key="index"><router-link :to="'/app/piaf/artistDetail/'+singer.id" class="text-primary mr-3 ">{{singer.name}}</router-link></a></h1><br>
                   <h2 class="mb-0 truncate">앨범: <router-link :to="'/app/piaf/albumDetail/'+song.album.id" class="text-primary">{{song.album.name}}</router-link></h2><br>
                   <h3 class="mb-0 truncate " style="display: inline-flex;">장르:<h3 class="ml-1" v-for="(genre, index) in song.genres" v-bind:key="index"> {{genre.name}}</h3></h3><br>
                   <h3 class="mb-0 truncate">감정: {{song.type}}</h3>
-                  <h1 class="mb-0 truncate glyph-icon simple-icon-heart mt-5 text-large"> {{song.like}}</h1>
+                  <h1 v-if="!checkLikeSong(song.id)" class="mb-0 truncate mt-5 text-large"><img src="../../../assets/img/heart/heart_empty.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{song.like}}</h1>
+                  <h1 v-if="checkLikeSong(song.id)" class="mb-0 truncate mt-5 text-large"><img src="../../../assets/img/heart/heart_full.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{song.like}}</h1>
                 </div>
         </b-colxx>
       </b-colxx>
@@ -42,6 +43,7 @@
 </template>
 <script>
 import http from "../../../utils/http-common";
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 export default {
   components: {
   },
@@ -61,11 +63,52 @@ export default {
     }
   },
   methods: {
-
+    checkLikeSong(songID){
+      if(this.user.like_songs){
+        for(var i=0;i<this.user.like_songs.length;i++){
+          if(this.user.like_songs[i]==songID){
+            return true;
+          }
+        }
+        return false;
+      }
+      return false;
+    },
+    likeSong: function(id) {
+      console.log(this.$store.state.authorization)
+      if(this.user.like_songs){
+        http.post(`song/${id}/like/`,'',{
+          headers: {
+            Authorization: this.$store.state.authorization
+          },
+        })
+        .then((rest) => {
+          console.log(rest.data)
+          if(rest.data.liked){
+            this.user.like_songs.push(id);
+          }else{
+            for(var i=0;i<this.user.like_songs.length;i++){
+              if(this.user.like_songs[i]==id){
+                this.user.like_songs.splice(i, 1);
+                break;
+              }
+            }
+          }
+      })
+      }
+    },
   },
   mounted() {
     this.songID = this.$route.params.songID;
   },
-
+  computed: {
+    ...mapGetters({
+      currentUser: "currentUser",
+      // menuType: "getMenuType",
+      // menuClickCount: "getMenuClickCount",
+      // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
+    }),
+    ...mapState(['authorization', 'user', 'isLoggedin'])
+  },
 }
 </script>
