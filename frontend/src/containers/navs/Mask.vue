@@ -56,7 +56,7 @@
                                 <music-bar style="position:relative; left:16px; top:16px; display:none;" :id="'playlist-item-playing'+index" />
 
                                 <!-- 마우스 오버시 보이는 부분 -->
-                                <span style="position:absolute; left:85%; float:right; display:none;" :id="'playlist-item-overlay'+index"><font size="6">x</font></span>
+                                <span style="position:absolute; left:85%; float:right; display:none;" :id="'playlist-item-overlay'+index" @click.prevent="remove(index)"><font size="6">x</font></span>
 
                                 <img :src="data.img" :alt="data.name" class="list-thumbnail border-0" />
                                 <div class="pl-3 pt-2 pr-2 pb-2">
@@ -101,7 +101,7 @@ export default {
                 autoplay: 1
             },
             selectedSong: {
-                index: '',
+                index: -1,
                 img: '',
                 title: '',
                 artist: '',
@@ -204,8 +204,8 @@ export default {
                     this.markPlayingIndex(this.selectedSong.index)
                     this.selectedSong.img = this.playlist[this.selectedSong.index].img
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
-                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -224,7 +224,7 @@ export default {
     },
     methods: {
         selectSong(index, data) {
-            if(this.selectedSong.index==='') {
+            if(this.selectedSong.index == -1) {
                 this.selectedSong.index = index
                 this.markPlayingIndex(this.selectedSong.index)
                 this.selectedSong.img = data.img
@@ -286,6 +286,50 @@ export default {
         },
         unmarkPlayingIndex(index) {
             document.getElementById('playlist-item-playing'+index).style.display = "none"
+        },
+        remove(index) {
+            event.stopPropagation();
+            // 재생 중인 곡보다 앞번호일 경우
+            if(index < this.selectedSong.index) {
+                this.playlist = this.playlist.splice(index, 1)
+                this.unmarkPlayingIndex(this.selectedSong.index)
+                this.markPlayingIndex(this.selectedSong.index-1)
+                this.selectedSong.index=this.selectedSong.index-1
+            }
+            // 재생 중인 곡일 경우
+            else if(index == this.selectedSong.index) {
+                // 한곡만 남은 경우 
+                if(index == 0 && this.playlist.length == 1) {
+                    this.playlist = this.playlist.splice(index, 1)
+                    this.selectedSong.index = -1
+                    this.selectedSong.img = ''
+                    this.selectedSong.title = ''
+                    this.selectedSong.artist = ''
+                    this.selectedSong.src = ''
+                }
+                // 마지막 곡일 경우
+                else if(index == this.playlist.length-1) {
+                    this.playlist = this.playlist.splice(index, 1)
+                    this.selectedSong.index = 0
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.markPlayingIndex(this.selectedSong.index)
+                }
+                else {
+                    this.playlist = this.playlist.splice(index, 1)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                }
+                
+            }
+            else {
+                
+                this.playlist = this.playlist.splice(index, 1)
+            }
         }
     }
 }
