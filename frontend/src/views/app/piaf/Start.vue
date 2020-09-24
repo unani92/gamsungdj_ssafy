@@ -17,7 +17,7 @@
 									<div class="card-img-overlay" :class="'overlayClass'+(index+0)">
                                         <div style="position:absolute; bottom:10%;">
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -33,7 +33,7 @@
 									<div class="card-img-overlay" :class="'overlayClass'+(index+5)">
                                         <div style="position:absolute; bottom:10%;">
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
 										<h5 class="card-title">{{ data.name }}</h5>
@@ -60,7 +60,7 @@
 									<div class="card-img-overlay" :class="'overlayClass'+(index+10)">
                                         <div style="position:absolute; bottom:10%;">
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -76,7 +76,7 @@
 									<div class="card-img-overlay" :class="'overlayClass'+(index+15)">
                                         <div style="position:absolute; bottom:10%;">
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -103,7 +103,7 @@
 									<div class="card-img-overlay" :class="'overlayClass'+(index+20)">
                                         <div style="position:absolute; bottom:10%;">
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -119,7 +119,7 @@
 									<div class="card-img-overlay tempclass" :class="'overlayClass'+(index+25)">
                                         <div style="position:absolute; bottom:10%;">
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                            <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                            <span :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -293,6 +293,22 @@ export default {
         ]),
     },
 	methods:{
+    async songLike(e) {
+      const { id } = e.target
+      const authToken = this.$store.state.authorization
+      const config = {
+        headers: {
+          Authorization: authToken
+        }
+      }
+      try {
+        const res = await http.post(`song/${id}/like/`, '',config)
+        console.log(res.data)
+      } catch (e) {
+        console.log(e)
+      }
+
+    },
 		tempFunction() {
 			alert("페이지 준비중입니다.");
         },
