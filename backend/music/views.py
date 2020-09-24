@@ -95,6 +95,7 @@ class Like(APIView):
     @permission_classes([IsAuthenticated])
     def post(self, request, category, pk):
         user = request.user
+        print(user)
         if category == 'song':
             song = get_object_or_404(Song, pk=pk)
             if user in song.user_like.all():
