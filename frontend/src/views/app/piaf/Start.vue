@@ -351,10 +351,23 @@ export default {
 }
 </script>
 <style scoped>
+.card-title {
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
+    width:100%;
+    overflow:hidden;
+}
+.card-text {
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
+    width:100%;
+    overflow:hidden;
+}
 .card-img-overlay {
     white-space: nowrap;
     overflow:hidden;
-    text-overflow:ellipsis;
     display:none;
 }
 .main-carousel-bg1 {
