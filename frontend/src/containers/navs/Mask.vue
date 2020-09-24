@@ -135,7 +135,6 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                    this.player.playVideo()
                 }
                 else{
                     this.player.playVideo()
@@ -152,7 +151,6 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                    this.player.playVideo()
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0
@@ -161,7 +159,6 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                    this.player.playVideo()
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -171,7 +168,6 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                    this.player.playVideo()
                 }
             }
             else if(state === "next") {
@@ -183,7 +179,6 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                    this.player.playVideo()
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0
@@ -192,7 +187,6 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                    this.player.playVideo()
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -202,40 +196,55 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                    this.player.playVideo()
                 }
             }
             else if(state === "add") {
-                if(this.selectedSong.index!='')
-                    this.unmarkPlayingIndex(this.selectedSong.index+1)
-                console.log("1")
-                this.selectedSong.index = 0
-                console.log("2")
-                this.markPlayingIndex(this.selectedSong.index)
-                console.log("3")
-                this.selectedSong.img = this.playlist[this.selectedSong.index].img
-                console.log("4")
-                this.selectedSong.title = this.playlist[this.selectedSong.index].name
-                console.log("5")
-                this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
-                this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                this.player.playVideo()
+                if(this.playlist.length == 1) {
+                    this.selectedSong.index = 0
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                }
+                else {
+                    this.unmarkPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.index = 0
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                }
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
             }
             this.$store.state.playerControl = ''
         }
     },
     methods: {
         selectSong(index, data) {
-            if(this.selectedSong.index!='')
-                    this.unmarkPlayingIndex(this.selectedSong.index)
-            this.selectedSong.index = index
-            this.markPlayingIndex(this.selectedSong.index)
-            this.selectedSong.img = data.img
-            this.selectedSong.title = data.name
-            this.selectedSong.artist = data.artist[0].name
-            this.selectedSong.src = data.src
-            this.$store.state.visiblePlayButton = false
-            this.$store.state.visiblePauseButton = true
+            if(this.selectedSong.index==='') {
+                this.selectedSong.index = index
+                this.markPlayingIndex(this.selectedSong.index)
+                this.selectedSong.img = data.img
+                this.selectedSong.title = data.name
+                this.selectedSong.artist = data.artist[0].name
+                this.selectedSong.src = data.src
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
+            }
+            else {
+                this.unmarkPlayingIndex(this.selectedSong.index)
+                this.selectedSong.index = index
+                this.markPlayingIndex(this.selectedSong.index)
+                this.selectedSong.img = data.img
+                this.selectedSong.title = data.name
+                this.selectedSong.artist = data.artist[0].name
+                this.selectedSong.src = data.src
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
+            }
         },
         ended() {
             if(this.selectedSong.index >= this.playlist.length-1) {
@@ -271,11 +280,11 @@ export default {
             document.getElementById('playlist-item-overlay'+index).style.display = "none"
         },
         markPlayingIndex(index) {
-            console.log(index+"unmarked")
-            document.getElementById('playlist-item-playing'+index).style.display = "block"
+            setTimeout(function(){
+                document.getElementById('playlist-item-playing'+index).style.display = "block"
+            }, 100)
         },
         unmarkPlayingIndex(index) {
-            console.log(index+"marked")
             document.getElementById('playlist-item-playing'+index).style.display = "none"
         }
     }

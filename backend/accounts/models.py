@@ -30,6 +30,6 @@ class UserProfile(models.Model):
 
 
 class UserPlayList(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_playlists")
     song = models.ManyToManyField(Song, related_name="playlist_songs")
     name = models.CharField(max_length=128)

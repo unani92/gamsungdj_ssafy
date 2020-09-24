@@ -23,7 +23,7 @@
 </template>
 
 <script>
-const baseURL = "http://localhost:8000/"
+const baseURL = "http://localhost:8000/api/"
 import axios from 'axios'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";

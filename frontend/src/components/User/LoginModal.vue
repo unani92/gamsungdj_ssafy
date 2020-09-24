@@ -31,7 +31,7 @@
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
 import JoinForm from './JoinForm.vue'
-const baseURL = "http://localhost:8000/"
+const baseURL = "http://localhost:8000/api/"
 import axios from 'axios'
 import { mapActions, mapState, mapGetters } from 'vuex'
 

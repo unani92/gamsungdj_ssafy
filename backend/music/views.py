@@ -29,9 +29,9 @@ class CategoryDetail(APIView):
                 try:
                     s = Song.objects.filter(name__exact=song, album=album)[0]
                     serializer = SongSerializer(s)
-                    arr.append({idx: serializer.data})
+                    arr.append(serializer.data)
                 except:
-                    arr.append({idx: ''})
+                    arr.append('')
 
             serializer = AlbumSerializer(album)
             return Response({
