@@ -1,9 +1,9 @@
 <template>
     <!--
         참고
-        https://developers.google.com/youtube/iframe_api_reference#Events 
+        https://developers.google.com/youtube/iframe_api_reference#Events
         https://www.npmjs.com/package/vue-youtube
-        
+
         문제점
         1. 컬러가 정해져 있지 않아서 재생 중인 곡을 선택 했을 때 css 를 변경하면 다시 복구할 수 없음
         2. index 로 접근하기 때문에 재생 중 다른 플레이리스트를 가져왔을 때 문제가 생김
@@ -51,7 +51,7 @@
                                 @mouseover="showOverlay(index)"
                                 @mouseout="hideOverlay(index)"
                             >
-                                
+
                                 <!-- 재생 중인 곡만 보이는 부분 -->
                                 <music-bar style="position:relative; left:16px; top:16px; display:none;" :id="'playlist-item-playing'+index" />
 
@@ -219,6 +219,7 @@ export default {
                 console.log("5")
                 this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                 this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                this.player.playVideo()
             }
             this.$store.state.playerControl = ''
         }

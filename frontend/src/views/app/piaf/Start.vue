@@ -189,7 +189,7 @@
         </b-colxx>
     </b-row>
 	<!-- 시간 매칭 추천 끝 -->
-	
+
 	<!-- 기분 매칭 추천 시작 -->
     <b-row>
         <b-colxx xxs="12">
@@ -223,6 +223,10 @@ import GlideComponent from '../../../components/Carousel/GlideComponent'
 import http from '../../../utils/http-common'
 import { dummyData1, dummyData2, dummyData3 } from "../../../data/dummyData"
 import { mapState } from 'vuex'
+import axios from 'axios'
+
+const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
+const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
 
 export default {
     components: {
@@ -280,7 +284,7 @@ export default {
 			carouselData2_1: '',
 			carouselData2_2: '',
 			carouselData3_1: '',
-			carouselData3_2: '', 
+			carouselData3_2: '',
         }
     },
     computed: {
@@ -305,8 +309,25 @@ export default {
             }
         },
         addToPlaylistAndPlay(data) {
-            this.playlist.unshift(data)
-            this.$store.state.playerControl = "add"
+		        console.log(data.artist[0].name + ' ' + data.name)
+		        axios.get(youtubeURL, {
+		          params: {
+		            key: API_KEY,
+                part: 'snippet',
+                maxResults: 1,
+                type: 'video',
+                q: data.artist[0].name + ' ' + data.name
+              }
+            })
+              .then(res => {
+                const { items } = res.data
+                const { videoId } = items[0].id
+                data['src'] = videoId
+                console.log(data['src'])
+                this.playlist.unshift(data)
+                this.$store.state.playerControl = "add"
+              })
+              .catch(err => console.log(err))
             this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
         },
         addToPlaylist(data) {
