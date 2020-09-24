@@ -309,30 +309,43 @@ export default {
             }
         },
         addToPlaylistAndPlay(data) {
-		        console.log(data.artist[0].name + ' ' + data.name)
-		        axios.get(youtubeURL, {
-		          params: {
-		            key: API_KEY,
-                part: 'snippet',
-                maxResults: 1,
-                type: 'video',
-                q: data.artist[0].name + ' ' + data.name
-              }
+            axios.get(youtubeURL, {
+                params: {
+                    key: API_KEY,
+                    part: 'snippet',
+                    maxResults: 1,
+                    type: 'video',
+                    q: data.artist[0].name + ' ' + data.name
+                }
             })
-              .then(res => {
+            .then(res => {
                 const { items } = res.data
                 const { videoId } = items[0].id
                 data['src'] = videoId
-                console.log(data['src'])
                 this.playlist.unshift(data)
                 this.$store.state.playerControl = "add"
-              })
-              .catch(err => console.log(err))
-            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+                this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+            })
+            .catch(err => console.log(err))
         },
         addToPlaylist(data) {
-            this.playlist.push(data)
-            this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+            axios.get(youtubeURL, {
+                params: {
+                    key: API_KEY,
+                    part: 'snippet',
+                    maxResults: 1,
+                    type: 'video',
+                    q: data.artist[0].name + ' ' + data.name
+                }
+            })
+            .then(res => {
+                const { items } = res.data
+                const { videoId } = items[0].id
+                data['src'] = videoId
+                this.playlist.push(data)
+                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+            })
+            .catch(err => console.log(err))
         },
 	}
 }
