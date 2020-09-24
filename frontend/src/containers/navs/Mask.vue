@@ -199,16 +199,16 @@ export default {
                 }
             }
             else if(state === "add") {
-                console.log(this.playlist)
-                if(this.playlist.length==1) {
+                if(this.playlist.length == 1) {
                     this.selectedSong.index = 0
-                    this.markPlayingIndex(0)
+                    this.markPlayingIndex(this.selectedSong.index)
                     this.selectedSong.img = this.playlist[this.selectedSong.index].img
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
-                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                 }
-                else if(this.selectedSong.index=='') {
+                else {
+                    this.unmarkPlayingIndex(this.selectedSong.index)
                     this.selectedSong.index = 0
                     this.markPlayingIndex(this.selectedSong.index)
                     this.selectedSong.img = this.playlist[this.selectedSong.index].img
@@ -216,15 +216,8 @@ export default {
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
-                else {
-                    this.unmarkPlayingIndex(this.selectedSong.index)
-                    this.selectedSong.index = 0
-                    this.markPlayingIndex(0)
-                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
-                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
-                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
-                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
-                }
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
             }
             this.$store.state.playerControl = ''
         }
@@ -287,11 +280,11 @@ export default {
             document.getElementById('playlist-item-overlay'+index).style.display = "none"
         },
         markPlayingIndex(index) {
-            console.log(index+"marked")
-            document.getElementById('playlist-item-playing'+index).style.display = "block"
+            setTimeout(function(){
+                document.getElementById('playlist-item-playing'+index).style.display = "block"
+            }, 100)
         },
         unmarkPlayingIndex(index) {
-            console.log(index+"unmarked")
             document.getElementById('playlist-item-playing'+index).style.display = "none"
         }
     }
