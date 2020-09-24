@@ -243,7 +243,8 @@ export default {
     ...mapMutations(["changeSideMenuStatus", "changeSideMenuForMobile"]),
     ...mapActions(["setLang", "signOut", 'logout']),
     search() {
-      this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`);
+      this.$router.push(`/app/piaf/search/${this.searchKeyword}`);
+      // this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`);
       this.searchKeyword = "";
     },
     searchClick() {
@@ -277,50 +278,50 @@ export default {
       this.logout()
     },
 
-    toggleFullScreen() {
-      const isInFullScreen = this.isInFullScreen();
+    // toggleFullScreen() {
+    //   const isInFullScreen = this.isInFullScreen();
 
-      var docElm = document.documentElement;
-      if (!isInFullScreen) {
-        if (docElm.requestFullscreen) {
-          docElm.requestFullscreen();
-        } else if (docElm.mozRequestFullScreen) {
-          docElm.mozRequestFullScreen();
-        } else if (docElm.webkitRequestFullScreen) {
-          docElm.webkitRequestFullScreen();
-        } else if (docElm.msRequestFullscreen) {
-          docElm.msRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      }
-      this.fullScreen = !isInFullScreen;
-    },
-    isInFullScreen() {
-      return (
-        (document.fullscreenElement && document.fullscreenElement !== null) ||
-        (document.webkitFullscreenElement &&
-          document.webkitFullscreenElement !== null) ||
-        (document.mozFullScreenElement &&
-          document.mozFullScreenElement !== null) ||
-        (document.msFullscreenElement && document.msFullscreenElement !== null)
-      );
-    }
+    //   var docElm = document.documentElement;
+    //   if (!isInFullScreen) {
+    //     if (docElm.requestFullscreen) {
+    //       docElm.requestFullscreen();
+    //     } else if (docElm.mozRequestFullScreen) {
+    //       docElm.mozRequestFullScreen();
+    //     } else if (docElm.webkitRequestFullScreen) {
+    //       docElm.webkitRequestFullScreen();
+    //     } else if (docElm.msRequestFullscreen) {
+    //       docElm.msRequestFullscreen();
+    //     }
+    //   } else {
+    //     if (document.exitFullscreen) {
+    //       document.exitFullscreen();
+    //     } else if (document.webkitExitFullscreen) {
+    //       document.webkitExitFullscreen();
+    //     } else if (document.mozCancelFullScreen) {
+    //       document.mozCancelFullScreen();
+    //     } else if (document.msExitFullscreen) {
+    //       document.msExitFullscreen();
+    //     }
+    //   }
+    //   this.fullScreen = !isInFullScreen;
+    // },
+    // isInFullScreen() {
+    //   return (
+    //     (document.fullscreenElement && document.fullscreenElement !== null) ||
+    //     (document.webkitFullscreenElement &&
+    //       document.webkitFullscreenElement !== null) ||
+    //     (document.mozFullScreenElement &&
+    //       document.mozFullScreenElement !== null) ||
+    //     (document.msFullscreenElement && document.msFullscreenElement !== null)
+    //   );
+    // }
   },
   computed: {
     ...mapGetters({
       currentUser: "currentUser",
-      menuType: "getMenuType",
-      menuClickCount: "getMenuClickCount",
-      selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
+      // menuType: "getMenuType",
+      // menuClickCount: "getMenuClickCount",
+      // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
     }),
     ...mapState(['authorization', 'user', 'isLoggedin'])
   },
@@ -332,11 +333,6 @@ export default {
     this.isDarkActive = color.indexOf("dark") > -1;
   },
   watch: {
-    "$i18n.locale"(to, from) {
-      if (from !== to) {
-        this.$router.go(this.$route.path);
-      }
-    },
     isDarkActive(val) {
       let color = getThemeColor();
       let isChange = false;

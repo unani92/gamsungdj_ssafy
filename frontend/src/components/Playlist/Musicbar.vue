@@ -1,11 +1,11 @@
 <template>
-<div class="music-bar">
-    <span class="bar bar-0">0</span>
-    <span class="bar bar-1">1</span>
-    <span class="bar bar-2">2</span>
-    <span class="bar bar-3">3</span>
-    <span class="bar bar-4">4</span>
-</div>
+  <div class="music-bar">
+      <span class="bar bar-0">0</span>
+      <span class="bar bar-1">1</span>
+      <span class="bar bar-2">2</span>
+      <span class="bar bar-3">3</span>
+      <span class="bar bar-4">4</span>
+  </div>
 </template>
 
 <script>
@@ -16,9 +16,9 @@ export default {
 
 <style>
 .music-bar {
-  position: absolute;
+  /* position: absolute;
   left:26px;
-  top:26px;
+  top:26px; */
 }
 
 .bar {
