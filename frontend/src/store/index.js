@@ -9,11 +9,11 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const baseURL = 'http://localhost:8000/'
 export default new Vuex.Store({
   state: {
     authorization:sessionStorage.getItem("authorization"),
-    user : sessionStorage.getItem('user')?JSON.parse(sessionStorage.getItem("user")):[],
+    // user : sessionStorage.getItem('user')?JSON.parse(sessionStorage.getItem("user")):[],
+    user : sessionStorage.getItem('user'),
     visiblePlaylist: false,
     visiblePlayButton: true,
     visiblePauseButton: false,
