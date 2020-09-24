@@ -18,7 +18,7 @@ export default new Vuex.Store({
     visiblePlayButton: true,
     visiblePauseButton: false,
     playlist: [],
-    playerControl: '',
+    playerControl: ''
   },
   getters: {
     config: (state) => ({headers: { Authorization: state.authorization }}),

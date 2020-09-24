@@ -12,7 +12,7 @@
 						<div class="col-sm-8">
 							<b-row>
 								<b-colxx class="mb-2 mt-4" v-for="(data, index) in carouselData1_1" :key="index">
-								<b-card class="text-white" no-body  @mouseover="showOverlay(index)" @mouseout="hideOverlay(index)">
+								<b-card class="text-white" no-body @mouseover="showOverlay(index)" @mouseout="hideOverlay(index)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+0)">
                                         <div style="position:absolute; bottom:10%;">
