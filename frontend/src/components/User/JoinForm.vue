@@ -85,23 +85,35 @@ export default {
         },
         
         submit(refname) {
-            this.hideModal(refname)
+            
             const joinInfo = {
                 "avatar": this.avatar,
                 "gender": this.gender,
                 "age": this.age,
             }
-            axios.post(baseURL + "accounts/", joinInfo, {
+            if (this.gender != "" && this.age !="") {
+                axios.post(baseURL + "accounts/", joinInfo, {
                     headers: {
                         Authorization: this.$store.state.authorization,
                     }
                 })
                 .then(res => {
                     this.setUser(res.data)
+                    this.hideModal(refname)
                 })
                 .catch(res => {
-
+                    console.log(res)
                 })
+            }
+            else if (this.gender == "" && this.age != "") {
+                alert("성별을 선택하세요.")
+            }
+            else if (this.gender != "" && this.age == "") {
+                alert("나이를 선택하세요.")
+            }
+            else {
+                alert("성별과 나이는 필수정보입니다. 정보를 입력해주세요")
+            }
         },
 
     }

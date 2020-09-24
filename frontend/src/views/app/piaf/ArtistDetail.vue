@@ -255,7 +255,7 @@ export default {
 			}
 		}
 		return this.songs.sort((a, b) => {
-			return a.id - b.id
+			return b.id - a.id
 		})
 
     },

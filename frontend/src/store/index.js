@@ -18,6 +18,8 @@ export default new Vuex.Store({
     visiblePlayButton: true,
     visiblePauseButton: false,
     playlist: [],
+    songLikeList: [],
+    albumLikeList: [],
     playerControl: '',
     isLoggedin: false,
   },
@@ -39,7 +41,12 @@ export default new Vuex.Store({
     SET_USER(state, value) {
       sessionStorage.setItem("user", value)
       state.user = value
+      state.songLikeList = value.like_songs
+      state.albumLikeList = value.like_albums
       state.isLoggedin = true
+    },
+    SET_SONG_LIKE(state, value) {
+      state.songLikeList = value
     },
     LOGOUT(state){
       state.authorization=""
