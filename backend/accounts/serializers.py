@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import UserProfile
+from .models import UserProfile, UserPlayList
 
 User = get_user_model()
 
@@ -28,3 +28,17 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+
+
+class UserPlayListSerializer(serializers.ModelSerializer):
+    from music.serializers import SongSerializer
+    user = UserSerializer(required=False)
+    song = SongSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = UserPlayList
+        fields = '__all__'
