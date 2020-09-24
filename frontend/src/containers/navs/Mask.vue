@@ -100,13 +100,13 @@ export default {
             playerVars: {
                 autoplay: 1
             },
-            selectedSong: {
-                index: -1,
-                img: '',
-                title: '',
-                artist: '',
-                src: '',
-            },
+            // selectedSong: {
+            //     index: -1,
+            //     img: '',
+            //     title: '',
+            //     artist: '',
+            //     src: '',
+            // },
             playlistData,
             playerToggleFlag: false,
         }
@@ -115,6 +115,7 @@ export default {
         ...mapState([
             'playlist',
             'playerControl',
+            'selectedSong'
         ]),
         player() {
             return this.$refs.youtube.player

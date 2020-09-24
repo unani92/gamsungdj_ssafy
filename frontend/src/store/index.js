@@ -19,12 +19,18 @@ export default new Vuex.Store({
     visiblePauseButton: false,
     playlist: [],
     playerControl: '',
+    selectedSong: {
+      index: -1,
+      img: '',
+      title: '',
+      artist: '',
+      src: '',
+    },
     isLoggedin: false,
   },
   getters: {
     config: (state) => ({headers: { Authorization: state.authorization }}),
     currentUser: (state) => state.user,
-    currentPlaylist: (state) => state.playlist
   },
 
   mutations: {

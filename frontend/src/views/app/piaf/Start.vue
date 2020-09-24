@@ -154,7 +154,9 @@
                         </div>
                         <b-card-body>
                             <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
-                            <a href="#" @click.prevent="tempFunction"><p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p></a>
+                            <a href="#" @click.prevent="tempFunction">
+                                <p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p>
+                            </a>
                         </b-card-body>
                     </b-card>
                 </div>
