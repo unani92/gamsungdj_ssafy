@@ -56,7 +56,7 @@
                                 <music-bar style="position:relative; left:16px; top:16px; display:none;" :id="'playlist-item-playing'+index" />
 
                                 <!-- 마우스 오버시 보이는 부분 -->
-                                <span style="position:absolute; left:85%; float:right; display:none;" :id="'playlist-item-overlay'+index" @click.prevent="remove(index)"><font size="6">x</font></span>
+                                <span style="position:absolute; left:85%; float:right; display:none;" :id="'playlist-item-overlay'+index" @click="remove(index)"><font size="6">x</font></span>
 
                                 <img :src="data.img" :alt="data.name" class="list-thumbnail border-0" />
                                 <div class="pl-3 pt-2 pr-2 pb-2">
@@ -100,13 +100,6 @@ export default {
             playerVars: {
                 autoplay: 1
             },
-            // selectedSong: {
-            //     index: -1,
-            //     img: '',
-            //     title: '',
-            //     artist: '',
-            //     src: '',
-            // },
             playlistData,
             playerToggleFlag: false,
         }
@@ -200,7 +193,7 @@ export default {
                 }
             }
             else if(state === "add") {
-                if(this.playlist.length == 1) {
+                if(this.playlist.length == 1 || this.selectedSong.index == -1) {
                     this.selectedSong.index = 0
                     this.markPlayingIndex(this.selectedSong.index)
                     this.selectedSong.img = this.playlist[this.selectedSong.index].img

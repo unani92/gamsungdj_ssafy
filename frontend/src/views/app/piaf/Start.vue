@@ -326,7 +326,7 @@ export default {
                 data['src'] = videoId
                 this.playlist.unshift(data)
                 this.$store.state.playerControl = "add"
-                this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+                this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
             })
             .catch(err => console.log(err))
         },
@@ -345,7 +345,7 @@ export default {
                 const { videoId } = items[0].id
                 data['src'] = videoId
                 this.playlist.push(data)
-                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
             })
             .catch(err => console.log(err))
         },
