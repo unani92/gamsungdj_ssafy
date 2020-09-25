@@ -154,11 +154,12 @@
       </template>
     </b-colxx>
   </b-row>
-
+  <LoginModal :showLogin="showLogin" @hideModal="showLogin=false"/>
   </div>
 </template>
 <script>
 import http from "../../../utils/http-common";
+import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
@@ -166,6 +167,7 @@ const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
 
 export default {
   components: {
+    LoginModal,
   },
 
   created() {
@@ -194,6 +196,7 @@ export default {
   },
   data () {
     return {
+      showLogin: false,
       clickAlbumLike: false,
       sort_value : "",
 	  	sort_type : 'asc',
@@ -295,6 +298,8 @@ export default {
             }
           }
       })
+      }else{
+        this.showLogin=true;
       }
     },
     likeAlbum: function(id) {
@@ -319,6 +324,8 @@ export default {
             }
           }
       })
+      }else{
+        this.showLogin=true;
       }
     },
     changeSortValue(value) {
