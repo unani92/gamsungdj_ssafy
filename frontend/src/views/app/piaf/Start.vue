@@ -284,7 +284,8 @@ export default {
     computed: {
       ...mapState([
         'playlist',
-        'songLikeList'
+        'songLikeList',
+        'isLoggedin'
       ]),
       ...mapGetters(['config'])
     },
@@ -308,10 +309,17 @@ export default {
       return this.songLikeList.includes(data.id);
     },
     async songLike(e) {
-      const { id } = e.target
-      const span = document.getElementById(id)
-      const { data } = await http.post(`song/${id}/like/`, '',this.config)
-      span.classList.toggle('liked')
+      console.log('c')
+      if (this.isLoggedin) {
+        console.log('clicked')
+        const { id } = e.target
+        const span = document.getElementById(id)
+        const { data } = await http.post(`song/${id}/like/`, '',this.config)
+        span.classList.toggle('liked')
+      } else {
+        const loginBtn = document.querySelector('.name')
+        loginBtn.click()
+      }
     },
 		tempFunction() {
 			alert("페이지 준비중입니다.");
