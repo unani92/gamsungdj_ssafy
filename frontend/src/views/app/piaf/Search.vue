@@ -25,8 +25,9 @@
                     <div class="w-50">
                         <b-card-body>
                             <h3 class="mb-4 card-subtitle" style="font-weight :bold"><br>{{artist.name}}</h3>
-                            <h4 class="mb-4 card-subtitle"><a style="font-size:16px;">활동유형: </a>{{artist.type}}</h4>
-                            <h6 class="mb-4 card-subtitle">데뷔: {{artist.released}}</h6>
+                            <h4 class="mb-4 card-subtitle">활동유형: {{artist.type}}</h4>
+                            <h4 class="mb-4 card-subtitle" v-if="artist.member">멤버: {{artist.member}}</h4>
+                            <h6 class="mb-4 card-subtitle">데뷔: {{artist.debue}}</h6>
                         </b-card-body>
                     </div>
                 </b-card>
@@ -45,6 +46,7 @@
                                   <b-card-body>
                                       <h3 class="mb-4 card-subtitle" style="font-weight :bold"><br>{{artist.name}}</h3>
                                       <h4 class="mb-4 card-subtitle"><a style="font-size:16px;">활동유형: </a>{{artist.type}}</h4>
+                                      <h4 class="mb-4 card-subtitle" v-if="artist.member">멤버: {{artist.member}}</h4>
                                       <h6 class="mb-4 card-subtitle">데뷔: {{artist.released}}</h6>
                                   </b-card-body>
                               </div>
@@ -54,9 +56,6 @@
             </div>
           </template>
           <br><div class="separator mb-5"></div>
-        </template>
-        <template v-else>
-          <div class="loading"></div>
         </template>
     </b-colxx>
   </b-row>
@@ -75,24 +74,24 @@
               <table  class="table table-sm" style="margin-bottom:0px;">
                   <thead style="font-size: initial;">
                     <th></th>
-                    <th>곡</th>
-                    <th>가수</th>
+                    <th id='song' @click="changeSortValue('name')" style="cursor:pointer">곡</th>
+                    <th id='artist' @click="changeSortValue('artist')" style="cursor:pointer">가수</th>
                     <th>장르</th>
-                    <th>재생</th>
-                    <th>추가</th>
-                    <th>상세정보</th>
-                    <th>좋아요</th>
+                    <th style="width:10%">재생</th>
+                    <th style="width:10%">추가</th>
+                    <th style="width:10%">좋아요</th>
                   </thead>
                   <tbody style="font-size: x-large;">
-                    <tr :class="{'flex-row':true}" v-for="(song, index) in songs.slice(0,songListSize)" v-bind:key="index">
-                      <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" /></td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.name}}</td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.artist}}</td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.genre}}</td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-control-play"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-playlist"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-magnifier-add" @click="detailSong(song.id)" style="cursor:pointer;"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-heart"/></td>
+                    <tr :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice(0,songListSize)" v-bind:key="index" style="cursor:pointer;">
+                      <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{limitString(song.name)}}</td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
+                      <td style="vertical-align: middle;" @click.prevent="playSong(song.id)"><div class="glyph-icon simple-icon-control-play"/></td>
+                      <td style="vertical-align: middle;" @click.prevent="addSong(song.id)"><div class="glyph-icon simple-icon-playlist"/></td>
+                      <!-- <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td> -->
+                      <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
                   </tbody>
               </table>
@@ -107,79 +106,95 @@
     <b-colxx xxs="12">
       <template v-if="isAlbum">
         <template v-if="!moreAlbum">
-            <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
-          </template>
-          <template v-else>
-            <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right  cursor:pointer">접기∧</a></h2>
-          </template>
-          <!-- <b-colxx xxs="12" class="pl-0 pr-0" style="display: inline-flex;">
-            <div class="pr-3 pl-3 mb-4 glide__slide" v-for="(artist, index) in artists.slice(0,3)" :key="index"  @click="detailArtist(artist.id)" style="width:33%">
-                <b-card class="flex-row" no-body style=" cursor:pointer;">
-                    <div class="w-50 position-relative">
-                        <img class="card-img-left" :src="artist.img"/>
-                    </div>
-                    <div class="w-50">
-                        <b-card-body>
-                            <h3 class="mb-4 card-subtitle" style="font-weight :bold"><br>{{artist.name}}</h3>
-                            <h4 class="mb-4 card-subtitle"><a style="font-size:16px;">활동유형: </a>{{artist.type}}</h4>
-                            <h6 class="mb-4 card-subtitle">데뷔: {{artist.released}}</h6>
-                        </b-card-body>
-                    </div>
-                </b-card>
-            </div>
-          </b-colxx> -->
-            <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;">
-                <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(0,5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
-                    <div class="position-relative">
-                        <img :src="album.img" class="card-img-top"/>
-                    </div>
-                    <b-card-body>
-                        <b-row>
-                            <b-colxx xxs="10" class="mb-3">
-                                <h4 style="font-weight :bold">{{album.name}}</h4>
-                                <h5>{{album.artist}}</h5>
-                                <h6>장르: {{album.genre}}</h6>
-                            </b-colxx>
-                        </b-row>
-                    </b-card-body>
-                </b-card>
-            </b-colxx>
-            <template v-if="moreAlbum">
-                <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;" v-for="n in parseInt((albums.length-1)/5)" v-bind:key="n">
-                  <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(n*5,(n+1)*5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
-                    <div class="position-relative">
-                      <img :src="album.img" class="card-img-top"/>
-                    </div>
-                    <b-card-body>
-                        <b-row>
-                            <b-colxx xxs="10" class="mb-3">
-                                <h4 style="font-weight :bold">{{album.name}}</h4>
-                                <h5>{{album.artist}}</h5>
-                                <h6>장르: {{album.genre}}</h6>
-                            </b-colxx>
-                        </b-row>
-                    </b-card-body>
-                  </b-card>
-                </b-colxx>
-              </template>
-          </template>
-        <template v-else>
-          <div class="loading"></div>
+          <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
         </template>
+        <template v-else>
+          <h2>앨범><a v-if="albums.length>5" @click="showMoreAlbum" style="font-size:0.7em; float:right; cursor:pointer">접기∧</a></h2>
+        </template>
+        <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;">
+            <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(0,5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
+                <div class="position-relative">
+                    <img :src="album.img" class="card-img-top"/>
+                </div>
+                <b-card-body>
+                    <b-row>
+                        <b-colxx>
+                            <h4 style="font-weight :bold">{{album.name}}</h4>
+                            <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
+                            <h6 v-if="album.genre">장르:<a v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</a></h6>
+                            <h6>발매일: {{dateformat(album.released_date)}}</h6>
+                            <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                            <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                        </b-colxx>
+                    </b-row>
+                </b-card-body>
+            </b-card>
+        </b-colxx>
+        <template v-if="moreAlbum">
+          <b-colxx xxs="12" class="mb-4 pl-0 pr-3" style="display: inline-flex;" v-for="n in parseInt((albums.length-1)/5)" v-bind:key="n">
+            <b-card class="mr-3 ml-3" no-body v-for="(album, index) in albums.slice(n*5,(n+1)*5)" v-bind:key="index" style="width:18%; cursor:pointer;" @click="detailAlbum(album.id)">
+              <div class="position-relative">
+                <img :src="album.img" class="card-img-top"/>
+              </div>
+              <b-card-body>
+                <b-row>
+                    <b-colxx xxs="10" class="mb-3">
+                        <h4 style="font-weight :bold">{{album.name}}</h4>
+                        <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
+                        <h6 v-if="album.genre">장르: {{album.genre}}</h6>
+                        <h6>발매일: {{dateformat(album.released_date)}}</h6>
+                        <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                        <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                    </b-colxx>
+                </b-row>
+              </b-card-body>
+            </b-card>
+          </b-colxx>
+        </template>
+      </template>
     </b-colxx>
   </b-row>
 
   </div>
 </template>
 <script>
+import http from "../../../utils/http-common";
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 export default {
   components: {
   },
-
+  
+  created() {
+    this.keyword = this.$route.params.keyword;
+    http.get("/search/song/"+this.keyword+"/")
+      .then((rest) => {
+        this.songs = rest.data;
+        if(this.songs.length!=0){
+          this.isSong=true;
+        }
+    })
+    http.get("/search/artist/"+this.keyword+"/")
+      .then((rest) => {
+        this.artists = rest.data;
+        if(this.artists.length!=0){
+          this.isArtist=true;
+        }
+    })
+    http.get("/search/album/"+this.keyword+"/")
+      .then((rest) => {
+        this.albums = rest.data;
+        if(this.albums.length!=0){
+          this.isAlbum=true;
+        }
+    })
+  },
   data () {
     return {
-      isArtist: true,
-      isSong: true,
+      clickAlbumLike: false,
+      sort_value : "",
+	  	sort_type : 'asc',
+      isArtist: false,
+      isSong: false,
       isAlbum: false,
       moreArtist: false,
       moreSong: false,
@@ -187,62 +202,12 @@ export default {
       keyword: '',
       songListSize: 5,
       // currentPage: 1,
-      artists: [{ id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
-      { id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
-      { id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
-      { id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
-      { id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},],
-      songs: [{ id: 1, name: '선물', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '인사', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/103/05/070/10305070_500.jpg?8e4dafd3e69b879fdeb5f6d5e8e6cdda/melon/sharpen/0x1'},
-      { id: 1, name: '유리', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/102/27/379/10227379_500.jpg?bb36e84e0109f6b0253b72688988233d/melon/quality/80/optimize'},
-      { id: 1, name: 'Page 0', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/101/93/505/10193505_500.jpg?cf087eb8878fbec43435f3ba84e307e5/melon/quality/80/optimize'},
-      { id: 1, name: '좋은 날', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/101/91/294/10191294_500.jpg?ceb46dcf7679dd7c58e2941eb93bc624/melon/quality/80/optimize'},
-      { id: 1, name: '선물5', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물6', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물7', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물8', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물9', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물10', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물11', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물12', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물13', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
-      { id: 1, name: '선물14', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},],
-      albums: [{ id:1, name:"축제", img: "https://cdnimg.melon.co.kr/cm2/album/images/103/48/325/10348325_500.jpg?679a781c2d3687f2aefffaeb310614d5/melon/resize/282/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
-      { id:1, name:"인사", img: "https://cdnimg.melon.co.kr/cm/album/images/103/05/070/10305070_500.jpg?8e4dafd3e69b879fdeb5f6d5e8e6cdda/melon/sharpen/0x1", genre:"발라드, 인디음악", artist:"멜로망스"},
-      { id:1, name:"WHY : 당신이 연인에게 차인 진짜 이유 OST - Part.2", img: "https://cdnimg.melon.co.kr/cm/album/images/102/27/379/10227379_500.jpg?bb36e84e0109f6b0253b72688988233d/melon/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
-      { id:1, name:"Page 0", img: "https://cdnimg.melon.co.kr/cm/album/images/101/93/505/10193505_500.jpg?cf087eb8878fbec43435f3ba84e307e5/melon/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
-      { id:1, name:"미스터 션샤인 OST Part.5", img: "https://cdnimg.melon.co.kr/cm/album/images/101/91/294/10191294_500.jpg?ceb46dcf7679dd7c58e2941eb93bc624/melon/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
-      { id:1, name:"축제5", img: "https://cdnimg.melon.co.kr/cm2/album/images/103/48/325/10348325_500.jpg?679a781c2d3687f2aefffaeb310614d5/melon/resize/282/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
-      { id:1, name:"축제6", img: "https://cdnimg.melon.co.kr/cm2/album/images/103/48/325/10348325_500.jpg?679a781c2d3687f2aefffaeb310614d5/melon/resize/282/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
-      { id:1, name:"축제7", img: "https://cdnimg.melon.co.kr/cm2/album/images/103/48/325/10348325_500.jpg?679a781c2d3687f2aefffaeb310614d5/melon/resize/282/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},
-      { id:1, name:"축제8", img: "https://cdnimg.melon.co.kr/cm2/album/images/103/48/325/10348325_500.jpg?679a781c2d3687f2aefffaeb310614d5/melon/resize/282/quality/80/optimize", genre:"발라드, 인디음악", artist:"멜로망스"},],
+      artists: [],
+      songs: [],
+      albums: [],
     }
   },
   methods: {
-    loadItems() {
-        this.isAlbum = false;
-        this.isAlbum = true;
-    //   axios
-    //     .get(this.apiUrl)
-    //     .then(response => {
-    //       return response.data;
-    //     })
-    //     .then(res => {
-    //       this.total = res.total;
-    //       this.from = res.from;
-    //       this.to = res.to;
-    //       this.items = res.data.map(x => {
-    //         return {
-    //           ...x,
-    //           img: x.img.replace("/img/", "/img/products/")
-    //         };
-    //       });
-    //       this.perPage = res.per_page;
-    //       this.selectedItems = [];
-    //       this.lastPage = res.last_page;
-    //       this.isLoad = true;
-    //     });
-    },
     showMoreArtist: function() {
       this.moreArtist = !this.moreArtist;
     },
@@ -265,13 +230,172 @@ export default {
       this.$router.push('/app/piaf/songDetail/'+id)
     },
     detailAlbum: function(id){
-      this.$router.push('/app/piaf/albumDetail/'+id)
+      if(!this.clickAlbumLike){
+        this.$router.push('/app/piaf/albumDetail/'+id)
+      }else{
+        this.clickAlbumLike=false;
+      }
+      
     },
-  },
-  mounted() {
-    this.loadItems();
-    this.keyword = this.$route.params.keyword;
-  },
+    playSong: function(id) {
+      alert(id+"실행");
+    },
+    addSong: function(id) {
+      alert(id+"추가");
+    },
+    likeSong: function(id) {
+      console.log(this.$store.state.authorization)
+      if(this.user.like_songs){
+        http.post(`song/${id}/like/`,'',{
+          headers: {
+            Authorization: this.$store.state.authorization
+          },
+        })
+        .then((rest) => {
+          console.log(rest.data)
+          if(rest.data.liked){
+            this.user.like_songs.push(id);
+          }else{
+            for(var i=0;i<this.user.like_songs.length;i++){
+              if(this.user.like_songs[i]==id){
+                this.user.like_songs.splice(i, 1);
+                break;
+              }
+            }
+          }
+      })
+      }
+    },
+    likeAlbum: function(id) {
+      this.clickAlbumLike = true;
+      console.log(this.$store.state.authorization)
+      if(this.user.like_albums){
+        http.post(`album/${id}/like/`,'',{
+          headers: {
+            Authorization: this.$store.state.authorization
+          },
+        })
+        .then((rest) => {
+          console.log(rest.data)
+          if(rest.data.liked){
+            this.user.like_albums.push(id);
+          }else{
+            for(var i=0;i<this.user.like_albums.length;i++){
+              if(this.user.like_albums[i]==id){
+                this.user.like_albums.splice(i, 1);
+                break;
+              }
+            }
+          }
+      })
+      }
+    },
+    changeSortValue(value) {
+      if(this.sort_value != value){
+        this.sort_value=value;
+        this.sort_type = 'asc';
+      }else{
+        if(this.sort_type =='asc'){
+          this.sort_type = 'desc';
+        }else if(this.sort_type =='desc'){
+          this.sort_value = '';
+          this.sort_type = 'none';
+        }else{
+          this.sort_type = 'asc'
+        }
+      }
 
+      var tag1 = document.getElementById('song');
+      var tag2 = document.getElementById('artist');
+      if(this.sort_value=='name'){
+        tag1.style.color = "#236591";
+      }else {
+        tag1.style.color = "";
+      }
+
+      if(this.sort_value=='artist'){
+        tag2.style.color = "#236591";
+      }else {
+        tag2.style.color = "";
+      }
+    },
+    limitString(songName) {
+      if(songName.length>26){
+        return songName.substr(0,22) + "...";
+      }else{
+        return songName;
+      }
+    },
+    dateformat(albumDate) {
+      return albumDate.substr(0,4) + "-" + albumDate.substr(4,2) + "-" + albumDate.substr(6,2);
+    },
+    checkLikeSong(songID){
+      if(this.user.like_songs){
+        for(var i=0;i<this.user.like_songs.length;i++){
+          if(this.user.like_songs[i]==songID){
+            return true;
+          }
+        }
+        return false;
+      }
+      return false;
+    },
+    checkLikeAlbum(albumID){
+       if(this.user.like_albums){
+         for(var i=0;i<this.user.like_albums.length;i++){
+          if(this.user.like_albums[i]==albumID){
+            return true;
+          }
+        }
+        return false;
+       }
+      return false;
+    }
+
+  },
+  computed: {
+    sortSongs() {
+		if(this.sort_value=='name'){
+			if(this.sort_type=='asc'){
+			return this.songs.sort((a, b) => {
+				if( a.name > b.name) return 1;
+				else if ( a.name < b.name ) return -1;
+				else return 0;
+			})
+			}else if(this.sort_type=='desc'){
+				return this.songs.sort((a, b) => {
+					if( a.name < b.name) return 1;
+					else if ( a.name > b.name ) return -1;
+					else return 0;
+				})
+			}
+		}else if(this.sort_value=='artist'){
+			if(this.sort_type=='asc'){
+			return this.songs.sort((a, b) => {
+				if( a.artist[0].name > b.artist[0].name) return 1;
+				else if ( a.artist[0].name < b.artist[0].name ) return -1;
+				else return 0;
+			})
+			}else if(this.sort_type=='desc'){
+				return this.songs.sort((a, b) => {
+					if( a.artist[0].name < b.artist[0].name) return 1;
+					else if ( a.artist[0].name > b.artist[0].name ) return -1;
+					else return 0;
+				})
+			}
+		}
+		return this.songs.sort((a, b) => {
+			return b.id - a.id
+		})
+
+    },
+    ...mapGetters({
+      currentUser: "currentUser",
+      // menuType: "getMenuType",
+      // menuClickCount: "getMenuClickCount",
+      // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
+    }),
+    ...mapState(['authorization', 'user', 'isLoggedin'])
+  },
 }
 </script>

@@ -1,9 +1,9 @@
 <template>
     <!--
         참고
-        https://developers.google.com/youtube/iframe_api_reference#Events 
+        https://developers.google.com/youtube/iframe_api_reference#Events
         https://www.npmjs.com/package/vue-youtube
-        
+
         문제점
         1. 컬러가 정해져 있지 않아서 재생 중인 곡을 선택 했을 때 css 를 변경하면 다시 복구할 수 없음
         2. index 로 접근하기 때문에 재생 중 다른 플레이리스트를 가져왔을 때 문제가 생김
@@ -13,11 +13,15 @@
         <div class="col-sm-9 aligner" style="height:inherit;">
             <b-tabs card no-fade style="height:100%; width:100%;">
                 <b-tab title="Player" active title-item-class="w-50 text-center">
-                    <switches v-model="changePlayer" theme="custom" color="primary-inverse"></switches>
-                    <div class="player" v-show="changePlayer">
-                        <youtube id="youtube" :video-id="videoid" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
+                    <div class="player-wrapper">
+                        <div class="float-right">
+                            <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
+                        </div>
+                        <div class="player" v-show="playerToggleFlag">
+                            <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
+                        </div>
+                        <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
                     </div>
-                    <!-- <player v-show="!changePlayer" /> -->
                 </b-tab>
                 <b-tab title="Analyze" title-item-class="w-50 text-center">
                         <analyze />
@@ -31,32 +35,40 @@
             <b-row>
                 <b-colxx xxs="12" class="mt-3">
                     <b-card class="mb-3">
-                        <!-- 헤더 시작 -->
-                        <h3 style="display:inline-block; margin-top:12px">{{ selectedPlaylistTitle }}</h3><!-- 가로 중앙 정렬 필요 -->
-                        <b-dropdown id="ddown1" text="재생 목록 불러오기" variant="outline-secondary" class="float-right">
-                            <b-dropdown-header>나의 재생 목록</b-dropdown-header>
-                            <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item v-for="(data, index) in playlistData" :key="index" @click="selectPlaylist(index)">{{ data.title }}</b-dropdown-item>
-                        </b-dropdown>
-                        <!-- 헤더 끝 --><hr>
 
-                        <!-- 바디 시작 -->
-                        <div class="playlist-item-wrapper" v-for="(data, index) in selectedPlaylist" :key="index">
-                            <!-- <div class="d-flex flex-row" style="padding:10px; cursor:pointer; position:absolute;">
-                                <music-bar />
-                            </div> -->
-                            <div class="d-flex flex-row" style="padding:10px; cursor:pointer" @click="playVideo(data.src, index, data.img)">
-                                <img :src="data.img" :alt="data.title" class="list-thumbnail border-0" />
+                        <h3 style="display:inline-block; margin-top:12px">재생 목록</h3>
+                        <span v-if="this.$store.state.user">
+                            <b-dropdown id="ddown1" text="재생 목록 불러오기" variant="outline-secondary" class="float-right">
+                                <b-dropdown-header>나의 재생 목록</b-dropdown-header>
+                                <b-dropdown-divider></b-dropdown-divider>
+                                <b-dropdown-item v-for="(data, index) in playlistData" :key="index" @click="selectPlaylist(index)">{{ data.title }}</b-dropdown-item>
+                            </b-dropdown>
+                        </span><hr>
+
+                        <div class="playlist-item-wrapper" v-for="(data, index) in playlist" :key="index">
+                            <div class="d-flex flex-row" style="padding:10px; cursor:pointer"
+                                @click="selectSong(index, data)"
+                                @mouseover="showOverlay(index)"
+                                @mouseout="hideOverlay(index)"
+                            >
+
+                                <!-- 재생 중인 곡만 보이는 부분 -->
+                                <music-bar style="position:relative; left:16px; top:16px; display:none;" :id="'playlist-item-playing'+index" />
+
+                                <!-- 마우스 오버시 보이는 부분 -->
+                                <span style="position:absolute; left:85%; float:right; display:none;" :id="'playlist-item-overlay'+index"><font size="6">x</font></span>
+
+                                <img :src="data.img" :alt="data.name" class="list-thumbnail border-0" />
                                 <div class="pl-3 pt-2 pr-2 pb-2">
-                                    <p class="list-item-heading">{{ data.title }}</p>
+                                    <p class="list-item-heading">{{ data.name }}</p>
                                     <div class="pr-4">
-                                        <p class="text-muted mb-1 text-small">{{ data.artist }}</p>
+                                        <p class="text-muted mb-1 text-small">{{ data.artist[0].name }}</p>
                                     </div>
-                                    <!-- <div class="text-primary text-small font-weight-medium d-none d-sm-block">{{ data.artist }}</div> -->
+                                    <!-- <div class="text-primary text-small font-weight-medium d-none d-sm-block">{{ data.artist[0].name }}</div> -->
                                 </div>
                             </div>
                         </div>
-                        <!-- 바디 끝 -->
+
                     </b-card>
                 </b-colxx>
             </b-row>
@@ -67,13 +79,16 @@
 </template>
 
 <script>
-import MusicBar from "../../components/Playlist/Musicbar2"
+import MusicBar from "../../components/Playlist/Musicbar"
 import Player from "../../components/Playlist/Player"
 import Analyze from "../../components/Playlist/Analyze"
 import { playlistData } from "../../data/playlist"
-import Switches from "vue-switches";
+import { mapState } from "vuex"
+import Switches from "vue-switches"
+import http from "../../utils/http-common"
+
 export default {
-    props: ['msg'],
+    props: ['state'],
     components:{
         'music-bar': MusicBar,
         'player': Player,
@@ -82,105 +97,195 @@ export default {
     },
     data() {
         return {
-            videoid: '',
             playerVars: {
                 autoplay: 1
             },
-            playing: '',
-            selectedPlaylistIndex: '-1',
-            selectedPlaylistTitle: '재생 목록',
-            selectedPlaylist: '',
-            selectedSong: {},
-            selectedSongImg: '',
+            selectedSong: {
+                index: '',
+                img: '',
+                title: '',
+                artist: '',
+                src: '',
+            },
             playlistData,
-            changePlayer: true
+            playerToggleFlag: false,
         }
     },
     computed: {
+        ...mapState([
+            'playlist',
+            'playerControl',
+        ]),
         player() {
             return this.$refs.youtube.player
-        }
-    },
-    methods: {
-        playVideo(videoid, index, img) {
-            this.videoid = videoid
-            this.playing = index
-            this.$store.state.visiblePlayButton = false
-            this.$store.state.visiblePauseButton = true
-            this.selectedSongImg = img
-            for(let i=0; i<this.selectedPlaylist.length; i++) {
-                this.selectedSong[i] = false
-            }
-            this.selectedSong[index] = true
         },
-        play(msg) {
-            if(msg === "play") {
-                if(this.selectedPlaylist.length == 0){
-                    alert("playlist is empty")
+    },
+    watch: {
+        playerControl: function(state) {
+            if(state === "play") {
+                if(this.playlist.length == 0) {
+                    this.$notify('info', "재생 목록이 비어있습니다.", "", "",{ duration: 5000, permanent: false })
                     this.$store.state.visiblePlayButton = true
                     this.$store.state.visiblePauseButton = false
                 }
-                else if(this.videoid === ''){
-                    this.playing = 0;
-                    this.videoid = this.selectedPlaylist[this.playing].src
+                else if(this.selectedSong.src === ''){
+                    this.selectedSong.index = 0
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                }
+                else{
                     this.player.playVideo()
                 }
-                else
-                    this.player.playVideo()
             }
-            else if(msg === "pause")
+            else if(state === "pause")
                 this.player.pauseVideo()
-            else if(msg === "prev") {
-                if(this.playing == 0) {
-                    this.playing = this.selectedPlaylist[length-1].src
-                    this.videoid = this.selectedPlaylist[this.playing].src
-                    this.player.playVideo()
+            else if(state === "prev") {
+                if(this.selectedSong.index == 0) {
+                    this.unmarkPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.index = this.playlist.length-1
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
-                else if(this.videoid === ''){
-                    this.playing = 0;
-                    this.videoid = this.selectedPlaylist[this.playing].src
-                    this.player.playVideo()
+                else if(this.selectedSong.src === ''){
+                    this.selectedSong.index = 0
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
                 else {
-                    this.playing = this.playing-1
-                    this.videoid = this.selectedPlaylist[this.playing].src
-                    this.player.playVideo()
+                    this.unmarkPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.index = this.selectedSong.index-1
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
             }
-            else if(msg === "next") {
-                if(this.playing == this.selectedPlaylist.length-1) {
-                    this.playing = 0
-                    this.videoid = this.selectedPlaylist[this.playing].src
-                    this.player.playVideo()
+            else if(state === "next") {
+                if(this.selectedSong.index == this.playlist.length-1) {
+                    this.unmarkPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.index = 0
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
-                else if(this.videoid === ''){
-                    this.playing = 0;
-                    this.videoid = this.selectedPlaylist[this.playing].src
-                    this.player.playVideo()
+                else if(this.selectedSong.src === ''){
+                    this.selectedSong.index = 0
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
                 else {
-                    this.playing = this.playing+1
-                    this.videoid = this.selectedPlaylist[this.playing].src
-                    this.player.playVideo()
+                    this.unmarkPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.index = this.selectedSong.index+1
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
+            }
+            else if(state === "add") {
+                if(this.playlist.length == 1) {
+                    this.selectedSong.index = 0
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                }
+                else {
+                    this.unmarkPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.index = 0
+                    this.markPlayingIndex(this.selectedSong.index)
+                    this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                    this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                    this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                    this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                }
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
+            }
+            this.$store.state.playerControl = ''
+        }
+    },
+    methods: {
+        selectSong(index, data) {
+            if(this.selectedSong.index==='') {
+                this.selectedSong.index = index
+                this.markPlayingIndex(this.selectedSong.index)
+                this.selectedSong.img = data.img
+                this.selectedSong.title = data.name
+                this.selectedSong.artist = data.artist[0].name
+                this.selectedSong.src = data.src
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
+            }
+            else {
+                this.unmarkPlayingIndex(this.selectedSong.index)
+                this.selectedSong.index = index
+                this.markPlayingIndex(this.selectedSong.index)
+                this.selectedSong.img = data.img
+                this.selectedSong.title = data.name
+                this.selectedSong.artist = data.artist[0].name
+                this.selectedSong.src = data.src
+                this.$store.state.visiblePlayButton = false
+                this.$store.state.visiblePauseButton = true
             }
         },
         ended() {
-            if(this.playing >= this.selectedPlaylist.length-1) {
-                this.playing = 0
-                this.videoid = this.selectedPlaylist[0].src
+            if(this.selectedSong.index >= this.playlist.length-1) {
+                this.unmarkPlayingIndex(this.selectedSong.index)
+                this.selectedSong.index = 0
+                this.markPlayingIndex(this.selectedSong.index)
+                this.selectedSong.img = this.playlist[0].img
+                this.selectedSong.title = this.playlist[0].name
+                this.selectedSong.artist = this.playlist[0].artist[0].name
+                this.selectedSong.src = this.playlist[0].src
                 this.player.playVideo()
             }
             else {
-                this.playing = this.playing+1
-                this.videoid = this.selectedPlaylist[this.playing].src
+                this.unmarkPlayingIndex(this.selectedSong.index)
+                this.selectedSong.index = this.selectedSong.index+1
+                this.markPlayingIndex(this.selectedSong.index)
+                this.selectedSong.img = this.playlist[this.selectedSong.index].img
+                this.selectedSong.title = this.playlist[this.selectedSong.index].name
+                this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
+                this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 this.player.playVideo()
             }
         },
         selectPlaylist(index) {
-            this.selectedPlaylistIndex = index
-            this.selectedPlaylistTitle = this.playlistData[index].title
-            this.selectedPlaylist = this.playlistData[index].playlist
+            for(let i=0; i<this.playlistData[index].playlist.length; i++){
+                this.playlist.push(this.playlistData[index].playlist[i])
+            }
+        },
+        showOverlay(index) {
+            document.getElementById('playlist-item-overlay'+index).style.display = "block"
+        },
+        hideOverlay(index) {
+            document.getElementById('playlist-item-overlay'+index).style.display = "none"
+        },
+        markPlayingIndex(index) {
+            setTimeout(function(){
+                document.getElementById('playlist-item-playing'+index).style.display = "block"
+            }, 100)
+        },
+        unmarkPlayingIndex(index) {
+            document.getElementById('playlist-item-playing'+index).style.display = "none"
         }
     }
 }
@@ -195,5 +300,19 @@ export default {
 .playlist-item-wrapper:hover {
     background: rgba(0,0,0,.7);
     opacity: .7;
+}
+.player-wrapper {
+    height: 460px;
+    width: 640px;
+    position: absolute;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
 }
 </style>

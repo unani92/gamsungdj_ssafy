@@ -9,18 +9,24 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const baseURL = 'http://localhost:8000/'
 export default new Vuex.Store({
   state: {
     authorization:sessionStorage.getItem("authorization"),
-    user : sessionStorage.getItem('user')?JSON.parse(sessionStorage.getItem("user")):[],
+    // user : sessionStorage.getItem('user')?JSON.parse(sessionStorage.getItem("user")):[],
+    user : sessionStorage.getItem('user'),
     visiblePlaylist: false,
     visiblePlayButton: true,
-    visibelPauseButton: false,
+    visiblePauseButton: false,
+    playlist: [],
+    songLikeList: [],
+    albumLikeList: [],
+    playerControl: '',
+    isLoggedin: false,
   },
   getters: {
     config: (state) => ({headers: { Authorization: state.authorization }}),
-    currentUser: (state) =>  state.user
+    currentUser: (state) => state.user,
+    currentPlaylist: (state) => state.playlist
   },
 
   mutations: {
@@ -35,10 +41,17 @@ export default new Vuex.Store({
     SET_USER(state, value) {
       sessionStorage.setItem("user", value)
       state.user = value
+      state.songLikeList = value.like_songs
+      state.albumLikeList = value.like_albums
+      state.isLoggedin = true
+    },
+    SET_SONG_LIKE(state, value) {
+      state.songLikeList = value
     },
     LOGOUT(state){
       state.authorization=""
       state.user=[]
+      state.isLoggedin = false
       sessionStorage.removeItem("authorization")
       sessionStorage.removeItem("user")
     },

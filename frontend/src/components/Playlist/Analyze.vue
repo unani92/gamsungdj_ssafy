@@ -1,16 +1,35 @@
 <template>
     <div>
-        <music-bar />
+        <wordcloud
+        :data="defaultWords"
+        nameKey="name"
+        valueKey="value"
+        :color="myColors"
+        :showTooltip="true"
+        :wordClick="wordClickHandler">
+        </wordcloud>
     </div>
-  
 </template>
 
 <script>
-import Musicbar3 from './Musicbar3'
+import wordcloud from 'vue-wordcloud'
 export default {
-    components:{
-        'music-bar': Musicbar3
-    }
+    components: {
+        wordcloud
+    },
+    data() {
+        return {
+            myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
+            defaultWords: [
+                
+            ]
+        } 
+    },
+    methods: {
+        wordClickHandler(name, value, vm) {
+            console.log('wordClickHandler', name, value, vm);
+        }
+    },
 }
 </script>
 

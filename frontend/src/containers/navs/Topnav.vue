@@ -165,7 +165,7 @@
       </div> -->
 
       <!-- logged in -->
-      <div class="user d-inline-block" v-if="authorization">
+      <div class="user d-inline-block" v-if="isLoggedin">
         <b-dropdown
           class="dropdown-menu-right"
           right
@@ -177,7 +177,7 @@
           <template slot="button-content">
             <span class="name mr-1">{{user.username}}</span>
             <span v-if="user.avatar">
-              <img :alt="user.username" :src="user.avatar" />
+              <img :alt="user.username" :src="imgURL" />
             </span>
             <span v-else>
               <b-avatar></b-avatar>
@@ -191,37 +191,21 @@
         </b-dropdown>
       </div>
       <!-- not logged in -->
-      <div class="user d-inline-block" v-else>
-        <b-dropdown
-          class="dropdown-menu-right"
-          right
-          variant="empty"
-          toggle-class="p-0"
-          menu-class="mt-3"
-          no-caret
-        >
-          <template slot="button-content">
-            <span class="name mr-1">로그인을 해주세요</span>
-            <span>
-              <b-avatar></b-avatar>
-            </span>
-          </template>
-          <b-dropdown-item>회원가입</b-dropdown-item>
-          <b-dropdown-item>로그인</b-dropdown-item>
-          <b-dropdown-divider />
-          <b-dropdown-item id="socialBtn"><GoogleLoginBtn/></b-dropdown-item>
-          <b-dropdown-item id="socialBtn"><KakaoLoginBtn/></b-dropdown-item>
-        </b-dropdown>
+       <div class="user d-inline-block" v-else @click="showLogin = !showLogin" style="cursor: pointer;">
+        <span class="name mr-1">로그인을 해주세요</span>
+        <span>
+          <b-avatar></b-avatar>
+        </span>
       </div>
     </div>
+    <LoginModal :showLogin="showLogin" @hideModal="showLogin=false"/>
   </nav>
 </template>
 
 <script>
 import Switches from "vue-switches";
 import notifications from "../../data/notifications";
-import GoogleLoginBtn from "@/components/User/GoogleLoginBtn.vue"
-import KakaoLoginBtn from "@/components/User/KakaoLoginBtn.vue"
+import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 import { MenuIcon, MobileMenuIcon } from "../../components/Svg";
 import {
@@ -237,8 +221,7 @@ export default {
     "menu-icon": MenuIcon,
     "mobile-menu-icon": MobileMenuIcon,
     switches: Switches,
-    GoogleLoginBtn,
-    KakaoLoginBtn,
+    LoginModal,
   },
   data() {
     return {
@@ -252,14 +235,16 @@ export default {
       buyUrl,
       notifications,
       isDarkActive: false,
-      adminRoot
+      adminRoot,
+      showLogin: false
     };
   },
   methods: {
     ...mapMutations(["changeSideMenuStatus", "changeSideMenuForMobile"]),
     ...mapActions(["setLang", "signOut", 'logout']),
     search() {
-      this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`);
+      this.$router.push(`/app/piaf/search/${this.searchKeyword}`);
+      // this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`);
       this.searchKeyword = "";
     },
     searchClick() {
@@ -293,52 +278,53 @@ export default {
       this.logout()
     },
 
-    toggleFullScreen() {
-      const isInFullScreen = this.isInFullScreen();
+    // toggleFullScreen() {
+    //   const isInFullScreen = this.isInFullScreen();
 
-      var docElm = document.documentElement;
-      if (!isInFullScreen) {
-        if (docElm.requestFullscreen) {
-          docElm.requestFullscreen();
-        } else if (docElm.mozRequestFullScreen) {
-          docElm.mozRequestFullScreen();
-        } else if (docElm.webkitRequestFullScreen) {
-          docElm.webkitRequestFullScreen();
-        } else if (docElm.msRequestFullscreen) {
-          docElm.msRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      }
-      this.fullScreen = !isInFullScreen;
-    },
-    isInFullScreen() {
-      return (
-        (document.fullscreenElement && document.fullscreenElement !== null) ||
-        (document.webkitFullscreenElement &&
-          document.webkitFullscreenElement !== null) ||
-        (document.mozFullScreenElement &&
-          document.mozFullScreenElement !== null) ||
-        (document.msFullscreenElement && document.msFullscreenElement !== null)
-      );
-    }
+    //   var docElm = document.documentElement;
+    //   if (!isInFullScreen) {
+    //     if (docElm.requestFullscreen) {
+    //       docElm.requestFullscreen();
+    //     } else if (docElm.mozRequestFullScreen) {
+    //       docElm.mozRequestFullScreen();
+    //     } else if (docElm.webkitRequestFullScreen) {
+    //       docElm.webkitRequestFullScreen();
+    //     } else if (docElm.msRequestFullscreen) {
+    //       docElm.msRequestFullscreen();
+    //     }
+    //   } else {
+    //     if (document.exitFullscreen) {
+    //       document.exitFullscreen();
+    //     } else if (document.webkitExitFullscreen) {
+    //       document.webkitExitFullscreen();
+    //     } else if (document.mozCancelFullScreen) {
+    //       document.mozCancelFullScreen();
+    //     } else if (document.msExitFullscreen) {
+    //       document.msExitFullscreen();
+    //     }
+    //   }
+    //   this.fullScreen = !isInFullScreen;
+    // },
+    // isInFullScreen() {
+    //   return (
+    //     (document.fullscreenElement && document.fullscreenElement !== null) ||
+    //     (document.webkitFullscreenElement &&
+    //       document.webkitFullscreenElement !== null) ||
+    //     (document.mozFullScreenElement &&
+    //       document.mozFullScreenElement !== null) ||
+    //     (document.msFullscreenElement && document.msFullscreenElement !== null)
+    //   );
+    // }
   },
   computed: {
+    imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
     ...mapGetters({
       currentUser: "currentUser",
-      menuType: "getMenuType",
-      menuClickCount: "getMenuClickCount",
-      selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
+      // menuType: "getMenuType",
+      // menuClickCount: "getMenuClickCount",
+      // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
     }),
-    ...mapState(['authorization', 'user'])
+    ...mapState(['authorization', 'user', 'isLoggedin'])
   },
   beforeDestroy() {
     document.removeEventListener("click", this.handleDocumentforMobileSearch);
@@ -348,11 +334,6 @@ export default {
     this.isDarkActive = color.indexOf("dark") > -1;
   },
   watch: {
-    "$i18n.locale"(to, from) {
-      if (from !== to) {
-        this.$router.go(this.$route.path);
-      }
-    },
     isDarkActive(val) {
       let color = getThemeColor();
       let isChange = false;

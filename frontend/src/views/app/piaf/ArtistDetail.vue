@@ -14,7 +14,8 @@
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{artist.name}}</h1><br>
                   <h1 class="mb-0 truncate text-large">{{artist.type}}</h1><br>
-                  <h3 class="mb-0 truncate">데뷔: {{artist.released}}</h3><br>
+                  <h3 class="mb-0 truncate" v-if="artist.member">멤버: {{artist.member}}</h3><br>
+                  <h3 class="mb-0 truncate">데뷔: {{artist.debue}}</h3><br>
                 </div>
         </b-colxx>
     </b-colxx>
@@ -37,24 +38,24 @@
               <table  class="table table-sm" style="margin-bottom:0px;">
                   <thead style="font-size: initial;">
                     <th></th>
-                    <th>곡</th>
-                    <th>가수</th>
+                    <th id='song' @click="changeSortValue('name')" style="cursor:pointer">곡</th>
+                    <th id='artist' @click="changeSortValue('artist')" style="cursor:pointer">가수</th>
                     <th>장르</th>
-                    <th>재생</th>
-                    <th>추가</th>
-                    <th>상세정보</th>
-                    <th>좋아요</th>
+                    <th style="width:10%">재생</th>
+                    <th style="width:10%">추가</th>
+                    <th style="width:10%">좋아요</th>
                   </thead>
                   <tbody style="font-size: x-large;">
-                    <tr :class="{'flex-row':true}" v-for="(song, index) in songs.slice(0,songListSize)" v-bind:key="index">
-                      <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" /></td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.name}}</td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.artist}}</td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;">{{song.genre}}</td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-control-play"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-playlist"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-magnifier-add" @click="detailSong(song.id)" style="cursor:pointer;"/></td>
-                      <td style="vertical-align: middle;"><div class="glyph-icon simple-icon-heart"/></td>
+                    <tr :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice(0,songListSize)" v-bind:key="index" style="cursor:pointer;">
+                      <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.name}}</td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.artist}}</td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{song.genre}}</td>
+                      <td style="vertical-align: middle;" @click.prevent="playSong(song.id)"><div class="glyph-icon simple-icon-control-play"/></td>
+                      <td style="vertical-align: middle;" @click.prevent="addSong(song.id)"><div class="glyph-icon simple-icon-playlist"/></td>
+                      <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td>
+                      <!-- <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td> -->
                     </tr>
                   </tbody>
               </table>
@@ -120,23 +121,32 @@
   </div>
 </template>
 <script>
-
+import http from "../../../utils/http-common";
 export default {
   components: {
   },
-
+  created() {
+    this.artistID = this.$route.params.artistID;
+    http
+      .get("/artist/"+this.artistID)
+      .then((rest) => {
+        this.artist = rest.data;
+      })
+  },
   data () {
     return {
+      sort_value : "",
+	  	sort_type : 'asc',
       isArtist: true,
       isSong: true,
       isAlbum: true,
       moreSong: false,
       moreAlbum: false,
-      keyword: '',
+
       songListSize: 5,
       // currentPage: 1,
       artistID: 0,
-      artist: { id: 1, name: '멜로망스', released: '2015.03.10', type: '그룹', img: 'https://cdnimg.melon.co.kr/cm2/artistcrop/images/008/39/732/839732_500.jpg?bfce7f999e6fa8e6d45e1b329a2eeb6f/melon/resize/416/quality/80/optimize'},
+      artist: {},
       songs: [{ id: 1, name: '선물', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
       { id: 1, name: '선물1', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
       { id: 1, name: '선물2', artist: '멜로망스', genre: '발라드', img: 'https://cdnimg.melon.co.kr/cm/album/images/100/78/176/10078176_500.jpg?fc3fe8c6bd74c16bce7ffd971a930ffa/melon/resize/282/quality/80/optimize'},
@@ -183,10 +193,72 @@ export default {
     detailAlbum: function(id){
       this.$router.push('/app/piaf/albumDetail/'+id)
     },
-  },
-  mounted() {
-    this.artistID = this.$route.params.artistID;
-  },
+    changeSortValue(value) {
+      if(this.sort_value != value){
+        this.sort_value=value;
+        this.sort_type = 'asc';
+      }else{
+        if(this.sort_type =='asc'){
+          this.sort_type = 'desc';
+        }else if(this.sort_type =='desc'){
+          this.sort_value = '';
+          this.sort_type = 'none';
+        }else{
+          this.sort_type = 'asc'
+        }
+      }
 
+      var tag1 = document.getElementById('song');
+      var tag2 = document.getElementById('artist');
+      if(this.sort_value=='name'){
+        tag1.style.color = "#236591";
+      }else {
+        tag1.style.color = "";
+      }
+
+      if(this.sort_value=='artist'){
+        tag2.style.color = "#236591";
+      }else {
+        tag2.style.color = "";
+      }
+    },
+  },
+  computed: {
+    sortSongs() {
+		if(this.sort_value=='name'){
+			if(this.sort_type=='asc'){
+			return this.songs.sort((a, b) => {
+				if( a.name > b.name) return 1;
+				else if ( a.name < b.name ) return -1;
+				else return 0;
+			})
+			}else if(this.sort_type=='desc'){
+				return this.songs.sort((a, b) => {
+					if( a.name < b.name) return 1;
+					else if ( a.name > b.name ) return -1;
+					else return 0;
+				})
+			}
+		}else if(this.sort_value=='artist'){
+			if(this.sort_type=='asc'){
+			return this.songs.sort((a, b) => {
+				if( a.artist > b.artist) return 1;
+				else if ( a.artist < b.artist ) return -1;
+				else return 0;
+			})
+			}else if(this.sort_type=='desc'){
+				return this.songs.sort((a, b) => {
+					if( a.artist < b.artist) return 1;
+					else if ( a.artist > b.artist ) return -1;
+					else return 0;
+				})
+			}
+		}
+		return this.songs.sort((a, b) => {
+			return b.id - a.id
+		})
+
+    },
+  }
 }
 </script>
