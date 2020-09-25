@@ -177,7 +177,7 @@
           <template slot="button-content">
             <span class="name mr-1">{{user.username}}</span>
             <span v-if="user.avatar">
-              <img :alt="user.username" :src="user.avatar" />
+              <img :alt="user.username" :src="imgURL" />
             </span>
             <span v-else>
               <b-avatar></b-avatar>
@@ -317,6 +317,7 @@ export default {
     // }
   },
   computed: {
+    imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
     ...mapGetters({
       currentUser: "currentUser",
       // menuType: "getMenuType",
