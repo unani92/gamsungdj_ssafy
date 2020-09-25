@@ -4,12 +4,14 @@ from rest_framework.decorators import permission_classes, APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Song, Album, Artist, Log, AlbumComment, SongComment
 from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
-
+from random import sample
 # Create your views here.
 
 class SongType(APIView):
     def get(self, request, emotion_type):
-        songs = Song.objects.filter(type__exact=emotion_type).order_by('-like')[:10]
+        songs = Song.objects.filter(type__exact=emotion_type).order_by('-like')[:200]
+        selected = list(sample(range(0,200), 10))
+        songs = [songs[i] for i in selected]
         serializer = SongSerializer(songs, many=True)
         return Response(serializer.data)
 

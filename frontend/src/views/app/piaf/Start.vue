@@ -8,6 +8,7 @@
                 <div class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card class="flex-row" no-body>
 						<div class="col-sm-4 main-carousel-bg1">
+              <button @click="getSadSong">update</button>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
@@ -53,6 +54,7 @@
 				<div class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card class="flex-row" no-body>
 						<div class="col-sm-4 main-carousel-bg2">
+              <button @click="getJoySong">update</button>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
@@ -98,6 +100,7 @@
                 <div class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card class="flex-row" no-body>
 						<div class="col-sm-4 main-carousel-bg3">
+              <button @click="getLoveSong">update</button>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
