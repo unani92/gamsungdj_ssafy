@@ -39,13 +39,16 @@
 
       </b-colxx>
     </b-row>
+    <LoginModal :showLogin="showLogin" @hideModal="showLogin=false"/>
   </div>
 </template>
 <script>
 import http from "../../../utils/http-common";
+import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 export default {
   components: {
+    LoginModal,
   },
   created() {
     this.songID = this.$route.params.songID;
@@ -58,7 +61,7 @@ export default {
   data () {
     return {
       songID: 0,
-
+      showLogin: false,
       song: [],
     }
   },
@@ -95,6 +98,8 @@ export default {
             }
           }
       })
+      }else{
+        this.showLogin=true;
       }
     },
   },
