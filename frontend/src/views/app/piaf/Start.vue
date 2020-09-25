@@ -235,63 +235,48 @@ const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
 
 export default {
-    components: {
-        'glide-component': GlideComponent,
-    },
+  components: {
+    'glide-component': GlideComponent,
+  },
 	mounted(){
-    http
-    .get('sad')
-    .then((data) => {
-        this.carouselData1_1 = data.data.slice(0, 5)
-        this.carouselData1_2 = data.data.slice(5, 10)
-		})
-		http
-		.get('joy')
-        .then((data) => {
-			this.carouselData2_1 = data.data.slice(0, 5)
-            this.carouselData2_2 = data.data.slice(5, 10)
-		})
-		http
-		.get('love')
-        .then((data) => {
-			this.carouselData3_1 = data.data.slice(0, 5)
-            this.carouselData3_2 = data.data.slice(5, 10)
-        })
+    this.getSadSong()
+    this.getJoySong()
+    this.getLoveSong()
+  },
+  data() {
+    return {
+      glideSingleOption: {
+        gap: 5,
+        perView: 1,
+        type: "carousel"
+      },
+      glideNoControlsSettings: {
+        gap: 5,
+        perView: 6,
+        type: "carousel",
+        breakpoints: {
+          480: {
+              perView: 1
+          },
+          800: {
+              perView: 2
+          },
+          1200: {
+              perView: 3
+          }
+      },
+      hideNav: true
     },
-    data() {
-        return {
-            glideSingleOption: {
-                gap: 5,
-                perView: 1,
-                type: "carousel"
-            },
-            glideNoControlsSettings: {
-                gap: 5,
-                perView: 6,
-                type: "carousel",
-                breakpoints: {
-                    480: {
-                        perView: 1
-                    },
-                    800: {
-                        perView: 2
-                    },
-                    1200: {
-                        perView: 3
-                    }
-                },
-                hideNav: true
-			},
-			dummyData1 ,
-			dummyData2 ,
-			dummyData3 ,
-			carouselData1_1: '',
-			carouselData1_2: '',
-			carouselData2_1: '',
-			carouselData2_2: '',
-			carouselData3_1: '',
-			carouselData3_2: '',
-        }
+    dummyData1 ,
+    dummyData2 ,
+    dummyData3 ,
+    carouselData1_1: '',
+    carouselData1_2: '',
+    carouselData2_1: '',
+    carouselData2_2: '',
+    carouselData3_1: '',
+    carouselData3_2: '',
+      }
     },
     computed: {
       ...mapState([
@@ -301,17 +286,29 @@ export default {
       ...mapGetters(['config'])
     },
 	methods:{
+    async getSadSong() {
+      const { data } = await http.get('sad')
+      this.carouselData1_1 = data.slice(0, 5)
+      this.carouselData1_2 = data.slice(5, 10)
+    },
+    async getJoySong() {
+      const { data } = await http.get('joy')
+      this.carouselData2_1 = data.slice(0, 5)
+      this.carouselData2_2 = data.slice(5, 10)
+    },
+    async getLoveSong() {
+      const { data } = await http.get('love')
+      this.carouselData3_1 = data.slice(0, 5)
+      this.carouselData3_2 = data.slice(5, 10)
+    },
     isLiked(data) {
       return this.songLikeList.includes(data.id);
     },
     async songLike(e) {
-
       const { id } = e.target
       const span = document.getElementById(id)
       const { data } = await http.post(`song/${id}/like/`, '',this.config)
       span.classList.toggle('liked')
-      console.log(data.liked)
-      console.log(span)
     },
 		tempFunction() {
 			alert("페이지 준비중입니다.");
