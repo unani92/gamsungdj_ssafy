@@ -8,7 +8,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     # from music.serializers import SongSerializer
     password = serializers.CharField(write_only=True)
-    avatar = serializers.ImageField(source='userprofile.avatar')
+    avatar = serializers.ImageField(source='userprofile.avatar', use_url=True, required=False)
     gender = serializers.CharField(source='userprofile.gender')
     age = serializers.CharField(source='userprofile.age')
     is_signed_up = serializers.BooleanField(source="userprofile.is_signed_up")
@@ -31,6 +31,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer
+    avatar = serializers.ImageField(required=False, use_url=True)
     class Meta:
         model = UserProfile
         fields = '__all__'

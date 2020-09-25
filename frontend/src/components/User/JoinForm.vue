@@ -5,7 +5,7 @@
         :no-close-on-backdrop="selectedBackdrop=='false'">
     <b-row>
     <b-form class="form-container">
-            <b-form-file v-model="avatar" accept="image/jpeg, image/png, image/gif" class="mb-3"></b-form-file>
+            <b-form-file v-model="avatar" accept="image/jpeg, image/png, image/gif, image/jpg" class="mb-3"></b-form-file>
             <b-form-group :label="$t('성별')">
                 <v-select v-model="gender" :options="genderData" :reduce="genderData=>genderData.value" />
             </b-form-group>
@@ -38,7 +38,7 @@ export default {
             selectedBackdrop: 'false',
             gender: '',
             age: '',
-            avatar: '',
+            avatar: null,
             genderData: [
                 {
                     label: "남성",
@@ -85,12 +85,26 @@ export default {
         },
         
         submit(refname) {
-            
-            const joinInfo = {
-                "avatar": this.avatar,
-                "gender": this.gender,
-                "age": this.age,
+            if (this.avatar !== null) {
+                const joinInfo = new FormData()
+                joinInfo.append("avatar", this.avatar)
+                joinInfo.append("gender",this.gender)
+                joinInfo.append("age", this.age)
+                joinInfo.append("is_signed_up", true)
+                this.postData(joinInfo, refname)
             }
+            else {
+                const joinInfo = {
+                    "gender": this.gender,
+                    "age": this.age,
+                    "is_signed_up":true
+                }
+                this.postData(joinInfo, refname)
+            }
+            
+            
+        },
+        postData(joinInfo, refname) {
             if (this.gender != "" && this.age !="") {
                 axios.post(baseURL + "accounts/", joinInfo, {
                     headers: {
@@ -114,7 +128,7 @@ export default {
             else {
                 alert("성별과 나이는 필수정보입니다. 정보를 입력해주세요")
             }
-        },
+        }
 
     }
 
