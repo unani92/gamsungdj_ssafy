@@ -87,8 +87,8 @@
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{limitString(song.name)}}</td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
-                      <td style="vertical-align: middle;" @click.prevent="playSong(song.id)"><div class="glyph-icon simple-icon-control-play"/></td>
-                      <td style="vertical-align: middle;" @click.prevent="addSong(song.id)"><div class="glyph-icon simple-icon-playlist"/></td>
+                      <td style="vertical-align: middle;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
+                      <td style="vertical-align: middle;" @click.prevent="addToPlayList(song)"><div class="glyph-icon simple-icon-playlist"/></td>
                       <!-- <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td> -->
                       <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
                       <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
@@ -160,10 +160,14 @@
 <script>
 import http from "../../../utils/http-common";
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
+
+const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
+const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
+
 export default {
   components: {
   },
-  
+
   created() {
     this.keyword = this.$route.params.keyword;
     http.get("/search/song/"+this.keyword+"/")
@@ -235,13 +239,40 @@ export default {
       }else{
         this.clickAlbumLike=false;
       }
-      
+
     },
-    playSong: function(id) {
-      alert(id+"실행");
+    async addToPlaylistAndPlay(song) {
+      const { data } = await http.get(youtubeURL, {
+        params: {
+          key: API_KEY,
+          part: 'snippet',
+          maxResults: 1,
+          type: 'video',
+          q: song.artist[0].name + ' ' + song.name
+        }
+      })
+      const { items } = data
+      const { videoId } = items[0].id
+      song['src'] = videoId
+      this.playlist.unshift(song)
+      this.$store.state.playerControl = 'add'
+      this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
     },
-    addSong: function(id) {
-      alert(id+"추가");
+    async addToPlayList(song) {
+      const { data } = await http.get(youtubeURL, {
+        params: {
+          key: API_KEY,
+          part: 'snippet',
+          maxResults: 1,
+          type: 'video',
+          q: song.artist[0].name + ' ' + song.name
+        }
+      })
+      const { items } = data
+      const { videoId } = items[0].id
+      song['src'] = videoId
+      this.playlist.push(song)
+      this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
     },
     likeSong: function(id) {
       console.log(this.$store.state.authorization)
@@ -354,6 +385,7 @@ export default {
 
   },
   computed: {
+
     sortSongs() {
 		if(this.sort_value=='name'){
 			if(this.sort_type=='asc'){
@@ -395,7 +427,7 @@ export default {
       // menuClickCount: "getMenuClickCount",
       // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
     }),
-    ...mapState(['authorization', 'user', 'isLoggedin'])
+    ...mapState(['authorization', 'user', 'isLoggedin', 'playlist'])
   },
 }
 </script>

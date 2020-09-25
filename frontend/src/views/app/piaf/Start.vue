@@ -239,11 +239,11 @@ export default {
         'glide-component': GlideComponent,
     },
 	mounted(){
-        http
-        .get('sad')
-        .then((data) => {
-            this.carouselData1_1 = data.data.slice(0, 5)
-            this.carouselData1_2 = data.data.slice(5, 10)
+    http
+    .get('sad')
+    .then((data) => {
+        this.carouselData1_1 = data.data.slice(0, 5)
+        this.carouselData1_2 = data.data.slice(5, 10)
 		})
 		http
 		.get('joy')
