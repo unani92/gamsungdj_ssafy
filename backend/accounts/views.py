@@ -30,22 +30,20 @@ class UserAPI(APIView):
         return Response(serializer.data)
 
     @permission_classes([IsAuthenticated])
-    def post(self, request, format=None):
+    def post(self, request):
         user = request.user
         try:
             UserProfile.objects.get(user=user)
             return Response(status=status.HTTP_409_CONFLICT)
         except UserProfile.DoesNotExist:
-            profile = UserProfile.objects.create(
-                user=user,
-                age=request.data.get('age'),
-                gender=request.data.get('gender'),
-                avatar=request.data.get('avatar'),
-                is_signed_up=True
-            )
-            serializer = UserSerializer(user)
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            request.data['user'] = user.id
+            serializer = UserProfileSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(user=user)
+                serializer = UserSerializer(user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @permission_classes([IsAuthenticated])
     def put(self, request):

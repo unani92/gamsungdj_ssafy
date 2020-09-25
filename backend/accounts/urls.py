@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = "accounts"
 urlpatterns = [
@@ -14,4 +16,4 @@ urlpatterns = [
     path('playlist/<int:pk>/', views.PlaylistDetailAPI.as_view()),
     # add or delete song in playlist
     path('playlist/<int:pk>/song/<int:song_pk>/', views.PlayListSongAPI.as_view()),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

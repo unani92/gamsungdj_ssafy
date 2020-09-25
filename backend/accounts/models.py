@@ -22,7 +22,7 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
-    avatar = models.ImageField(upload_to='static/image/avatar/', null=True)
+    avatar = models.ImageField(upload_to='static/image/avatar/', null=True, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True)
     age = models.CharField(max_length=1, choices=AGE_CHOICES, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
