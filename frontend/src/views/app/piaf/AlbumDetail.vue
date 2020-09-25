@@ -82,14 +82,17 @@
 
       </b-colxx>
     </b-row>
+    <LoginModal :showLogin="showLogin" @hideModal="showLogin=false"/>
   </div>
 </template>
 <script>
 import http from "../../../utils/http-common";
+import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 export default {
   
   components: {
+    LoginModal,
   },
   created() {
     this.albumID = this.$route.params.albumID;
@@ -110,6 +113,7 @@ export default {
   },
   data () {
     return {
+      showLogin: false,
       sort_value : "",
 	  	sort_type : 'asc',
       isSong: true,
@@ -194,6 +198,8 @@ export default {
             }
           }
       })
+      }else{
+        this.showLogin=true;
       }
     },
     checkLikeAlbum(albumID){
@@ -228,6 +234,8 @@ export default {
             }
           }
       })
+      }else{
+        this.showLogin=true;
       }
     },
 
