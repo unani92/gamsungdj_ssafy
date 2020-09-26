@@ -46,7 +46,7 @@
                         </span><hr>
 
                         <div class="playlist-item-wrapper" v-for="(data, index) in playlist" :key="index">
-                            <div class="d-flex flex-row" style="padding:10px; cursor:pointer"
+                            <div class="d-flex flex-row playlist-item-ellipsis " style="padding:10px; cursor:pointer;"
                                 @click="selectSong(index, data)"
                                 @mouseover="showOverlay(index)"
                                 @mouseout="hideOverlay(index)"
@@ -318,10 +318,8 @@ export default {
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
-                
             }
-            else {
-                
+            else {      
                 this.playlist = this.playlist.splice(index, 1)
             }
         }
@@ -352,5 +350,12 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
+}
+.playlist-item-ellipsis {
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
+    width:100%;
+    overflow:hidden;
 }
 </style>

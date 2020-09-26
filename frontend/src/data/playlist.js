@@ -4,6 +4,28 @@ export const playlistData = [
         playlist:
         [
             {
+                img: "https://cdnimg.melon.co.kr/cm/album/images/101/37/250/10137250_500.jpg?50e1f74970a36bb3b504a76f87981834/melon/quality/80/optimize",
+                name: "2002",
+                artist: [
+                    {
+                        name: "Anne-Marie",
+                    }
+                ],
+                src: "Il-an3K9pjg"
+
+            },
+            {
+                img: "https://cdnimg.melon.co.kr/cm2/album/images/104/65/994/10465994_20200723160043_500.jpg?8db1857c022f2f71eedcb170efbcc16d/melon/quality/80/optimize",
+                name: "홀로",
+                artist: [
+                    {
+                        name: "이하이",
+                    }
+                ],
+                src: "erVnNhFOHl4"
+                
+            },
+            {
                 img: "https://cdnimg.melon.co.kr/cm2/album/images/104/79/150/10479150_20200821103346_500.jpg?21a0dfff48264f87bb4120d95578e9ee/melon/quality/80/optimize",
                 name: "Dynamite",
                 artist: [
@@ -14,14 +36,26 @@ export const playlistData = [
                 src: "gdZLi9oWNZg"
             },
             {
-                img: "https://cdnimg.melon.co.kr/cm2/album/images/104/69/416/10469416_20200730151034_500.jpg?dcdcccfa8cd1bc5dae7b668a5910c277/melon/sharpen/0x1",
-                name: "눈누난나 (NUNU NANA)",
+                img: "https://cdnimg.melon.co.kr/cm2/album/images/103/20/500/10320500_500.jpg?415f9d7d32c2914d632a56cd402ccd62/melon/sharpen/0x1",
+                name: "흔들리는 꽃들 속에서 네 샴푸향이 느껴진거야",
                 artist: [
                     {
-                        name: "제시(Jessi)",
+                        name: "장범준",
                     }
                 ],
-                src: "GcIVcAGlXLU"
+                src: "689GoEBjMhY"
+
+            },
+            {
+                img: "https://cdnimg.melon.co.kr/cm/album/images/102/94/603/10294603_500.jpg?0c56b81bdfc97f7c568a95aad6a7614a/melon/quality/80/optimize",
+                name: "오늘도 빛나는 너에게 (To You My Light) (Feat.이라온)",
+                artist: [
+                    {
+                        name: "마크툽 (MAKTUB)",
+                    }
+                ],
+                src: "dmSUBdk4SY4"
+
             },
             {
                 img: "https://cdnimg.melon.co.kr/cm2/album/images/104/63/600/10463600_20200720152905_500.jpg?4f47c8ca556045d56c9f2016a866e652/melon/quality/80/optimize",
@@ -32,16 +66,6 @@ export const playlistData = [
                     }
                 ],
                 src: "d2ytH5mymWY"
-            },
-            {
-                img: "https://cdnimg.melon.co.kr/cm2/album/images/104/62/799/10462799_20200717150822_500.jpg?adcaec1a0d99e7a379c098d31dca68da/melon/quality/80/optimize",
-                name: "다시 여기 바닷가",
-                artist: [
-                    {
-                        name: "싹쓰리 (유두래곤, 린다G, 비룡)",
-                    }
-                ],
-                src: "ESKfHHtiSjs"
             },
             {
                 img: "https://cdnimg.melon.co.kr/cm2/album/images/104/52/351/10452351_20200629152036_500.jpg?40db717ac487b870724b0bab06e4b0d7/melon/quality/80/optimize",

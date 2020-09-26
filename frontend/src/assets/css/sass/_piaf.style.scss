@@ -7858,3 +7858,11 @@ select:-webkit-autofill:focus {
   display: inline-block;
   width: 270px;
 }
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  width: 100%;
+  overflow: hidden;
+}

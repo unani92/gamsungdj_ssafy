@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div>
         <wordcloud
         :data="defaultWords"
         nameKey="name"
