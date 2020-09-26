@@ -46,7 +46,7 @@
                         </span><hr>
 
                         <div class="playlist-item-wrapper" v-for="(data, index) in playlist" :key="index">
-                            <div class="d-flex flex-row" style="padding:10px; cursor:pointer"
+                            <div class="d-flex flex-row playlist-item-ellipsis " style="padding:10px; cursor:pointer;"
                                 @click="selectSong(index, data)"
                                 @mouseover="showOverlay(index)"
                                 @mouseout="hideOverlay(index)"
@@ -56,7 +56,7 @@
                                 <music-bar style="position:relative; left:16px; top:16px; display:none;" :id="'playlist-item-playing'+index" />
 
                                 <!-- 마우스 오버시 보이는 부분 -->
-                                <span style="position:absolute; left:85%; float:right; display:none;" :id="'playlist-item-overlay'+index" @click.prevent="remove(index)"><font size="6">x</font></span>
+                                <span style="position:absolute; left:85%; float:right; display:none;" :id="'playlist-item-overlay'+index" @click="remove(index)"><font size="6">x</font></span>
 
                                 <img :src="data.img" :alt="data.name" class="list-thumbnail border-0" />
                                 <div class="pl-3 pt-2 pr-2 pb-2">
@@ -100,13 +100,6 @@ export default {
             playerVars: {
                 autoplay: 1
             },
-            selectedSong: {
-                index: -1,
-                img: '',
-                title: '',
-                artist: '',
-                src: '',
-            },
             playlistData,
             playerToggleFlag: false,
         }
@@ -115,6 +108,7 @@ export default {
         ...mapState([
             'playlist',
             'playerControl',
+            'selectedSong'
         ]),
         player() {
             return this.$refs.youtube.player
@@ -199,7 +193,7 @@ export default {
                 }
             }
             else if(state === "add") {
-                if(this.playlist.length == 1) {
+                if(this.playlist.length == 1 || this.selectedSong.index == -1) {
                     this.selectedSong.index = 0
                     this.markPlayingIndex(this.selectedSong.index)
                     this.selectedSong.img = this.playlist[this.selectedSong.index].img
@@ -324,10 +318,8 @@ export default {
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 }
-                
             }
-            else {
-                
+            else {      
                 this.playlist = this.playlist.splice(index, 1)
             }
         }
@@ -358,5 +350,12 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
+}
+.playlist-item-ellipsis {
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
+    width:100%;
+    overflow:hidden;
 }
 </style>

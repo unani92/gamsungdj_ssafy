@@ -16,13 +16,13 @@
 								<b-card class="text-white" no-body @mouseover="showOverlay(index)" @mouseout="hideOverlay(index)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+0)">
-                    <div style="position:absolute; bottom:10%;">
-                      <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                      <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
-                    </div>
-                    <h5 class="card-title">{{ data.name }}</h5>
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
@@ -33,12 +33,12 @@
 								<b-card class="text-white" no-body @mouseover="showOverlay(index+5)" @mouseout="hideOverlay(index+5)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+5)">
-                    <div style="position:absolute; bottom:10%;">
-                      <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                      <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
-                    </div>
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                        </div>
 										<h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
@@ -62,13 +62,13 @@
 								<b-card class="text-white" no-body  @mouseover="showOverlay(index+10)" @mouseout="hideOverlay(index+10)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+10)">
-                    <div style="position:absolute; bottom:10%;">
-                      <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                      <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
-                    </div>
-                    <h5 class="card-title">{{ data.name }}</h5>
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
@@ -79,13 +79,13 @@
 								<b-card class="text-white" no-body @mouseover="showOverlay(index+15)" @mouseout="hideOverlay(index+15)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+15)">
-                    <div style="position:absolute; bottom:10%;">
-                      <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                      <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
-                    </div>
-                    <h5 class="card-title">{{ data.name }}</h5>
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
@@ -108,13 +108,13 @@
 								<b-card class="text-white" no-body  @mouseover="showOverlay(index+20)" @mouseout="hideOverlay(index+20)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+20)">
-                    <div style="position:absolute; bottom:10%;">
-                      <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                      <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
-                    </div>
-                    <h5 class="card-title">{{ data.name }}</h5>
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
@@ -125,13 +125,13 @@
 								<b-card class="text-white" no-body @mouseover="showOverlay(index+25)" @mouseout="hideOverlay(index+25)">
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay tempclass" :class="'overlayClass'+(index+25)">
-                    <div style="position:absolute; bottom:10%;">
-                      <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                      <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                      <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
-                    </div>
-                    <h5 class="card-title">{{ data.name }}</h5>
+                                        <div style="position:absolute; bottom:10%;">
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                        </div>
+                                        <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
 									</div>
 								</b-card>
@@ -150,20 +150,32 @@
 	<!-- 날씨 매칭 추천 시작 -->
     <b-row>
         <b-colxx xxs="12">
-            <a href="#" @click.prevent="tempFunction"><h5 class="mb-4 card-title">오늘 같은 날에는 ></h5></a>
+            <a href="#" @click.prevent=""><h5 class="mb-4 card-title">오늘 같은 날에는 ></h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
                 <div v-for="(data, index) in dummyData1" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
-                        <div class="position-relative">
-                            <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
-                            <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
-                            <!-- <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">TRENDING</b-badge> -->
+                        <div class="position-relative" @mouseover="showOverlayWeather(index)" @mouseout="hideOverlayWeather(index)">
+                            <a href="#" @click.prevent="tempFunction">
+                                <img class="card-img-top" :src="data.src" alt="Card cap" />
+                            </a>
+                            <!-- 오버레이 시작 -->
+                            <div class="card-img-overlay" :class="'overlayWeather'+index">
+                                <div style="position:absolute; bottom:10%;">
+                                    <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                    <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
+                                    <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                </div>
+                                <h5 class="card-title">{{ data.name }}</h5>
+                                <p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
+                            </div>
+                            <!-- 오버레이 끝 -->
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
-                            <a href="#" @click.prevent="tempFunction"><p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p></a>
+                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4 ellipsis">{{ data.title }}</h6></a>
+                            <a href="#" @click.prevent="tempFunction"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist }}</p>
+                            </a>
                         </b-card-body>
                     </b-card>
                 </div>
@@ -176,7 +188,7 @@
 	<!-- 시간 매칭 추천 시작 -->
     <b-row>
         <b-colxx xxs="12">
-            <a href="#" @click.prevent="tempFunction"><h5 class="mb-4 card-title">이시간에는 ></h5></a>
+            <a href="#" @click.prevent=""><h5 class="mb-4 card-title">이시간에는 ></h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
@@ -184,12 +196,15 @@
                     <b-card no-body>
                         <div class="position-relative">
                             <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
-                            <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
-                            <!-- <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">TRENDING</b-badge> -->
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
-                            <a href="#" @click.prevent="tempFunction"><p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p></a>
+                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4 ellipsis">{{ data.title }}</h6></a>
+                            <a href="#" @click.prevent="tempFunction"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist }}</p></a>
+                            <div class="mt-2" style="font-size:x-large;">
+                                <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
+                                <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
+                            </div>
                         </b-card-body>
                     </b-card>
                 </div>
@@ -198,32 +213,6 @@
         </b-colxx>
     </b-row>
 	<!-- 시간 매칭 추천 끝 -->
-
-	<!-- 기분 매칭 추천 시작 -->
-    <b-row>
-        <b-colxx xxs="12">
-            <a href="#" @click.prevent="tempFunction"><h5 class="mb-4 card-title">지금 기분에는 ></h5></a>
-        </b-colxx>
-        <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
-            <glide-component :settings="glideNoControlsSettings">
-                <div v-for="(data, index) in dummyData3" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
-                    <b-card no-body>
-                        <div class="position-relative">
-                            <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
-                            <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">Play</b-badge>
-                            <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">Add</b-badge> -->
-                        </div>
-                        <b-card-body>
-                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4">{{ data.title }}</h6></a>
-                            <a href="#" @click.prevent="tempFunction"><p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p></a>
-                        </b-card-body>
-                    </b-card>
-                </div>
-            </glide-component>
-
-        </b-colxx>
-    </b-row>
-	<!-- 기분 매칭 추천 끝 -->
 </div>
 </template>
 
@@ -336,6 +325,30 @@ export default {
                 el[i].style.display="none"
             }
         },
+        showOverlayWeather(index) {
+            let el = document.getElementsByClassName('overlayWeather'+index)
+            for(var i=0; i<el.length; i++){
+                el[i].style.display="block"
+            }
+        },
+        hideOverlayWeather(index) {
+            let el = document.getElementsByClassName('overlayWeather'+index)
+            for(var i=0; i<el.length; i++){
+                el[i].style.display="none"
+            }
+        },
+        showOverlay(index) {
+            let el = document.getElementsByClassName('overlayClass'+index)
+            for(var i=0; i<el.length; i++){
+                el[i].style.display="block"
+            }
+        },
+        hideOverlay(index) {
+            let el = document.getElementsByClassName('overlayClass'+index)
+            for(var i=0; i<el.length; i++){
+                el[i].style.display="none"
+            }
+        },
         addToPlaylistAndPlay(data) {
             axios.get(youtubeURL, {
                 params: {
@@ -352,7 +365,7 @@ export default {
                 data['src'] = videoId
                 this.playlist.unshift(data)
                 this.$store.state.playerControl = "add"
-                this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+                this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
             })
             .catch(err => console.log(err))
         },
@@ -371,35 +384,36 @@ export default {
                 const { videoId } = items[0].id
                 data['src'] = videoId
                 this.playlist.push(data)
-                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 5000, permanent: false })
+                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
             })
             .catch(err => console.log(err))
         },
+        search(word){
+            this.$router.push(`/app/piaf/search/${word}`);
+        }
 	}
 }
 </script>
 <style scoped>
 .card-title {
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    word-wrap:normal;
-    width:100%;
-    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    width: 100%;
+    overflow: hidden;
 }
 .card-text {
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    word-wrap:normal;
-    width:100%;
-    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    width: 100%;
+    overflow: hidden;
 }
 .liked {
   color: red !important;
 }
 .card-img-overlay {
-    white-space: nowrap;
-    overflow:hidden;
-    display:none;
+    display: none;
 }
 .main-carousel-bg1 {
 	background: url('/assets/img/wordcloud/wc01.png') no-repeat;

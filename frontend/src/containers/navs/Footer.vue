@@ -3,8 +3,8 @@
     <div class="footer-content">
         <div class="row" style="height:100%; align-items:center;">
             <div class="col-12 col-sm-3">
+                <img :src="selectedSong.img" style="height:-webkit-fill-available;"> {{ selectedSong.title }} - {{ selectedSong.artist }}
                 <p class="mb-0 text-muted">
-                    album image
                 </p>
             </div>
             <div class="col-sm-6">
@@ -31,7 +31,13 @@
 </footer>
 </template>
 <script>
+import { mapState } from "vuex"
 export default {
+    computed: {
+        ...mapState([
+            'selectedSong'
+        ]),
+    },
     mounted(){
         window.addEventListener("resize", this.handleResize);
     },
@@ -78,10 +84,10 @@ export default {
 }
 </script>
 <style scoped>
-.glyph-icon{
+.glyph-icon {
     cursor:pointer;
 }
 .glyph-icon:hover {
     filter:brightness(200%)
 }
-</style>>
+</style>
