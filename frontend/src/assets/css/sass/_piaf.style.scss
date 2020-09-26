@@ -7866,3 +7866,13 @@ select:-webkit-autofill:focus {
   width: 100%;
   overflow: hidden;
 }
+.button-refresh {
+  float: right;
+  margin-top: 5%;
+  margin-right: 5%;
+  cursor: pointer;
+  
+}
+.glyph-icon:hover {
+  color: $theme-color-1;
+}

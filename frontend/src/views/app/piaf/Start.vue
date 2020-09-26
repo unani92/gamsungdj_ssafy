@@ -1,14 +1,14 @@
 <template>
 <div>
-	<!-- 감정 카테고리별 추천 음악 시작 -->
+	<!-- 감정 카테고리별 음악 추천 시작 -->
     <b-row>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideSingleOption">
                 <!-- 카테고리1 시작 -->
                 <div class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card class="flex-row" no-body>
-						<div class="col-sm-4 main-carousel-bg1">
-              <button @click="getSadSong">update</button>
+						<div class="col-sm-4 main-carousel-bg1" style="font-size:xx-large;">
+                            <div class="glyph-icon simple-icon-refresh button-refresh" @click="getSadSong"></div>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
@@ -53,8 +53,8 @@
                 <!-- 카테고리2 시작 -->
 				<div class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card class="flex-row" no-body>
-						<div class="col-sm-4 main-carousel-bg2">
-              <button @click="getJoySong">update</button>
+						<div class="col-sm-4 main-carousel-bg2" style="font-size:xx-large;">
+                            <div class="glyph-icon simple-icon-refresh button-refresh" @click="getJoySong"></div>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
@@ -99,8 +99,8 @@
                 <!-- 카테고리3 시작 -->
                 <div class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card class="flex-row" no-body>
-						<div class="col-sm-4 main-carousel-bg3">
-              <button @click="getLoveSong">update</button>
+						<div class="col-sm-4 main-carousel-bg3" style="font-size:xx-large;">
+                            <div class="glyph-icon simple-icon-refresh button-refresh" @click="getLoveSong"></div>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
@@ -141,11 +141,10 @@
                     </b-card>
                 </div>
                 <!-- 카테고리3 끝 -->
-
             </glide-component>
         </b-colxx>
     </b-row>
-	<!-- 감정 카테고리별 추천 음악 끝 -->
+	<!-- 감정 카테고리별 음악 추천 끝 -->
 
 	<!-- 날씨 매칭 추천 시작 -->
     <b-row>
@@ -157,7 +156,7 @@
                 <div v-for="(data, index) in dummyData1" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative" @mouseover="showOverlayWeather(index)" @mouseout="hideOverlayWeather(index)">
-                            <a href="#" @click.prevent="tempFunction">
+                            <a href="#" @click.prevent="search(data.title)">
                                 <img class="card-img-top" :src="data.src" alt="Card cap" />
                             </a>
                             <!-- 오버레이 시작 -->
@@ -195,11 +194,11 @@
                 <div v-for="(data, index) in dummyData2" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <a href="#" @click.prevent="tempFunction"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
+                            <a href="#" @click.prevent="search(data.title)"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4 ellipsis">{{ data.title }}</h6></a>
-                            <a href="#" @click.prevent="tempFunction"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist }}</p></a>
+                            <a href="#" @click.prevent="search(data.title)"><h6 class="mb-4 ellipsis">{{ data.title }}</h6></a>
+                            <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist }}</p></a>
                             <div class="mt-2" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                 <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
@@ -209,7 +208,6 @@
                     </b-card>
                 </div>
             </glide-component>
-
         </b-colxx>
     </b-row>
 	<!-- 시간 매칭 추천 끝 -->
@@ -227,48 +225,48 @@ const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
 
 export default {
-  components: {
-    'glide-component': GlideComponent,
-  },
-	mounted(){
-    this.getSadSong()
-    this.getJoySong()
-    this.getLoveSong()
-  },
-  data() {
-    return {
-      glideSingleOption: {
-        gap: 5,
-        perView: 1,
-        type: "carousel"
-      },
-      glideNoControlsSettings: {
-        gap: 5,
-        perView: 6,
-        type: "carousel",
-        breakpoints: {
-          480: {
-              perView: 1
-          },
-          800: {
-              perView: 2
-          },
-          1200: {
-              perView: 3
-          }
-      },
-      hideNav: true
+    components: {
+        'glide-component': GlideComponent,
     },
-    dummyData1 ,
-    dummyData2 ,
-    dummyData3 ,
-    carouselData1_1: '',
-    carouselData1_2: '',
-    carouselData2_1: '',
-    carouselData2_2: '',
-    carouselData3_1: '',
-    carouselData3_2: '',
-      }
+	mounted(){
+        this.getSadSong()
+        this.getJoySong()
+        this.getLoveSong()
+    },
+    data() {
+        return {
+            glideSingleOption: {
+                gap: 5,
+                perView: 1,
+                type: "carousel"
+            },
+            glideNoControlsSettings: {
+                gap: 5,
+                perView: 6,
+                type: "carousel",
+                breakpoints: {
+                    480: {
+                        perView: 1
+                    },
+                    800: {
+                        perView: 2
+                    },
+                    1200: {
+                        perView: 3
+                    }
+                },
+                hideNav: true
+            },
+            dummyData1 ,
+            dummyData2 ,
+            dummyData3 ,
+            carouselData1_1: '',
+            carouselData1_2: '',
+            carouselData2_1: '',
+            carouselData2_2: '',
+            carouselData3_1: '',
+            carouselData3_2: '',
+        }
     },
     computed: {
       ...mapState([
@@ -280,35 +278,34 @@ export default {
     },
 	methods:{
     async getSadSong() {
-      const { data } = await http.get('sad')
-      this.carouselData1_1 = data.slice(0, 5)
-      this.carouselData1_2 = data.slice(5, 10)
+        const { data } = await http.get('sad')
+        this.carouselData1_1 = data.slice(0, 5)
+        this.carouselData1_2 = data.slice(5, 10)
     },
     async getJoySong() {
-      const { data } = await http.get('joy')
-      this.carouselData2_1 = data.slice(0, 5)
-      this.carouselData2_2 = data.slice(5, 10)
+        const { data } = await http.get('joy')
+        this.carouselData2_1 = data.slice(0, 5)
+        this.carouselData2_2 = data.slice(5, 10)
     },
     async getLoveSong() {
-      const { data } = await http.get('love')
-      this.carouselData3_1 = data.slice(0, 5)
-      this.carouselData3_2 = data.slice(5, 10)
+        const { data } = await http.get('love')
+        this.carouselData3_1 = data.slice(0, 5)
+        this.carouselData3_2 = data.slice(5, 10)
     },
     isLiked(data) {
-      return this.songLikeList.includes(data.id);
+        return this.songLikeList.includes(data.id);
     },
     async songLike(e) {
-      console.log('c')
-      if (this.isLoggedin) {
-        console.log('clicked')
-        const { id } = e.target
-        const span = document.getElementById(id)
-        const { data } = await http.post(`song/${id}/like/`, '',this.config)
-        span.classList.toggle('liked')
-      } else {
-        const loginBtn = document.querySelector('.name')
-        loginBtn.click()
-      }
+        if (this.isLoggedin) {
+            const { id } = e.target
+            const span = document.getElementById(id)
+            const { data } = await http.post(`song/${id}/like/`, '',this.config)
+            span.classList.toggle('liked')
+        } 
+        else {
+            const loginBtn = document.querySelector('.name')
+            loginBtn.click()
+        }
     },
 		tempFunction() {
 			alert("페이지 준비중입니다.");
