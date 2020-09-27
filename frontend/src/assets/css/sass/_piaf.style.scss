@@ -1910,8 +1910,9 @@ button {
       padding: 0.5rem 1rem;
       line-height: 2;
       font-size: 0.8rem;
-      width: 93%;
+      // width: 93%;
       color: $primary-color;
+      border-radius: 20px;
     }
 
     .search-icon {
@@ -1921,7 +1922,7 @@ button {
       position: absolute;
       width: 40px;
       height: 40px;
-      bottom: -8px;
+      bottom: 0px;
       right: 3px;
       text-align: center;
       cursor: pointer;

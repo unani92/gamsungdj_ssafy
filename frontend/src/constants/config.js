@@ -27,21 +27,8 @@ export const firebaseConfig = {
   appId: "1:557576321564:web:bc2ce73477aff5c2197dd9"
 };
 
-
-
-
-export const currentUser = {
-  id: 1,
-  // title: 'Sarah Kortney',
-  // img: '/assets/img/profiles/l-1.jpg',
-  title: '정윤환',
-  img: 'https://avatars2.githubusercontent.com/u/53211781?s=460&u=997a6d5a5d89795776510214230bef36e1e66884&v=4',
-  date: 'Last seen today 15:24',
-  role: UserRole.Admin
-}
-
 export const isAuthGuardActive = false;
 export const themeRadiusStorageKey = 'theme_radius'
 export const themeSelectedColorStorageKey = 'theme_selected_color'
-export const defaultColor = 'light.blueolympic'
+export const defaultColor = 'dark.redruby'
 export const colors = ['bluenavy', 'blueyale', 'blueolympic', 'greenmoss', 'greenlime', 'purplemonster', 'orangecarrot', 'redruby', 'yellowgranola', 'greysteel']

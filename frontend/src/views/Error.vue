@@ -14,16 +14,16 @@
                   <router-link tag="a" to="/">
                     <span class="logo-single" />
                   </router-link>
-                  <h6 class="mb-4">{{ $t("pages.error-title") }}</h6>
-                  <p class="mb-0 text-muted text-small mb-0">{{ $t("pages.error-code") }}</p>
+                  <!-- <h6 class="mb-4">{{ $t("pages.error-title") }}</h6>
+                  <p class="mb-0 text-muted text-small mb-0">{{ $t("pages.error-code") }}</p> -->
                   <p class="display-1 font-weight-bold mb-5">404</p>
-                  <b-button
+                  <!-- <b-button
                     type="submit"
                     variant="primary"
                     size="lg"
                     class="btn-shadow"
                     @click="goBack"
-                  >{{ $t("pages.go-back-home") }}</b-button>
+                  >{{ $t("pages.go-back-home") }}</b-button> -->
                 </div>
               </b-card>
             </b-colxx>

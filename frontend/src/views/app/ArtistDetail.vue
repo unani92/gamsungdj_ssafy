@@ -121,7 +121,7 @@
   </div>
 </template>
 <script>
-import http from "../../../utils/http-common";
+import http from "../../utils/http-common";
 export default {
   components: {
   },

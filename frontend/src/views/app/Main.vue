@@ -215,9 +215,9 @@
 </template>
 
 <script>
-import GlideComponent from '../../../components/Carousel/GlideComponent'
-import http from '../../../utils/http-common'
-import { dummyData1, dummyData2, dummyData3 } from "../../../data/dummyData"
+import GlideComponent from '../../components/Carousel/GlideComponent'
+import http from '../../utils/http-common'
+import { dummyData1, dummyData2, dummyData3 } from "../../data/dummyData"
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
 
