@@ -8,8 +8,21 @@
       <center>
       <h2>{{ selectedSong.title }}</h2>
       <h4 class="mt-3">{{ selectedSong.artist }}</h4>
-      <div class="mt-5">00:00 / 03:12</div>
-      <div class="glyph-icon simple-icon-heart pt-5"> 152</div>
+      <div class="mt-5">{{ selectedSong.currentTime }} / {{ selectedSong.duration }}</div>
+      <div class="mt-3">
+        <div class="post-icon mr-3 d-inline-block">
+          <router-link to="#">
+            <i class="simple-icon-heart mr-1"></i>
+          </router-link>
+          <span>{{ selectedSong.like }} Likes</span>
+        </div>
+        <div class="post-icon mr-3 d-inline-block">
+          <router-link to="#">
+            <i class="simple-icon-bubble mr-1"></i>
+          </router-link>
+          <span>{{ selectedSong.comments}} Comments</span>
+        </div>
+      </div>
       </center>
     </span>
     </span>
@@ -19,23 +32,17 @@
 <script>
 export default {
   props: ['selectedSong'],
-  data() {
-    return {
-      dummyData: [
-        {
-            icon: 'iconsminds-male',
-            title: 'DEVELOPER',
-            price: '$11',
-            detail: 'User/Month',
-            link: '#',
-            features: [
-                'Number of end products 1',
-                'Free updates',
-                'Forum support'
-            ]
-        },
-      ],
-    } 
-  }
+  // computed: {
+  //   currentTime: function() {
+  //     var min = parseInt(this.selectedSong.currentTime/60)
+  //     var sec = parseInt(this.selectedSong.currentTime%60)
+  //     return min+':'+sec
+  //   },
+  //   duration: function() {
+  //     var min = parseInt(this.selectedSong.duration/60)
+  //     var sec = parseInt(this.selectedSong.duration%60)
+  //     return min+':'+sec
+  //   }
+  // }
 }
 </script>

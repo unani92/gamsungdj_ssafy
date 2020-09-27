@@ -14,7 +14,7 @@
                         <span class="glyph-icon simple-icon-control-rewind" @click="action('prev')"></span>
                         <span class="glyph-icon simple-icon-control-play" @click="action('play')"  v-show="this.$store.state.visiblePlayButton" style="padding:0px 20px 0px 20px;"></span>
                         <span class="glyph-icon simple-icon-control-pause" @click="action('pause')" v-show="this.$store.state.visiblePauseButton" style="padding:0px 20px 0px 20px;"></span>
-                        <span class="glyph-icon simple-icon-control-forward" @click="action('next')">  </span>
+                        <span class="glyph-icon simple-icon-control-forward" @click="action('next')"></span>
                     </font>
                 </p>
                 </center>
@@ -79,15 +79,12 @@ export default {
                 this.$store.state.visiblePauseButton = true
             }
             this.$store.state.playerControl = msg
-        },
+        }
     }
 }
 </script>
 <style scoped>
 .glyph-icon {
     cursor:pointer;
-}
-.glyph-icon:hover {
-    filter:brightness(200%)
 }
 </style>
