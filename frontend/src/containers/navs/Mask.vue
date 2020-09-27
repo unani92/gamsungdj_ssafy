@@ -1,20 +1,20 @@
 <template>
     <!--
-        참고
         https://developers.google.com/youtube/iframe_api_reference#Events
         https://www.npmjs.com/package/vue-youtube
-
-        문제점
-        1. 컬러가 정해져 있지 않아서 재생 중인 곡을 선택 했을 때 css 를 변경하면 다시 복구할 수 없음
-        2. index 로 접근하기 때문에 재생 중 다른 플레이리스트를 가져왔을 때 문제가 생김
-        3. vue-perfect-scrollbar가 안됨
+        https://codepen.io/OPiMedia/pen/WrzLQw
+        vue-perfect-scroll
     -->
     <div class="row aligner">
         <div class="col-sm-9 aligner" style="height:inherit;">
             <b-tabs card no-fade style="height:100%; width:100%;">
                 <b-tab title="Player" active title-item-class="w-50 text-center">
-                    <div class="player-wrapper">
+                    <div class="player-wrapper">         
                         <div class="float-right">
+                            <!-- <input id="YouTube-player-progress" type="range" v-model="selectedSong.currentTime" min="0" max="100" @change="youTubePlayerCurrentTimeChange">
+                            <label for="YouTube-player-progress">duration</label>
+                            <input id="YouTube-player-volume" type="range" min="0" max="100" v-model="selectedSong.volume" @change="youTubePlayerVolumeChange">
+                            <label for="YouTube-player-volume">volume</label> -->
                             <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
                         </div>
                         <div class="player" v-show="playerToggleFlag">
@@ -46,7 +46,7 @@
                         </span><hr>
 
                         <div class="playlist-item-wrapper" v-for="(data, index) in playlist" :key="index">
-                            <div class="d-flex flex-row playlist-item-ellipsis " style="padding:10px; cursor:pointer;"
+                            <div class="d-flex flex-row ellipsis " style="padding:10px; cursor:pointer;"
                                 @click="selectSong(index, data)"
                                 @mouseover="showOverlay(index)"
                                 @mouseout="hideOverlay(index)"
@@ -68,7 +68,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </b-card>
                 </b-colxx>
             </b-row>
@@ -98,11 +97,15 @@ export default {
     data() {
         return {
             playerVars: {
-                autoplay: 1
+                autoplay: 1,
+                controls: 1
             },
             playlistData,
             playerToggleFlag: false,
         }
+    },
+    mounted() {
+        setInterval(this.synchronize, 1000);
     },
     computed: {
         ...mapState([
@@ -112,7 +115,7 @@ export default {
         ]),
         player() {
             return this.$refs.youtube.player
-        },
+        }
     },
     watch: {
         playerControl: function(state) {
@@ -322,7 +325,21 @@ export default {
             else {      
                 this.playlist = this.playlist.splice(index, 1)
             }
-        }
+        },
+        // youTubePlayerVolumeChange() {   
+        //     this.player.setVolume(this.selectedSong.volume);
+        // },
+        // youTubePlayerCurrentTimeChange() {
+        //     this.player.seekTo(this.selectedSong.currentTime * this.selectedSong.duration / 100)
+        // },
+        // synchronize() {
+        //     this.player.getDuration()
+        //     .then((value) => this.selectedSong.duration = value)
+        //     this.player.getCurrentTime()
+        //     .then((value) => this.selectedSong.currentTime = value / this.selectedSong.duration * 100)
+        //     this.player.getVolume()
+        //     .then((value) => this.selectedSong.volume = value)
+        // }
     }
 }
 </script>
