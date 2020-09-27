@@ -1,21 +1,54 @@
 <template>
-    <div>
-        <wordcloud
-        :data="defaultWords"
-        nameKey="name"
-        valueKey="value"
-        :color="myColors"
-        :showTooltip="true"
-        :wordClick="wordClickHandler">
-        </wordcloud>
+    <div height>
+        <b-colxx class="col-sm-8" style="display:inline-block; float:left">
+            <b-row>
+            <wordcloud
+                :data="defaultWords"
+                nameKey="name"
+                valueKey="value"
+                :color="myColors"
+                :showTooltip="true"
+                :wordClick="wordClickHandler"
+            >
+            </wordcloud>
+            </b-row>
+        </b-colxx>
+        <b-colxx class="col-sm-3" style="display:inline-block; float:right">
+            <b-row class="mb-3">
+                <b-colxx>
+                    <b-card class="h-100" title="분석1">
+                        <div class="dashboard-donut-chart">
+                            <doughnut-chart :data="doughnutChartData" shadow />
+                        </div>
+                    </b-card>
+                </b-colxx>
+            </b-row>
+            <b-row>
+                <b-colxx>
+                    <b-card title="분석2">
+                        <div v-for="(s,index) in profileStatuses" :key="index" class="mb-4">
+                        <p class="mb-2">
+                            {{ s.title }}
+                            <span class="float-right text-muted">{{s.status}}/{{s.total}}</span>
+                        </p>
+                        <b-progress :value="(s.status / s.total) * 100"></b-progress>
+                        </div>
+                    </b-card>
+                </b-colxx>
+            </b-row>
+        </b-colxx>
     </div>
 </template>
 
 <script>
 import wordcloud from 'vue-wordcloud'
+import profileStatuses from "../../data/profileStatuses";
+import { doughnutChartData } from "../../data/charts";
+import DoughnutChart from "../../components/Charts/Doughnut";
 export default {
     components: {
-        wordcloud
+        wordcloud,
+        "doughnut-chart": DoughnutChart
     },
     data() {
         return {
@@ -58,7 +91,9 @@ export default {
                     "name": "play",
                     "value": 6
                 }
-            ]
+            ],
+            profileStatuses,
+            doughnutChartData,
         }
     },
     methods: {

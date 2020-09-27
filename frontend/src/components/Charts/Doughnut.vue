@@ -12,7 +12,7 @@ export default {
   props: {
     data: {
       type: Object
-    },
+    },  
     containerClass: {
       type: String,
       default: "chart-container"
