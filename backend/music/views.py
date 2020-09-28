@@ -214,6 +214,7 @@ class SongCommentList(APIView):
     def post(self, request, pk):
         song = get_object_or_404(Song, pk=pk)
         serializer = SongCommentSerializer(data=request.data)
+        print(request.user)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, song=song)
             return Response(serializer.data)
@@ -256,3 +257,8 @@ class SongCommentList(APIView):
                 "status": 401,
                 "msg": "게시글 삭제 권한이 없습니다."
             })
+
+class TimeRecommend(APIView):
+    @permission_classes([IsAuthenticated])
+    def get(self, request, time):
+        print(request.user)
