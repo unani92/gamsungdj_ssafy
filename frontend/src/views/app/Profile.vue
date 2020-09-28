@@ -86,7 +86,7 @@ export default {
       this.moreSong = !this.moreSong;
 	},
 	detailSong: function(id){
-      this.$router.push('/app/piaf/songDetail/'+id)
+      this.$router.push('/A505/songDetail/'+id)
 	},
 	sortList() {
 		//this.playlist = _.orderBy(this.playlist, this.sort_value, this.sort)

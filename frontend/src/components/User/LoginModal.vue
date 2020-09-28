@@ -1,6 +1,6 @@
 <template>
 <div>
-    <b-modal v-model="showLogin" id="modalbackdrop" ref="loginmodal" :title="$t('로그인')"
+    <b-modal v-model="showLogin" id="modalbackdrop" ref="loginmodal" title="로그인"
             :hide-backdrop="true"
             :no-close-on-backdrop="true">
         <b-row style="justify-content: center;">

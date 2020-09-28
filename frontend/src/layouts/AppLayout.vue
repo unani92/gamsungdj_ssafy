@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import Topnav from "../containers/navs/Topnav";
-import Mask from "../containers/navs/Mask";
-import Footer from "../containers/navs/Footer";
+import Topnav from "../containers/Topnav";
+import Mask from "../containers/Mask";
+import Footer from "../containers/Footer";
 import { mapGetters } from "vuex";
 
 export default {

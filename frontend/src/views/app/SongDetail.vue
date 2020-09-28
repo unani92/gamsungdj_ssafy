@@ -13,12 +13,12 @@
                 </div>
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{song.name}}</h1><br>
-                  <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in song.artist" v-bind:key="index"><router-link :to="'/app/piaf/artistDetail/'+singer.id" class="text-primary mr-3 ">{{singer.name}}</router-link></a></h1><br>
-                  <h2 class="mb-0 truncate">앨범: <router-link :to="'/app/piaf/albumDetail/'+song.album.id" class="text-primary">{{song.album.name}}</router-link></h2><br>
+                  <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in song.artist" v-bind:key="index"><router-link :to="'/A505/artistDetail/'+singer.id" class="text-primary mr-3 ">{{singer.name}}</router-link></a></h1><br>
+                  <h2 class="mb-0 truncate">앨범: <router-link :to="'/app/albumDetail/'+song.album.id" class="text-primary">{{song.album.name}}</router-link></h2><br>
                   <h3 class="mb-0 truncate " style="display: inline-flex;">장르:<h3 class="ml-1" v-for="(genre, index) in song.genres" v-bind:key="index"> {{genre.name}}</h3></h3><br>
                   <h3 class="mb-0 truncate">감정: {{song.type}}</h3>
-                  <h1 v-if="!checkLikeSong(song.id)" class="mb-0 truncate mt-5 text-large"><img src="../../../assets/img/heart/heart_empty.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{song.like}}</h1>
-                  <h1 v-if="checkLikeSong(song.id)" class="mb-0 truncate mt-5 text-large"><img src="../../../assets/img/heart/heart_full.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{song.like}}</h1>
+                  <h1 v-if="!checkLikeSong(song.id)" class="mb-0 truncate mt-5 text-large"><img src="../../assets/img/heart/heart_empty.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{song.like}}</h1>
+                  <h1 v-if="checkLikeSong(song.id)" class="mb-0 truncate mt-5 text-large"><img src="../../assets/img/heart/heart_full.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{song.like}}</h1>
                 </div>
         </b-colxx>
       </b-colxx>
@@ -43,7 +43,7 @@
   </div>
 </template>
 <script>
-import http from "../../../utils/http-common";
+import http from "../../utils/http-common";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 export default {
