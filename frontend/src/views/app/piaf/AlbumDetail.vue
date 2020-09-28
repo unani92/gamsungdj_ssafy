@@ -16,8 +16,8 @@
                   <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in album.artist" v-bind:key="index"><router-link :to="'/app/piaf/artistDetail/'+singer.id" class="text-primary">{{singer.name}}</router-link></a></h1><br>
                   <h3 class="mb-0 truncate " style="display: inline-flex;">장르:<h3 class="ml-1" v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</h3></h3><br>
                   <h3 class="mb-0 truncate">발매일: {{album.released_date}}</h3><br>
-                  <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
-                  <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                  <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{likeCount}}</h1>
+                  <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{likeCount}}</h1>
                 </div>
         </b-colxx>
       </b-colxx>
@@ -102,7 +102,7 @@ export default {
         this.album = rest.data.data;
         this.album.released_date = rest.data.data.released_date.substr(0,4) + "-" + rest.data.data.released_date.substr(4,2) + "-" + rest.data.data.released_date.substr(6,2);
         this.songs = rest.data.songs;
-        
+        this.likeCount = this.album.like + this.album.user_like.length;
         var namearray =  rest.data.data.songs.split(",");
         for(var i=0; i<this.songs.length;i++){
           if(!this.songs[i]){
@@ -113,6 +113,7 @@ export default {
   },
   data () {
     return {
+      likeCount:0,
       showLogin: false,
       sort_value : "",
 	  	sort_type : 'asc',
@@ -224,10 +225,12 @@ export default {
         .then((rest) => {
           console.log(rest.data)
           if(rest.data.liked){
+            this.likeCount+=1;
             this.user.like_albums.push(id);
           }else{
             for(var i=0;i<this.user.like_albums.length;i++){
               if(this.user.like_albums[i]==id){
+                this.likeCount-=1;
                 this.user.like_albums.splice(i, 1);
                 break;
               }

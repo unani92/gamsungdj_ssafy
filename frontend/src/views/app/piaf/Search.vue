@@ -123,8 +123,8 @@
                             <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
                             <h6 v-if="album.genre">장르:<a v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</a></h6>
                             <h6>발매일: {{dateformat(album.released_date)}}</h6>
-                            <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
-                            <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                            <img src="../../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(album.id)" style="width:32px;" @click="likeAlbum(album.id)"/>
+                            <img src="../../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(album.id)" style="width:32px;" @click="likeAlbum(album.id)"/>
                         </b-colxx>
                     </b-row>
                 </b-card-body>
@@ -143,8 +143,8 @@
                         <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
                         <h6 v-if="album.genre">장르: {{album.genre}}</h6>
                         <h6>발매일: {{dateformat(album.released_date)}}</h6>
-                        <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
-                        <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                        <img src="../../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(album.id)" style="width:32px;" @click="likeAlbum(album.id)"/>
+                        <img src="../../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(album.id)" style="width:32px;" @click="likeAlbum(album.id)"/>
                     </b-colxx>
                 </b-row>
               </b-card-body>
@@ -155,6 +155,16 @@
     </b-colxx>
   </b-row>
   <LoginModal :showLogin="showLogin" @hideModal="showLogin=false"/>
+  <b-modal v-model="emptyModal"  hide-header hide-footer
+            :hide-backdrop="true"
+            :no-close-on-backdrop="true">
+        <b-row style="justify-content: center;">
+          <h4>'{{keyword}}' 검색 결과가 없습니다.</h4>
+        </b-row>
+        <b-row class="mt-1" style="justify-content: center;">
+          <b-button variant="secondary" @click="toMain()">메인으로</b-button>
+        </b-row>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -177,6 +187,8 @@ export default {
         this.songs = rest.data;
         if(this.songs.length!=0){
           this.isSong=true;
+        }else{
+          this.dataCheck+=1;
         }
     })
     http.get("/search/artist/"+this.keyword+"/")
@@ -184,6 +196,8 @@ export default {
         this.artists = rest.data;
         if(this.artists.length!=0){
           this.isArtist=true;
+        }else{
+          this.dataCheck+=1;
         }
     })
     http.get("/search/album/"+this.keyword+"/")
@@ -191,11 +205,15 @@ export default {
         this.albums = rest.data;
         if(this.albums.length!=0){
           this.isAlbum=true;
+        }else{
+          this.dataCheck+=1;
         }
     })
   },
   data () {
-    return {
+    return {  
+      emptyModal: false,
+      dataCheck: 0,
       showLogin: false,
       clickAlbumLike: false,
       sort_value : "",
@@ -388,45 +406,47 @@ export default {
         return false;
        }
       return false;
+    },
+    toMain(){
+      this.$router.push('/app/piaf/start/');
     }
 
   },
   computed: {
 
     sortSongs() {
-		if(this.sort_value=='name'){
-			if(this.sort_type=='asc'){
-			return this.songs.sort((a, b) => {
-				if( a.name > b.name) return 1;
-				else if ( a.name < b.name ) return -1;
-				else return 0;
-			})
-			}else if(this.sort_type=='desc'){
-				return this.songs.sort((a, b) => {
-					if( a.name < b.name) return 1;
-					else if ( a.name > b.name ) return -1;
-					else return 0;
-				})
-			}
-		}else if(this.sort_value=='artist'){
-			if(this.sort_type=='asc'){
-			return this.songs.sort((a, b) => {
-				if( a.artist[0].name > b.artist[0].name) return 1;
-				else if ( a.artist[0].name < b.artist[0].name ) return -1;
-				else return 0;
-			})
-			}else if(this.sort_type=='desc'){
-				return this.songs.sort((a, b) => {
-					if( a.artist[0].name < b.artist[0].name) return 1;
-					else if ( a.artist[0].name > b.artist[0].name ) return -1;
-					else return 0;
-				})
-			}
-		}
-		return this.songs.sort((a, b) => {
-			return b.id - a.id
-		})
-
+      if(this.sort_value=='name'){
+        if(this.sort_type=='asc'){
+        return this.songs.sort((a, b) => {
+          if( a.name > b.name) return 1;
+          else if ( a.name < b.name ) return -1;
+          else return 0;
+        })
+        }else if(this.sort_type=='desc'){
+          return this.songs.sort((a, b) => {
+            if( a.name < b.name) return 1;
+            else if ( a.name > b.name ) return -1;
+            else return 0;
+          })
+        }
+      }else if(this.sort_value=='artist'){
+        if(this.sort_type=='asc'){
+        return this.songs.sort((a, b) => {
+          if( a.artist[0].name > b.artist[0].name) return 1;
+          else if ( a.artist[0].name < b.artist[0].name ) return -1;
+          else return 0;
+        })
+        }else if(this.sort_type=='desc'){
+          return this.songs.sort((a, b) => {
+            if( a.artist[0].name < b.artist[0].name) return 1;
+            else if ( a.artist[0].name > b.artist[0].name ) return -1;
+            else return 0;
+          })
+        }
+      }
+      return this.songs.sort((a, b) => {
+        return b.id - a.id
+      })
     },
     ...mapGetters({
       currentUser: "currentUser",
@@ -435,6 +455,13 @@ export default {
       // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
     }),
     ...mapState(['authorization', 'user', 'isLoggedin', 'playlist'])
+  },
+  watch : {
+    dataCheck: function(){
+      if(this.dataCheck==3){
+        this.emptyModal = true;
+      }
+    },
   },
 }
 </script>
