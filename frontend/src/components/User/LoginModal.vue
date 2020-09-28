@@ -1,8 +1,9 @@
 <template>
 <div>
     <b-modal v-model="showLogin" id="modalbackdrop" ref="loginmodal" title="로그인"
-            :hide-backdrop="true"
-            :no-close-on-backdrop="true">
+            :no-close-on-backdrop="true"
+            :hide-header-close="true"
+            centered>
         <b-row style="justify-content: center;">
             <div>
             <g-signin-button
@@ -132,7 +133,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #googleBtn {
     height: 49px;
     border: none;
@@ -150,4 +151,5 @@ export default {
     font-size: 16.5px; 
     color: rgb(29, 2, 2);
 }
+
 </style>
