@@ -43,7 +43,15 @@ class CategoryDetail(APIView):
         elif category == 'artist':
             artist = get_object_or_404(Artist, pk=pk)
             serializer = ArtistSerializer(artist)
-            return Response(serializer.data)
+            songs = Song.objects.filter(artist=pk)
+            song_serializer = SongSerializer(songs, many=True)
+            albums = Album.objects.filter(artist=pk)
+            album_serializer = AlbumSerializer(albums, many=True)
+            return Response({
+                'data': serializer.data,
+                'songs': song_serializer.data,
+                'albums': album_serializer.data
+            })
         else:
             return Response({
                 "status": 401,
