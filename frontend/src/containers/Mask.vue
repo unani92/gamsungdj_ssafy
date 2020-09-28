@@ -78,13 +78,13 @@
 </template>
 
 <script>
-import MusicBar from "../../components/Playlist/Musicbar"
-import Player from "../../components/Playlist/Player"
-import Analyze from "../../components/Playlist/Analyze"
-import { playlistData } from "../../data/playlist"
+import MusicBar from "../components/Playlist/Musicbar"
+import Player from "../components/Playlist/Player"
+import Analyze from "../components/Playlist/Analyze"
+import { playlistData } from "../data/playlist"
 import { mapState } from "vuex"
 import Switches from "vue-switches"
-import http from "../../utils/http-common"
+import http from "../utils/http-common"
 
 export default {
     props: ['state'],

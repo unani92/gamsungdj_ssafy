@@ -231,14 +231,14 @@ export default {
       this.moreAlbum = !this.moreAlbum;
     },
     detailArtist: function(id){
-      this.$router.push('/app/piaf/ArtistDetail/'+id)
+      this.$router.push('/app/ArtistDetail/'+id)
     },
     detailSong: function(id){
-      this.$router.push('/app/piaf/songDetail/'+id)
+      this.$router.push('/app/songDetail/'+id)
     },
     detailAlbum: function(id){
       if(!this.clickAlbumLike){
-        this.$router.push('/app/piaf/albumDetail/'+id)
+        this.$router.push('/app/albumDetail/'+id)
       }else{
         this.clickAlbumLike=false;
       }

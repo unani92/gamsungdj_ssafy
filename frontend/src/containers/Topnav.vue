@@ -69,18 +69,12 @@
 
 <script>
 import Switches from "vue-switches";
-import notifications from "../../data/notifications";
+import notifications from "../data/notifications";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
-import { MenuIcon, MobileMenuIcon } from "../../components/Svg";
-import {
-  searchPath,
-  menuHiddenBreakpoint,
-  localeOptions,
-  buyUrl,
-  adminRoot
-} from "../../constants/config";
-import { getDirection, setDirection, getThemeColor, setThemeColor } from "../../utils";
+import { MenuIcon, MobileMenuIcon } from "../components/Svg";
+import { adminRoot } from "../constants/config";
+import { getDirection, setDirection, getThemeColor, setThemeColor } from "../utils";
 export default {
   components: {
     "menu-icon": MenuIcon,
@@ -92,12 +86,6 @@ export default {
     return {
       searchKeyword: "",
       isMobileSearch: false,
-      isSearchOver: false,
-      fullScreen: false,
-      menuHiddenBreakpoint,
-      searchPath,
-      localeOptions,
-      buyUrl,
       notifications,
       isDarkActive: false,
       adminRoot,
@@ -105,11 +93,9 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["changeSideMenuStatus", "changeSideMenuForMobile"]),
-    ...mapActions(["setLang", "signOut", 'logout']),
+    ...mapActions(['logout']),
     search() {
-      this.$router.push(`/app/piaf/search/${this.searchKeyword}`);
-      // this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`);
+      this.$router.push(`/app/search/${this.searchKeyword}`);
       this.searchKeyword = "";
     },
     searchClick() {
@@ -129,15 +115,6 @@ export default {
         this.isMobileSearch = false;
         this.searchKeyword = "";
       }
-    },
-
-    changeLocale(locale, direction) {
-      const currentDirection = getDirection().direction;
-      if (direction !== currentDirection) {
-        setDirection(direction);
-      }
-
-      this.setLang(locale);
     },
     signout() {
       this.logout()
