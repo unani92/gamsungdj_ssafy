@@ -1,8 +1,9 @@
 <template>
 <div>
-<b-modal v-model="showJoin" id="modalbackdrop" ref="modalbackdrop" title="회워가입"
-        :hide-backdrop="selectedBackdrop=='false'"
-        :no-close-on-backdrop="selectedBackdrop=='false'">
+<b-modal v-model="showJoin" id="modalbackdrop" ref="modalbackdrop" title="회원가입"
+        :hide-header-close="true"
+        :no-close-on-backdrop="selectedBackdrop=='false'"
+        centered>
     <b-row>
     <b-form class="form-container">
             <b-form-file v-model="avatar" accept="image/jpeg, image/png, image/gif, image/jpg" class="mb-3"></b-form-file>

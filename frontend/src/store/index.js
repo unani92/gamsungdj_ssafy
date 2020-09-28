@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     authorization:sessionStorage.getItem("authorization"),
-    user : sessionStorage.getItem('user'),
+    user : JSON.parse(sessionStorage.getItem('user')),
     visiblePlaylist: false,
     visiblePlayButton: true,
     visiblePauseButton: false,
@@ -28,7 +28,7 @@ export default new Vuex.Store({
       like: '',
       comment: '',
     },
-    isLoggedin: false,
+    isLoggedin: sessionStorage.getItem('isLoggedin'),
   },
   getters: {
     config: (state) => ({headers: { Authorization: state.authorization }}),
@@ -41,10 +41,11 @@ export default new Vuex.Store({
       state.authorization = value
     },
     SET_USER(state, value) {
-      sessionStorage.setItem("user", value)
+      sessionStorage.setItem("user", JSON.stringify(value))
       state.user = value
       state.songLikeList = value.like_songs
       state.albumLikeList = value.like_albums
+      sessionStorage.setItem("isLoggedin", true)
       state.isLoggedin = true
     },
     SET_SONG_LIKE(state, value) {
@@ -52,8 +53,9 @@ export default new Vuex.Store({
     },
     LOGOUT(state){
       state.authorization=""
-      state.user=[]
+      state.user=null
       state.isLoggedin = false
+      sessionStorage.removeItem("isLoggedin")
       sessionStorage.removeItem("authorization")
       sessionStorage.removeItem("user")
     },
