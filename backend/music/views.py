@@ -62,6 +62,13 @@ class SearchResult(APIView):
     def get(self, request, category, keyword):
         if category == 'song':
             songs = Song.objects.filter(name__contains=keyword).order_by('-pk')
+            try:
+                artist = Artist.objects.get(name__contains=keyword)
+                artist_songs = Song.objects.filter(artist=artist.pk)
+            except:
+                artist_songs = []
+
+            songs = list(artist_songs) + list(songs)
             serializer = SongSerializer(songs, many=True)
             return Response(serializer.data)
         elif category == 'album':
