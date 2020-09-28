@@ -18,6 +18,7 @@
                   <h3 class="mb-0 truncate">발매일: {{album.released_date}}</h3><br>
                   <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{likeCount}}</h1>
                   <h1 v-if="checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{likeCount}}</h1>
+                
                 </div>
         </b-colxx>
       </b-colxx>
