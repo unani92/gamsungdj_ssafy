@@ -13,7 +13,7 @@
                 </div>
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{album.name}}</h1><br>
-                  <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in album.artist" v-bind:key="index"><router-link :to="'/app/piaf/artistDetail/'+singer.id" class="text-primary">{{singer.name}}</router-link></a></h1><br>
+                  <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in album.artist" v-bind:key="index"><router-link :to="'/A505/artistDetail/'+singer.id" class="text-primary">{{singer.name}}</router-link></a></h1><br>
                   <h3 class="mb-0 truncate " style="display: inline-flex;">장르:<h3 class="ml-1" v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</h3></h3><br>
                   <h3 class="mb-0 truncate">발매일: {{album.released_date}}</h3><br>
                   <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
@@ -135,7 +135,7 @@ export default {
       }
     },
     detailSong: function(id){
-      this.$router.push('/app/piaf/songDetail/'+id)
+      this.$router.push('/A505/songDetail/'+id)
     },
     changeSortValue(value) {
       if(this.sort_value != value){

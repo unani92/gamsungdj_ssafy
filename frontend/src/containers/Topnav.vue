@@ -69,7 +69,6 @@
 
 <script>
 import Switches from "vue-switches";
-import notifications from "../data/notifications";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 import { MenuIcon, MobileMenuIcon } from "../components/Svg";
@@ -86,7 +85,6 @@ export default {
     return {
       searchKeyword: "",
       isMobileSearch: false,
-      notifications,
       isDarkActive: false,
       adminRoot,
       showLogin: false
@@ -95,7 +93,7 @@ export default {
   methods: {
     ...mapActions(['logout']),
     search() {
-      this.$router.push(`/app/search/${this.searchKeyword}`);
+      this.$router.push(`${adminRoot}/search/${this.searchKeyword}`);
       this.searchKeyword = "";
     },
     searchClick() {
@@ -119,52 +117,11 @@ export default {
     signout() {
       this.logout()
     },
-
-    // toggleFullScreen() {
-    //   const isInFullScreen = this.isInFullScreen();
-
-    //   var docElm = document.documentElement;
-    //   if (!isInFullScreen) {
-    //     if (docElm.requestFullscreen) {
-    //       docElm.requestFullscreen();
-    //     } else if (docElm.mozRequestFullScreen) {
-    //       docElm.mozRequestFullScreen();
-    //     } else if (docElm.webkitRequestFullScreen) {
-    //       docElm.webkitRequestFullScreen();
-    //     } else if (docElm.msRequestFullscreen) {
-    //       docElm.msRequestFullscreen();
-    //     }
-    //   } else {
-    //     if (document.exitFullscreen) {
-    //       document.exitFullscreen();
-    //     } else if (document.webkitExitFullscreen) {
-    //       document.webkitExitFullscreen();
-    //     } else if (document.mozCancelFullScreen) {
-    //       document.mozCancelFullScreen();
-    //     } else if (document.msExitFullscreen) {
-    //       document.msExitFullscreen();
-    //     }
-    //   }
-    //   this.fullScreen = !isInFullScreen;
-    // },
-    // isInFullScreen() {
-    //   return (
-    //     (document.fullscreenElement && document.fullscreenElement !== null) ||
-    //     (document.webkitFullscreenElement &&
-    //       document.webkitFullscreenElement !== null) ||
-    //     (document.mozFullScreenElement &&
-    //       document.mozFullScreenElement !== null) ||
-    //     (document.msFullscreenElement && document.msFullscreenElement !== null)
-    //   );
-    // }
   },
   computed: {
     imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
     ...mapGetters({
       currentUser: "currentUser",
-      // menuType: "getMenuType",
-      // menuClickCount: "getMenuClickCount",
-      // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
     }),
     ...mapState(['authorization', 'user', 'isLoggedin'])
   },

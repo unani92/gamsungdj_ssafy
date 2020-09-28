@@ -10,7 +10,7 @@ const routes = [
     component: () => import("./views/home"),
   },
   {
-    path: "/app",
+    path: "/A505",
     component: () => import("./views/app"),
     redirect: `${adminRoot}/main`,
     children: [

@@ -161,6 +161,7 @@
 import http from "../../utils/http-common";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
+import { adminRoot } from "../../constants/config";
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
@@ -231,14 +232,14 @@ export default {
       this.moreAlbum = !this.moreAlbum;
     },
     detailArtist: function(id){
-      this.$router.push('/app/ArtistDetail/'+id)
+      this.$router.push(`${adminRoot}/ArtistDetail/${id}`)
     },
     detailSong: function(id){
-      this.$router.push('/app/songDetail/'+id)
+      this.$router.push(`${adminRoot}/songDetail/${id}`)
     },
     detailAlbum: function(id){
       if(!this.clickAlbumLike){
-        this.$router.push('/app/albumDetail/'+id)
+        this.$router.push(`${adminRoot}/albumDetail/${id}`)
       }else{
         this.clickAlbumLike=false;
       }

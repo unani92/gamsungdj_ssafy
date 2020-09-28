@@ -217,7 +217,6 @@
 <script>
 import GlideComponent from '../../components/Carousel/GlideComponent'
 import http from '../../utils/http-common'
-import { dummyData1, dummyData2, dummyData3 } from "../../data/dummyData"
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
 
@@ -257,9 +256,72 @@ export default {
                 },
                 hideNav: true
             },
-            dummyData1 ,
-            dummyData2 ,
-            dummyData3 ,
+            dummyData1:
+            [
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/79/150/10479150_20200821103346_500.jpg?21a0dfff48264f87bb4120d95578e9ee/melon/quality/80/optimize",
+                    title: "Dynamite",
+                    artist: "방탄소년단",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/69/416/10469416_20200730151034_500.jpg?dcdcccfa8cd1bc5dae7b668a5910c277/melon/sharpen/0x1",
+                    title: "눈누난나 (NUNU NANA)",
+                    artist: "제시(Jessi)",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/63/600/10463600_20200720152905_500.jpg?4f47c8ca556045d56c9f2016a866e652/melon/quality/80/optimize",
+                    title: "취기를 빌려 (취향저격 그녀 X 산들)",
+                    artist: "산들",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/62/799/10462799_20200717150822_500.jpg?adcaec1a0d99e7a379c098d31dca68da/melon/quality/80/optimize",
+                    title: "다시 여기 바닷가",
+                    artist: "싹쓰리 (유두래곤, 린다G, 비룡)",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/52/351/10452351_20200629152036_500.jpg?40db717ac487b870724b0bab06e4b0d7/melon/quality/80/optimize",
+                    title: "마리아 (Maria)",
+                    artist: "화사 (Hwa Sa)",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/75/061/10475061_20200812120927_500.jpg?e0e2a4331bb0aa6e525f679804f35f8e/melon/quality/80/optimize",
+                    title: "When We Disco (Duet with 선미)",
+                    artist: "박진영",
+                },
+            ],
+            dummyData2:
+            [
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/34/250/10434250_20200522151246_500.jpg?efb35e4b6d68454084fe2a58b8d70805/melon/quality/80/optimize",
+                    title: "돼버릴거야 (feat.휘인 of 마마무) (Prod.기리보이)",
+                    artist: "딘딘",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/72/319/10472319_20200805151615_500.jpg?ab6e9e2acf7e853b6611add34fdb55d7/melon/quality/80/optimize",
+                    title: "On&On",
+                    artist: "D2ear",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/69/721/10469721_20200730171630_500.jpg?050fafc6d4d4a2d6c865c43a71d8450c/melon/quality/80/optimize",
+                    title: "잘 살고 있어요",
+                    artist: "nokdu",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/74/356/10474356_20200810183044_500.jpg?c37e9c51256d54058bd45510eb1c06a3/melon/quality/80/optimize",
+                    title: "0과 1사이",
+                    artist: "원지 (WONJI)",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/74/229/10474229_20200810152829_500.jpg?0e275b2d5e5968ff4997aeb1cac957b3/melon/quality/80/optimize",
+                    title: "WE (Feat. SOLE)",
+                    artist: "다희 (DAHEE)",
+                },
+                {
+                    src: "https://cdnimg.melon.co.kr/cm2/album/images/103/64/577/10364577_20191213144211_500.jpg?3ed85e910eff03b518e083f012243648/melon/quality/80/optimize",
+                    title: "나뿐인것같아",
+                    artist: "비비 (BB)",
+                },
+            ],
             carouselData1_1: '',
             carouselData1_2: '',
             carouselData2_1: '',
@@ -386,7 +448,7 @@ export default {
             .catch(err => console.log(err))
         },
         search(word){
-            this.$router.push(`/app/piaf/search/${word}`);
+            this.$router.push(`/A505/search/${word}`);
         }
 	}
 }

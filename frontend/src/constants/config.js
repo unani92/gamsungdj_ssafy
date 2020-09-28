@@ -1,8 +1,6 @@
-export const defaultMenuType = 'menu-hidden' // 'menu-default', 'menu-sub-hidden', 'menu-hidden';
-export const adminRoot = '/app';
-
+export const defaultMenuType = 'menu-hidden'
+export const adminRoot = '/A505';
 export const defaultDirection = 'ltr'
-
 export const themeRadiusStorageKey = 'theme_radius'
 export const themeSelectedColorStorageKey = 'theme_selected_color'
 export const defaultColor = 'dark.redruby'
