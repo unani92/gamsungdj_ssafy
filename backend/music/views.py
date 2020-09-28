@@ -140,8 +140,14 @@ class AlbumCommentList(APIView):
     def get(self, request, pk):
         album = get_object_or_404(Album, pk=pk)
         comments = AlbumComment.objects.filter(album=album)
+        song_comments = SongComment.objects.filter(song__album=pk)
+
+        song_serializer = SongCommentSerializer(song_comments, many=True)
         serializer = AlbumCommentSerializer(comments, many=True)
-        return Response(serializer.data)
+        return Response({
+            'albumComment': serializer.data,
+            'songComment': song_serializer.data
+        })
 
     @permission_classes([IsAuthenticated])
     def post(self, request, pk):
