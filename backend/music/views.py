@@ -5,6 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Song, Album, Artist, Log, AlbumComment, SongComment
 from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
 from random import sample
+from datetime import datetime
+from collections import Counter
+import math
 # Create your views here.
 
 class SongType(APIView):
@@ -259,6 +262,53 @@ class SongCommentList(APIView):
             })
 
 class TimeRecommend(APIView):
-    @permission_classes([IsAuthenticated])
-    def get(self, request, time):
-        print(request.user)
+    def get(self, request):
+        now = datetime.now()
+        hour = now.hour
+
+        if request.user.is_authenticated:  # logged in user
+            recommend = []
+
+            # 사용자가 좋아요를 누른 곡은 추천에서 제외
+            sad_songs_all = Song.objects.filter(type__exact='sad').exclude(user_like__in=[request.user]).order_by('-like')
+            love_songs_all = Song.objects.filter(type__exact='love').exclude(user_like__in=[request.user.pk]).order_by('-like')
+            joy_songs_all = Song.objects.filter(type__exact='joy').exclude(user_like__in=[request.user.pk]).order_by('-like')
+
+            # extract all user's logs by time
+            if 0<= hour < 7:
+                logs = Log.objects.filter(user=request.user, time__hour__range=(0,7))
+            elif 7<= hour < 11:
+                logs = Log.objects.filter(user=request.user, time__hour__range=(7,11))
+            elif 12 <= hour < 14:
+                logs = Log.objects.filter(user=request.user, time__hour__range=(12,14))
+            elif 20 <= hour <= 23:
+                logs = Log.objects.filter(user=request.user, time__hour__range=(20,24))
+            else:
+                logs = Log.objects.filter(user=request.user)
+
+            # log based recommend
+            if logs:
+                feelings = [log.song.type for log in logs]
+                counts = {'sad': 0, 'joy': 0, 'love': 0}
+                for feel in feelings:
+                    counts[feel] += 1
+                sad_prop = int(counts['sad'] / len(feelings)*100)
+                joy_prop = int(counts['joy'] / len(feelings) * 100)
+                love_prop = int(counts['love'] / len(feelings) * 100)
+
+                sad_songs = math.ceil(sad_prop/100 * 12)
+                joy_songs = math.ceil(joy_prop/100 * 12)
+                love_songs = math.ceil(love_prop/100 * 12)
+
+            else:    # if user's log not exist
+                pass
+
+            return Response({
+                'status': 200
+            })
+
+
+        else:    # not logged in
+            return Response({
+                'data': 'noooooooooo'
+            })
