@@ -6,7 +6,7 @@
       </b-colxx>
     </b-row>
     <b-row>
-      <b-colxx xxs="12">
+      <b-colxx xxs="12">  
         <b-colxx xxs="12" class="mb-4 pl-3 pr-3" style="display: inline-flex;">
                 <div xxs="4" class="card mb-4"  style="width:30%; margin-right:3%">
                   <img class="card-img-top" :src="song.img" style="border-top-left-radius:initial; border-top-right-radius:initial"/>
@@ -14,11 +14,11 @@
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{song.name}}</h1><br>
                   <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in song.artist" v-bind:key="index"><router-link :to="'/A505/artistDetail/'+singer.id" class="text-primary mr-3 ">{{singer.name}}</router-link></a></h1><br>
-                  <h2 class="mb-0 truncate">앨범: <router-link :to="'/app/albumDetail/'+song.album.id" class="text-primary">{{song.album.name}}</router-link></h2><br>
+                  <h2 class="mb-0 truncate" v-if="song.album">앨범: <router-link :to="'/A505/albumDetail/'+song.album.id" class="text-primary">{{song.album.name}}</router-link></h2><br>
                   <h3 class="mb-0 truncate " style="display: inline-flex;">장르:<h3 class="ml-1" v-for="(genre, index) in song.genres" v-bind:key="index"> {{genre.name}}</h3></h3><br>
                   <h3 class="mb-0 truncate">감정: {{song.type}}</h3>
-                  <h1 v-if="!checkLikeSong(song.id)" class="mb-0 truncate mt-5 text-large"><img src="../../assets/img/heart/heart_empty.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{song.like}}</h1>
-                  <h1 v-if="checkLikeSong(song.id)" class="mb-0 truncate mt-5 text-large"><img src="../../assets/img/heart/heart_full.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{song.like}}</h1>
+                  <h1 v-if="!checkLikeSong() && this.song.user_like" class="mb-0 truncate mt-5 text-large"><img src="../../assets/img/heart/heart_empty.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{this.song.like + this.song.user_like.length}}</h1>
+                  <h1 v-if="checkLikeSong()" class="mb-0 truncate mt-5 text-large"><img src="../../assets/img/heart/heart_full.png" @click="likeSong(song.id)" style="width:32px; cursor:pointer;"/>{{this.song.like + this.song.user_like.length}}</h1>
                 </div>
         </b-colxx>
       </b-colxx>
@@ -32,7 +32,7 @@
       <b-colxx xxs="12">
         <h2>가사></h2>
         <b-colxx xxs="12" class="mb-4 pl-3 pr-3">
-          <h4 v-for="(row, index) in song.lyric.split('/')" v-bind:key="index">{{row}}</h4>
+          <h4 v-for="(lyric, index) in lyrics" v-bind:key="index">{{lyric}}</h4>
         </b-colxx>
       </b-colxx>
       <b-colxx xxs="12">
@@ -95,7 +95,7 @@ export default {
       .get("/song/"+this.songID)
       .then((rest) => {
         this.song = rest.data;
-        this.likeCount = this.song.like + this.song.user_like.length;
+        this.lyrics = this.song.lyric.split('/');
       })
     http
       .get("/song/"+this.songID+"/comment/")
@@ -106,18 +106,18 @@ export default {
   data () {
     return {
       showAlert: false,
-      likeCount:0,
       songID: 0,
       showLogin: false,
       song: [],
+      lyrics: [],
       comment: [],
     }
   },
   methods: {
-    checkLikeSong(songID){
-      if(this.user.like_songs){
-        for(var i=0;i<this.user.like_songs.length;i++){
-          if(this.user.like_songs[i]==songID){
+    checkLikeSong(){
+      if(this.user && this.song.user_like){
+        for(var i=0;i<this.song.user_like.length;i++){
+          if(this.song.user_like[i].id==this.user.id){
             return true;
           }
         }
@@ -127,7 +127,7 @@ export default {
     },
     likeSong: function(id) {
       console.log(this.$store.state.authorization)
-      if(this.user.like_songs){
+      if(this.user){
         http.post(`song/${id}/like/`,'',{
           headers: {
             Authorization: this.$store.state.authorization
@@ -136,13 +136,11 @@ export default {
         .then((rest) => {
           console.log(rest.data)
           if(rest.data.liked){
-            this.user.like_songs.push(id);
-            this.likeCount+=1;
+            this.song.user_like.push(this.user);
           }else{
-            for(var i=0;i<this.user.like_songs.length;i++){
-              if(this.user.like_songs[i]==id){
-                this.user.like_songs.splice(i, 1);
-                this.likeCount-=1;
+            for(var i=0;i<this.song.user_like.length;i++){
+              if(this.song.user_like[i].id==this.user.id){
+                this.song.user_like.splice(i, 1);
                 break;
               }
             }
@@ -153,7 +151,7 @@ export default {
       }
     },
     checkComment: function(id) {
-      if(this.user.id){
+      if(this.user){
         if(this.user.id == id){
           return true;
         }
@@ -161,7 +159,7 @@ export default {
       return false;
     },
     sendComment: function(){
-      if(this.user.id){
+      if(this.user){
         const commentForm = new FormData();
         if(document.getElementById("comment").value==""){
           this.showAlert=true;
@@ -186,7 +184,7 @@ export default {
       }
     },
     deleteCommet: function(pk){
-      http.delete("song/"+pk+"/comment/",'',{
+      http.delete("song/"+pk+"/comment/",{
         headers: {
           Authorization: this.$store.state.authorization
         },
