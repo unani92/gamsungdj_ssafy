@@ -90,8 +90,8 @@
                       <td style="vertical-align: middle;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
                       <td style="vertical-align: middle;" @click.prevent="addToPlayList(song)"><div class="glyph-icon simple-icon-playlist"/></td>
                       <!-- <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td> -->
-                      <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                      <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
+                      <td v-if="!checkLikeSong(index)" style="vertical-align: middle;" @click="likeSong(song.id, index)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td v-if="checkLikeSong(index)" style="vertical-align: middle;" @click="likeSong(song.id, index)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
                   </tbody>
               </table>
@@ -123,8 +123,8 @@
                             <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
                             <h6 v-if="album.genre">장르:<a v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</a></h6>
                             <h6>발매일: {{dateformat(album.released_date)}}</h6>
-                            <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
-                            <h1 v-if="checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                            <img src="../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id, index)"/>
+                            <img src="../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id, index)"/>
                         </b-colxx>
                     </b-row>
                 </b-card-body>
@@ -143,8 +143,8 @@
                         <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
                         <h6 v-if="album.genre">장르: {{album.genre}}</h6>
                         <h6>발매일: {{dateformat(album.released_date)}}</h6>
-                        <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
-                        <h1 v-if="checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                        <img src="../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id, index)"/>
+                        <img src="../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id, index)"/>
                     </b-colxx>
                 </b-row>
               </b-card-body>
@@ -154,7 +154,7 @@
       </template>
     </b-colxx>
   </b-row>
-  <LoginModal :showLogin="showLogin" @hideModal="showLogin=false"/>
+  <LoginModal :showLogin="showLogin" @hideModal="showLogin=!showLogin"/>
   <b-modal v-model="emptyModal"  hide-header hide-footer
             :hide-backdrop="true"
             :no-close-on-backdrop="true">
@@ -296,9 +296,8 @@ export default {
       this.playlist.push(song)
       this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
     },
-    likeSong: function(id) {
-      console.log(this.$store.state.authorization)
-      if(this.user.like_songs){
+    likeSong: function(id, index) {
+      if(this.user){
         http.post(`song/${id}/like/`,'',{
           headers: {
             Authorization: this.$store.state.authorization
@@ -307,11 +306,11 @@ export default {
         .then((rest) => {
           console.log(rest.data)
           if(rest.data.liked){
-            this.user.like_songs.push(id);
+            this.songs[index].user_like.push(this.user);
           }else{
-            for(var i=0;i<this.user.like_songs.length;i++){
-              if(this.user.like_songs[i]==id){
-                this.user.like_songs.splice(i, 1);
+            for(var i=0;i<this.songs[index].user_like.length;i++){
+              if(this.songs[index].user_like[i].id==this.user.id){
+                this.songs[index].user_like.splice(i, 1);
                 break;
               }
             }
@@ -321,10 +320,9 @@ export default {
         this.showLogin=true;
       }
     },
-    likeAlbum: function(id) {
+    likeAlbum: function(id, index) {
       this.clickAlbumLike = true;
-      console.log(this.$store.state.authorization)
-      if(this.user.like_albums){
+      if(this.user){
         http.post(`album/${id}/like/`,'',{
           headers: {
             Authorization: this.$store.state.authorization
@@ -333,11 +331,11 @@ export default {
         .then((rest) => {
           console.log(rest.data)
           if(rest.data.liked){
-            this.user.like_albums.push(id);
+            this.albums[index].user_like.push(this.user);
           }else{
-            for(var i=0;i<this.user.like_albums.length;i++){
-              if(this.user.like_albums[i]==id){
-                this.user.like_albums.splice(i, 1);
+            for(var i=0;i<this.albums[index].user_like.length;i++){
+              if(this.albums[index].user_like[i].id==this.user.id){
+                this.albums[index].user_like.splice(i, 1);
                 break;
               }
             }
@@ -386,10 +384,10 @@ export default {
     dateformat(albumDate) {
       return albumDate.substr(0,4) + "-" + albumDate.substr(4,2) + "-" + albumDate.substr(6,2);
     },
-    checkLikeSong(songID){
-      if(this.user.like_songs){
-        for(var i=0;i<this.user.like_songs.length;i++){
-          if(this.user.like_songs[i]==songID){
+    checkLikeSong(index){
+      if(this.user){
+        for(var i=0;i<this.songs[index].user_like.length;i++){
+          if(this.songs[index].user_like[i].id==this.user.id){
             return true;
           }
         }
@@ -397,10 +395,10 @@ export default {
       }
       return false;
     },
-    checkLikeAlbum(albumID){
-       if(this.user.like_albums){
-         for(var i=0;i<this.user.like_albums.length;i++){
-          if(this.user.like_albums[i]==albumID){
+    checkLikeAlbum(index){
+       if(this.user){
+         for(var i=0;i<this.albums[index].user_like.length;i++){
+          if(this.albums[index].user_like[i].id==this.user.id){
             return true;
           }
         }
@@ -409,7 +407,7 @@ export default {
       return false;
     },
     toMain(){
-      this.$router.push('/app/piaf/start/');
+      this.$router.push(`${adminRoot}/main`);
     }
 
   },
