@@ -13,11 +13,16 @@
                 </div>
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{album.name}}</h1><br>
-                  <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in album.artist" v-bind:key="index"><router-link :to="'/app/piaf/artistDetail/'+singer.id" class="text-primary">{{singer.name}}</router-link></a></h1><br>
+                  <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in album.artist" v-bind:key="index"><router-link :to="'/A505/artistDetail/'+singer.id" class="text-primary">{{singer.name}}</router-link></a></h1><br>
                   <h3 class="mb-0 truncate " style="display: inline-flex;">장르:<h3 class="ml-1" v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</h3></h3><br>
                   <h3 class="mb-0 truncate">발매일: {{album.released_date}}</h3><br>
+<<<<<<< HEAD:frontend/src/views/app/piaf/AlbumDetail.vue
                   <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_empty.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{likeCount}}</h1>
                   <h1 v-if="checkLikeAlbum(album.id)"><img src="../../../assets/img/heart/heart_full.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{likeCount}}</h1>
+=======
+                  <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                  <h1 v-if="checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+>>>>>>> 1638777662c43961ef9c8ff15b3ea2e14b547380:frontend/src/views/app/AlbumDetail.vue
                 </div>
         </b-colxx>
       </b-colxx>
@@ -57,8 +62,8 @@
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index" class="mr-2">{{genre.name}}</a></td>
                       <td style="vertical-align: middle;" @click.prevent="playSong(song.id)"><div class="glyph-icon simple-icon-control-play"/></td>
                       <td style="vertical-align: middle;" @click.prevent="addSong(song.id)"><div class="glyph-icon simple-icon-playlist"/></td>
-                      <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                      <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
+                      <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
                     <tr v-show="!song.id" :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice(0,songListSize)" v-bind:key="index" class="card-img-overlay" style="position: relative">
                       <td style="width:85px;opacity:0.5;"><img :src="album.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
@@ -67,8 +72,8 @@
                       <td></td>
                       <td></td>
                       <td></td>
-                      <!-- <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                      <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td> -->
+                      <!-- <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td class="like" style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td> -->
                     </tr>
                   </tbody>
               </table>
@@ -86,7 +91,7 @@
   </div>
 </template>
 <script>
-import http from "../../../utils/http-common";
+import http from "../../utils/http-common";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 export default {
@@ -136,7 +141,7 @@ export default {
       }
     },
     detailSong: function(id){
-      this.$router.push('/app/piaf/songDetail/'+id)
+      this.$router.push('/A505/songDetail/'+id)
     },
     changeSortValue(value) {
       if(this.sort_value != value){

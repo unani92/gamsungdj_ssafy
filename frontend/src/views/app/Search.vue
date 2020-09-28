@@ -90,8 +90,8 @@
                       <td style="vertical-align: middle;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
                       <td style="vertical-align: middle;" @click.prevent="addToPlayList(song)"><div class="glyph-icon simple-icon-playlist"/></td>
                       <!-- <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td> -->
-                      <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                      <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
+                      <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
                   </tbody>
               </table>
@@ -123,8 +123,8 @@
                             <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
                             <h6 v-if="album.genre">장르:<a v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</a></h6>
                             <h6>발매일: {{dateformat(album.released_date)}}</h6>
-                            <img src="../../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(album.id)" style="width:32px;" @click="likeAlbum(album.id)"/>
-                            <img src="../../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(album.id)" style="width:32px;" @click="likeAlbum(album.id)"/>
+                            <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                            <h1 v-if="checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
                         </b-colxx>
                     </b-row>
                 </b-card-body>
@@ -143,8 +143,8 @@
                         <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
                         <h6 v-if="album.genre">장르: {{album.genre}}</h6>
                         <h6>발매일: {{dateformat(album.released_date)}}</h6>
-                        <img src="../../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(album.id)" style="width:32px;" @click="likeAlbum(album.id)"/>
-                        <img src="../../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(album.id)" style="width:32px;" @click="likeAlbum(album.id)"/>
+                        <h1 v-if="!checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
+                        <h1 v-if="checkLikeAlbum(album.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px;" @click="likeAlbum(album.id)"/> {{album.like}}</h1>
                     </b-colxx>
                 </b-row>
               </b-card-body>
@@ -168,9 +168,10 @@
   </div>
 </template>
 <script>
-import http from "../../../utils/http-common";
+import http from "../../utils/http-common";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
+import { adminRoot } from "../../constants/config";
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
@@ -249,14 +250,14 @@ export default {
       this.moreAlbum = !this.moreAlbum;
     },
     detailArtist: function(id){
-      this.$router.push('/app/piaf/ArtistDetail/'+id)
+      this.$router.push(`${adminRoot}/ArtistDetail/${id}`)
     },
     detailSong: function(id){
-      this.$router.push('/app/piaf/songDetail/'+id)
+      this.$router.push(`${adminRoot}/songDetail/${id}`)
     },
     detailAlbum: function(id){
       if(!this.clickAlbumLike){
-        this.$router.push('/app/piaf/albumDetail/'+id)
+        this.$router.push(`${adminRoot}/albumDetail/${id}`)
       }else{
         this.clickAlbumLike=false;
       }

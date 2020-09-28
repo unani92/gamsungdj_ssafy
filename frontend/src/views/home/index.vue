@@ -28,7 +28,6 @@
             <a
               class="btn btn-outline-primary btn-sm mobile-menu-cta"
               target="_blank"
-              :href="buyUrl"
             >BUY</a>
           </li>
         </ul>
@@ -63,7 +62,6 @@
                     <a
                       class="btn btn-outline-semi-light btn-sm pr-4 pl-4"
                       target="_blank"
-                      :href="buyUrl"
                     >BUY</a>
                   </li>
                 </ul>
@@ -378,7 +376,7 @@ import { headroom } from "vue-headroom";
 import VueScrollTo from "vue-scrollto";
 import HomeLayout from "../../layouts/HomeLayout";
 import GlideComponent from "../../components/Carousel/GlideComponent";
-import { adminRoot, buyUrl } from "../../constants/config";
+import { adminRoot } from "../../constants/config";
 const slideSettings = {
   type: "carousel",
   gap: 30,
@@ -567,7 +565,6 @@ export default {
     return {
       showMobileMenu: false,
       adminRoot,
-      buyUrl,
       slideSettings,
       slideItems,
       features,

@@ -1,15 +1,15 @@
 <template>
 <div>
-<b-modal v-model="showJoin" id="modalbackdrop" ref="modalbackdrop" :title="$t('회원가입')"
+<b-modal v-model="showJoin" id="modalbackdrop" ref="modalbackdrop" title="회워가입"
         :hide-backdrop="selectedBackdrop=='false'"
         :no-close-on-backdrop="selectedBackdrop=='false'">
     <b-row>
     <b-form class="form-container">
             <b-form-file v-model="avatar" accept="image/jpeg, image/png, image/gif, image/jpg" class="mb-3"></b-form-file>
-            <b-form-group :label="$t('성별')">
+            <b-form-group label="성별">
                 <v-select v-model="gender" :options="genderData" :reduce="genderData=>genderData.value" />
             </b-form-group>
-            <b-form-group :label="$t('나이')">
+            <b-form-group label="나이">
                 <v-select v-model="age" :options="ageData" :reduce="ageData=>ageData.value" />
             </b-form-group>
         </b-form>

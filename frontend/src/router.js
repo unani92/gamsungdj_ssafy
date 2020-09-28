@@ -1,119 +1,52 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import AuthGuard from "./utils/auth.guard";
 import { adminRoot } from "./constants/config";
-import { UserRole } from "./utils/auth.roles";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    component: () => import(/* webpackChunkName: "home" */ "./views/home"),
-    // redirect: `${adminRoot}/piaf`,
+    component: () => import("./views/home"),
   },
   {
-    path: adminRoot,
-    component: () => import(/* webpackChunkName: "app" */ "./views/app"),
-    redirect: `${adminRoot}/piaf`,
-    meta: { loginRequired: true },
-    /*
-   define with Authorization :
-   meta: { loginRequired: true, roles: [UserRole.Admin, UserRole.Editor] },
-   */
+    path: "/A505",
+    component: () => import("./views/app"),
+    redirect: `${adminRoot}/main`,
     children: [
       {
-        path: "piaf",
-        component: () =>
-          import(/* webpackChunkName: "piaf" */ "./views/app/piaf"),
-        redirect: `${adminRoot}/piaf/start`,
-        children: [
-          {
-            path: 'start',
-            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Start')
-            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          },
-          {
-            path: 'search/:keyword',
-            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Search')
-            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          },
-          {
-            path: 'songDetail/:songID',
-            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/SongDetail')
-            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          },
-          {
-            path: 'albumDetail/:albumID',
-            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/AlbumDetail')
-            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          },
-          {
-            path: 'artistDetail/:artistID',
-            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/ArtistDetail')
-            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          },
-          {
-            path: 'profile',
-            component: () => import(/* webpackChunkName: "piaf" */ './views/app/piaf/Profile')
-            // meta: { roles: [UserRole.Admin, UserRole.Editor] },
-          },
-          
-        ]
+        path: 'main',
+        component: () => import('./views/app/Main')
       },
       {
-        path: "second-menu",
-        component: () =>
-          import(/* webpackChunkName: "second-menu" */ "./views/app/second-menu"),
-        redirect: `${adminRoot}/second-menu/second`,
-        children: [
-          { path: 'second', component: () => import(/* webpackChunkName: "piaf" */ './views/app/second-menu/Second') }
-        ]
+        path: 'search/:keyword',
+        component: () => import('./views/app/Search')
       },
-
-
       {
-        path: "single",
-        component: () =>
-          import(/* webpackChunkName: "single" */ "./views/app/single")
-      }
+        path: 'songDetail/:songID',
+        component: () => import('./views/app/SongDetail')
+      },
+      {
+        path: 'albumDetail/:albumID',
+        component: () => import('./views/app/AlbumDetail')
+      },
+      {
+        path: 'artistDetail/:artistID',
+        component: () => import('./views/app/ArtistDetail')
+      },
+      {
+        path: 'profile',
+        component: () => import('./views/app/Profile')
+      },
     ]
   },
   {
     path: "/error",
-    component: () => import(/* webpackChunkName: "error" */ "./views/Error")
-  },
-  {
-    path: "/user",
-    component: () => import(/* webpackChunkName: "user" */ "./views/user"),
-    redirect: "/user/login",
-    children: [
-      {
-        path: "login",
-        component: () =>
-          import(/* webpackChunkName: "user" */ "./views/user/Login")
-      },
-      {
-        path: "register",
-        component: () =>
-          import(/* webpackChunkName: "user" */ "./views/user/Register")
-      },
-      {
-        path: "forgot-password",
-        component: () =>
-          import(/* webpackChunkName: "user" */ "./views/user/ForgotPassword")
-      },
-      {
-        path: "reset-password",
-        component: () =>
-          import(/* webpackChunkName: "user" */ "./views/user/ResetPassword")
-      },
-
-    ]
+    component: () => import("./views/Error")
   },
   {
     path: "*",
-    component: () => import(/* webpackChunkName: "error" */ "./views/Error")
+    component: () => import("./views/Error")
   },
   
 ];
@@ -123,5 +56,4 @@ const router = new VueRouter({
   routes,
   mode: "history",
 });
-router.beforeEach(AuthGuard);
 export default router;

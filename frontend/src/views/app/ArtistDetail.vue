@@ -121,7 +121,7 @@
   </div>
 </template>
 <script>
-import http from "../../../utils/http-common";
+import http from "../../utils/http-common";
 export default {
   components: {
   },
@@ -188,10 +188,10 @@ export default {
       this.moreAlbum = !this.moreAlbum;
     },
     detailSong: function(id){
-      this.$router.push('/app/piaf/songDetail/'+id)
+      this.$router.push('/A505/songDetail/'+id)
     },
     detailAlbum: function(id){
-      this.$router.push('/app/piaf/albumDetail/'+id)
+      this.$router.push('/A505/albumDetail/'+id)
     },
     changeSortValue(value) {
       if(this.sort_value != value){

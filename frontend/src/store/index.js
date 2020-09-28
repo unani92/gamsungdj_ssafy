@@ -1,18 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-import app from '../main'
 import menu from './modules/menu'
-import user from './modules/user'
-import { setCurrentLanguage } from '../utils'
-import axios from 'axios'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     authorization:sessionStorage.getItem("authorization"),
-    // user : sessionStorage.getItem('user')?JSON.parse(sessionStorage.getItem("user")):[],
     user : sessionStorage.getItem('user'),
     visiblePlaylist: false,
     visiblePlayButton: true,
@@ -42,10 +36,6 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    changeLang(state, payload) {
-      app.$i18n.locale = payload
-      setCurrentLanguage(payload);
-    },
     SET_AUTH(state, value){
       sessionStorage.setItem("authorization", value)
       state.authorization = value
@@ -87,6 +77,5 @@ export default new Vuex.Store({
   },
   modules: {
     menu,
-    user,
   }
 })

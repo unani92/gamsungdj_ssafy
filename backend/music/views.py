@@ -43,7 +43,15 @@ class CategoryDetail(APIView):
         elif category == 'artist':
             artist = get_object_or_404(Artist, pk=pk)
             serializer = ArtistSerializer(artist)
-            return Response(serializer.data)
+            songs = Song.objects.filter(artist=pk)
+            song_serializer = SongSerializer(songs, many=True)
+            albums = Album.objects.filter(artist=pk)
+            album_serializer = AlbumSerializer(albums, many=True)
+            return Response({
+                'data': serializer.data,
+                'songs': song_serializer.data,
+                'albums': album_serializer.data
+            })
         else:
             return Response({
                 "status": 401,
@@ -54,6 +62,13 @@ class SearchResult(APIView):
     def get(self, request, category, keyword):
         if category == 'song':
             songs = Song.objects.filter(name__contains=keyword).order_by('-pk')
+            try:
+                artist = Artist.objects.get(name__contains=keyword)
+                artist_songs = Song.objects.filter(artist=artist.pk)
+            except:
+                artist_songs = []
+
+            songs = list(artist_songs) + list(songs)
             serializer = SongSerializer(songs, many=True)
             return Response(serializer.data)
         elif category == 'album':
@@ -132,8 +147,14 @@ class AlbumCommentList(APIView):
     def get(self, request, pk):
         album = get_object_or_404(Album, pk=pk)
         comments = AlbumComment.objects.filter(album=album)
+        song_comments = SongComment.objects.filter(song__album=pk)
+
+        song_serializer = SongCommentSerializer(song_comments, many=True)
         serializer = AlbumCommentSerializer(comments, many=True)
-        return Response(serializer.data)
+        return Response({
+            'albumComment': serializer.data,
+            'songComment': song_serializer.data
+        })
 
     @permission_classes([IsAuthenticated])
     def post(self, request, pk):
