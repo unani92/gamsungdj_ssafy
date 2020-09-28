@@ -52,8 +52,8 @@
           <div style="margin-left: auto;">
             <p class="text-muted mb-0 text-small">{{cmt.updated_at.substr(0,10)+" "+cmt.updated_at.substr(11,8)}}</p>
             <div style="text-align: end;" v-if="checkComment(cmt.user.id)">
-              <a class="mb-0 text-small text-primary" style="cursor:pointer;">수정</a>
-              <a class="mb-0 text-small text-primary" style="cursor:pointer;" @click="deleteCommet()">삭제</a>
+              <a class="mb-0 text-small text-primary" style="cursor:pointer;" >수정</a>
+              <a class="mb-0 text-small text-primary" style="cursor:pointer;" @click="deleteCommet(cmt.pk)">삭제</a>
             </div>
           </div>
         </b-colxx>
@@ -185,8 +185,8 @@ export default {
         this.showLogin=true;
       }
     },
-    deleteCommet: function(){
-      http.post(`song/${this.songID}/comment/`,'',{
+    deleteCommet: function(pk){
+      http.delete("song/"+pk+"/comment/",'',{
         headers: {
           Authorization: this.$store.state.authorization
         },
