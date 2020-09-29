@@ -179,20 +179,21 @@
 	<!-- 날씨 매칭 추천 끝 -->
 
 	<!-- 시간 매칭 추천 시작 -->
-    <b-row>
+    <div v-if="timeRecommend">
+    <b-row >
         <b-colxx xxs="12">
             <a href="#" @click.prevent=""><h5 class="mb-4 card-title">이시간에는 ></h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
-                <div v-for="(data, index) in dummyData2" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                <div v-for="(data, index) in timeRecommend" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <a href="#" @click.prevent="search(data.title)"><img class="card-img-top" :src="data.src" alt="Card cap" /></a>
+                            <a href="#" @click.prevent="search(data.title)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="search(data.title)"><h6 class="mb-4 ellipsis">{{ data.title }}</h6></a>
-                            <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist }}</p></a>
+                            <a href="#" @click.prevent="search(data.title)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                            <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                 <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
@@ -204,6 +205,7 @@
             </glide-component>
         </b-colxx>
     </b-row>
+    </div>
 	<!-- 시간 매칭 추천 끝 -->
 </div>
 </template>
@@ -222,6 +224,7 @@ export default {
         'glide-component': GlideComponent,
     },
 	mounted(){
+        this.getTimeRecommend()
         this.getSadSong()
         this.getJoySong()
         this.getLoveSong()
@@ -283,39 +286,7 @@ export default {
                     artist: "박진영",
                 },
             ],
-            dummyData2:
-            [
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/34/250/10434250_20200522151246_500.jpg?efb35e4b6d68454084fe2a58b8d70805/melon/quality/80/optimize",
-                    title: "돼버릴거야 (feat.휘인 of 마마무) (Prod.기리보이)",
-                    artist: "딘딘",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/72/319/10472319_20200805151615_500.jpg?ab6e9e2acf7e853b6611add34fdb55d7/melon/quality/80/optimize",
-                    title: "On&On",
-                    artist: "D2ear",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/69/721/10469721_20200730171630_500.jpg?050fafc6d4d4a2d6c865c43a71d8450c/melon/quality/80/optimize",
-                    title: "잘 살고 있어요",
-                    artist: "nokdu",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/74/356/10474356_20200810183044_500.jpg?c37e9c51256d54058bd45510eb1c06a3/melon/quality/80/optimize",
-                    title: "0과 1사이",
-                    artist: "원지 (WONJI)",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/74/229/10474229_20200810152829_500.jpg?0e275b2d5e5968ff4997aeb1cac957b3/melon/quality/80/optimize",
-                    title: "WE (Feat. SOLE)",
-                    artist: "다희 (DAHEE)",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/103/64/577/10364577_20191213144211_500.jpg?3ed85e910eff03b518e083f012243648/melon/quality/80/optimize",
-                    title: "나뿐인것같아",
-                    artist: "비비 (BB)",
-                },
-            ],
+            timeRecommend: null,
             carouselData1_1: '',
             carouselData1_2: '',
             carouselData2_1: '',
@@ -333,6 +304,10 @@ export default {
       ...mapGetters(['config'])
     },
 	methods: {
+        async getTimeRecommend() {
+          const { data: { data } } = await http.get('recommend/time/')
+          this.timeRecommend = data
+        },
         async getSadSong() {
             const { data } = await http.get('sad')
             this.carouselData1_1 = data.slice(0, 5)
@@ -358,7 +333,7 @@ export default {
                 const span = document.getElementById(id)
                 const { data } = await http.post(`song/${id}/like/`, '',this.config)
                 span.classList.toggle('liked')
-            } 
+            }
             else {
                 const loginBtn = document.querySelector('#loginFlag')
                 loginBtn.click()
