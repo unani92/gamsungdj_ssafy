@@ -27,7 +27,12 @@ class UserAPI(APIView):
     def get(self, request):
         user = request.user
         serializer = UserSerializer(user)
-        return Response(serializer.data)
+        playlists = user.user_playlists.order_by('-pk')
+        playlists_serializer = UserPlayListSerializer(playlists, many=True)
+        return Response({
+            'data': serializer.data,
+            'playlists': playlists_serializer.data
+        })
 
     @permission_classes([IsAuthenticated])
     def post(self, request):
