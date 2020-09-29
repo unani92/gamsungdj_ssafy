@@ -18,7 +18,7 @@
                             <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
                         </div>
                         <div class="player" v-show="playerToggleFlag">
-                            <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended" ref="youtube"></youtube>
+                            <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended(selectedSong.index)" ref="youtube"></youtube>
                         </div>
                         <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
                     </div>
@@ -374,7 +374,15 @@ export default {
                 this.$store.state.visiblePauseButton = true
             }
         },
-        ended() {
+        ended(index) {
+            http.
+            post('log/',
+            {
+                song: this.playlist[index].id
+            }, this.$store.getters.config)
+            .then((value) => {
+                console.log(value)
+            })
             if(this.selectedSong.index >= this.playlist.length-1) {
                 this.unmarkPlayingIndex(this.selectedSong.index)
                 this.selectedSong.index = 0

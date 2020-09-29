@@ -228,6 +228,7 @@ export default {
         this.getSadSong()
         this.getJoySong()
         this.getLoveSong()
+        this.getWeather()
     },
     data() {
         return {
@@ -419,6 +420,28 @@ export default {
         },
         search(word){
             this.$router.push(`/A505/search/${word}`);
+        },
+        getWeather(){
+            if(navigator.geolocation) {
+                var apikey = '28de7356f776313b2637236fb7961f04'
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    alert(position.coords.latitude + ' ' +position.coords.longitude)
+                    http
+                    .get('api.openweathermap.org/data/2.5/weather?lat='+position.coords.latitude+'&lon={lon}&appid='+apikey)
+                    .then((value) => {
+                        console.log(value)
+                    })
+                }, function(error) {
+                    console.log(error)
+                }, {
+                    enableHighAccuracy: false,
+                    maximumAge: 0,
+                    timeout: Infinity
+                })
+            }
+            else {
+                console.log('GPS를 지원하지 않습니다')
+            }
         }
 	}
 }

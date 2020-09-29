@@ -12,6 +12,7 @@ export default new Vuex.Store({
     visiblePlayButton: true,
     visiblePauseButton: false,
     playlist: [],
+    userPlayList: '',     // 로그인하면 풀림, 유저랑 똑같이 세션에 박아놓겟음
     songLikeList: [],
     albumLikeList: [],
     playerControl: '',
@@ -48,6 +49,9 @@ export default new Vuex.Store({
       sessionStorage.setItem("isLoggedin", true)
       state.isLoggedin = true
     },
+    SET_PLAYLIST(state, value) {
+      state.userPlayList = value
+    },
     SET_SONG_LIKE(state, value) {
       state.songLikeList = value
     },
@@ -69,6 +73,9 @@ export default new Vuex.Store({
     },
     setUser( { commit }, value) {
       commit('SET_USER', value)
+    },
+    setPlayList({ commit }, value) {
+      commit('SET_PLAYLIST', value)
     },
     logout({commit}){
       commit("LOGOUT")
