@@ -17,8 +17,8 @@
                     <div id="googleBtnText">구글 로그인</div>
                 </div>
             </g-signin-button>
-            
-            <img :src="require('@/assets/img/user/kakao_login_large_narrow.png')" alt="kakao_login_button" @click="kakaoLogin" style="width:200px; margin-top:10px; cursor: pointer;"/> 
+
+            <img :src="require('@/assets/img/user/kakao_login_large_narrow.png')" alt="kakao_login_button" @click="kakaoLogin" style="width:200px; margin-top:10px; cursor: pointer;"/>
             </div>
         </b-row>
         <template slot="modal-footer">
@@ -51,7 +51,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['setAuth', 'setUser']),
+        ...mapActions(['setAuth', 'setUser', 'setPlayList']),
         // 구글 로그인
         onGoogleSignInSuccess (response) {
             const token = response.wc.access_token
@@ -63,7 +63,7 @@ export default {
                 console.log(resp)
                 this.setAuth("JWT " + resp.data.token)
                 this.createUserProfile(resp)
-                
+
             })
             .catch(err => {
                 console.log(err.response)
@@ -82,13 +82,13 @@ export default {
                 fail: function(error) {
                     console.log(error);
                 },
-            })  
+            })
         },
         getKaKaoInfo(authInfo) {
             axios.post(baseURL + "accounts/kakao/", { access_token: authInfo.access_token })
             .then(response => {
                 console.log(response)
-                this.setAuth("JWT " + response.data.token) 
+                this.setAuth("JWT " + response.data.token)
                 this.createUserProfile(Response)
             })
         },
@@ -98,9 +98,10 @@ export default {
             console.log(this.config)
             axios.get(baseURL+"accounts/", this.config)
             .then(res => {
-                console.log("user info", res)
-                if (res.data.is_signed_up) {
-                    this.setUser(res.data)
+                console.log("user info", res.data)
+                if (res.data.data.is_signed_up) {
+                    this.setUser(res.data.data)
+                    this.setPlayList(res.data.playlists)
                     this.hideModal('loginmodal')
                 }
                 else {
@@ -115,9 +116,9 @@ export default {
         hideModal (refname) {
             this.showJoin = false
             this.showLogin = false
-            this.$emit("hideModal")         
+            this.$emit("hideModal")
         },
-        
+
     },
     computed: {
         ...mapState(['authorization']),
@@ -146,9 +147,9 @@ export default {
 }
 #googleBtnText {
     margin-left: -10px;
-    width:90%; 
-    text-align: center; 
-    font-size: 16.5px; 
+    width:90%;
+    text-align: center;
+    font-size: 16.5px;
     color: rgb(29, 2, 2);
 }
 
