@@ -159,22 +159,16 @@
                             <a href="#" @click.prevent="search(data.title)">
                                 <img class="card-img-top" :src="data.src" alt="Card cap" />
                             </a>
-                            <!-- 오버레이 시작 -->
-                            <div class="card-img-overlay" :class="'overlayWeather'+index">
-                                <div style="position:absolute; bottom:10%;">
-                                    <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                    <span class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;"></span>
-                                    <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
-                                </div>
-                                <h5 class="card-title">{{ data.name }}</h5>
-                                <p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
-                            </div>
-                            <!-- 오버레이 끝 -->
                         </div>
                         <b-card-body>
                             <a href="#" @click.prevent="tempFunction"><h6 class="mb-4 ellipsis">{{ data.title }}</h6></a>
                             <a href="#" @click.prevent="tempFunction"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist }}</p>
                             </a>
+                            <div class="mt-4" style="font-size:x-large;">
+                                <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
+                                <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
+                            </div>
                         </b-card-body>
                     </b-card>
                 </div>
@@ -199,7 +193,7 @@
                         <b-card-body>
                             <a href="#" @click.prevent="search(data.title)"><h6 class="mb-4 ellipsis">{{ data.title }}</h6></a>
                             <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist }}</p></a>
-                            <div class="mt-2" style="font-size:x-large;">
+                            <div class="mt-4" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                 <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
                                 <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
@@ -338,37 +332,38 @@ export default {
       ]),
       ...mapGetters(['config'])
     },
-	methods:{
-    async getSadSong() {
-        const { data } = await http.get('sad')
-        this.carouselData1_1 = data.slice(0, 5)
-        this.carouselData1_2 = data.slice(5, 10)
-    },
-    async getJoySong() {
-        const { data } = await http.get('joy')
-        this.carouselData2_1 = data.slice(0, 5)
-        this.carouselData2_2 = data.slice(5, 10)
-    },
-    async getLoveSong() {
-        const { data } = await http.get('love')
-        this.carouselData3_1 = data.slice(0, 5)
-        this.carouselData3_2 = data.slice(5, 10)
-    },
-    isLiked(data) {
-        return this.songLikeList.includes(data.id);
-    },
-    async songLike(e) {
-        if (this.isLoggedin) {
-            const { id } = e.target
-            const span = document.getElementById(id)
-            const { data } = await http.post(`song/${id}/like/`, '',this.config)
-            span.classList.toggle('liked')
-        } 
-        else {
-            const loginBtn = document.querySelector('.name')
-            loginBtn.click()
-        }
-    },
+	methods: {
+        async getSadSong() {
+            const { data } = await http.get('sad')
+            this.carouselData1_1 = data.slice(0, 5)
+            this.carouselData1_2 = data.slice(5, 10)
+        },
+        async getJoySong() {
+            const { data } = await http.get('joy')
+            this.carouselData2_1 = data.slice(0, 5)
+            this.carouselData2_2 = data.slice(5, 10)
+        },
+        async getLoveSong() {
+            const { data } = await http.get('love')
+            this.carouselData3_1 = data.slice(0, 5)
+            this.carouselData3_2 = data.slice(5, 10)
+        },
+        isLiked(data) {
+            return this.songLikeList.includes(data.id);
+        },
+        async songLike(e) {
+            console.log("liek")
+            if (this.isLoggedin) {
+                const { id } = e.target
+                const span = document.getElementById(id)
+                const { data } = await http.post(`song/${id}/like/`, '',this.config)
+                span.classList.toggle('liked')
+            } 
+            else {
+                const loginBtn = document.querySelector('#loginFlag')
+                loginBtn.click()
+            }
+        },
 		tempFunction() {
 			alert("페이지 준비중입니다.");
         },

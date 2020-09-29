@@ -42,7 +42,6 @@
 
 <script>
 import wordcloud from 'vue-wordcloud'
-import profileStatuses from "../../data/profileStatuses";
 import { doughnutChartData } from "../../data/charts";
 import DoughnutChart from "../../components/Charts/Doughnut";
 export default {
@@ -92,7 +91,34 @@ export default {
                     "value": 6
                 }
             ],
-            profileStatuses,
+            profileStatuses:
+            [
+                {
+                    title: 'Basic Information',
+                    total: 18,
+                    status: 12
+                },
+                {
+                    title: 'Portfolio',
+                    total: 8,
+                    status: 1
+                },
+                {
+                    title: 'Billing Details',
+                    total: 6,
+                    status: 2
+                },
+                {
+                    title: 'Interests',
+                    total: 10,
+                    status: 0
+                },
+                {
+                    title: 'Legal Documents',
+                    total: 2,
+                    status: 1
+                }
+            ],
             doughnutChartData,
         }
     },

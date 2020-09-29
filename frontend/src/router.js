@@ -38,6 +38,10 @@ const routes = [
         path: 'profile',
         component: () => import('./views/app/Profile')
       },
+      {
+        path: 'musicDNA',
+        component: () => import('./views/app/MusicDNA')
+      },
     ]
   },
   {

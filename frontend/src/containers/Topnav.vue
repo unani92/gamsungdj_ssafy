@@ -49,14 +49,15 @@
             </span>
           </template>
           <b-dropdown-item>My Page</b-dropdown-item>
-          <b-dropdown-item>Music DNA</b-dropdown-item>
+          <b-dropdown-item @click="link">Music DNA</b-dropdown-item>
+          </router-link>
           <b-dropdown-divider />
           <b-dropdown-item @click="signout">로그아웃</b-dropdown-item>
         </b-dropdown>
       </div>
 
       <!-- not logged in -->
-       <div class="user d-inline-block" v-else @click="showLogin = !showLogin" style="cursor: pointer;">
+       <div id="loginFlag" class="user d-inline-block" v-else @click="showLogin = !showLogin" style="cursor: pointer;">
         <span class="name mr-1">로그인을 해주세요</span>
         <span>
           <b-avatar></b-avatar>
@@ -117,6 +118,9 @@ export default {
     signout() {
       this.logout()
     },
+    link() {
+      this.$router.push(`${adminRoot}/musicDNA`)
+    }
   },
   computed: {
     imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
@@ -159,7 +163,7 @@ export default {
           this.handleDocumentforMobileSearch
         );
       }
-    }
+    },
   }
 };
 </script>
