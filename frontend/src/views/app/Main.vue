@@ -228,7 +228,7 @@ export default {
         this.getSadSong()
         this.getJoySong()
         this.getLoveSong()
-        this.getWeather()
+        // this.getWeather()
     },
     data() {
         return {
