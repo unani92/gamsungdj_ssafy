@@ -42,22 +42,34 @@
     <b-row>
       <b-colxx xxs="12">
         <h2>댓글></h2>
-        <b-colxx xxs="12" class="mb-1 pl-3 pr-3 mt-1" style="display: inline-flex;" v-for="(cmt, index) in comment" v-bind:key="index">
-          <div style="width:16%;" class="mr-2">
-            <h4 class="font-weight-medium mb-0" style="text-align:center;">{{cmt.user.username}}</h4>
-          </div>
-          <div style="width:70%;">
-            <h4>{{cmt.content}}</h4>
-          </div>
-          <div style="margin-left: auto;">
-            <p class="text-muted mb-0 text-small">{{cmt.updated_at.substr(0,10)+" "+cmt.updated_at.substr(11,8)}}</p>
-            <div style="text-align: end;" v-if="checkComment(cmt.user.id)">
-              <a class="mb-0 text-small text-primary" style="cursor:pointer;" >수정</a>
-              <a class="mb-0 text-small text-primary" style="cursor:pointer;" @click="deleteCommet(cmt.pk)">삭제</a>
+        <b-colxx xxs="12" class="mb-1 pl-3 pr-3 mt-1"  v-for="(cmt, index) in sortComment" v-bind:key="index">
+          <b-colxx xxs="12" style="display: inline-flex;">
+            <div style="width:16%;" class="mr-2">
+              <h4 v-if="cmt.user" class="font-weight-medium mb-0" style="text-align:center;">{{cmt.user.username}}</h4>
             </div>
-          </div>
+            <div style="width:70%;">
+              <h4  class="mb-0">{{cmt.content}}</h4>
+              <!-- <b-input type="text" :value="cmt.content">{{cmt.content}}</b-input> -->
+            </div>
+            <div style="margin-left: auto;">
+              <p v-if="cmt.updated_at" class="text-muted mb-0 text-small">{{cmt.updated_at.substr(0,10)+" "+cmt.updated_at.substr(11,8)}}</p>
+              <div v-if="checkComment(cmt.user.id)" calss="mb-0" style=" text-align:end;">
+                <a class="mb-0 text-small text-primary" :id="'modify_text_'+index" style="cursor:pointer;" @click="showModifyForm(index)">수정</a>
+                <a class="mb-0 text-small text-primary" style="cursor:pointer;" @click="deleteCommet(cmt.pk, index)">삭제</a>
+              </div>
+            </div>
+          </b-colxx>
+          <b-input-group class="comment-contaiener mb-2" :id="'modify_format_'+index" style="display:none">
+            <b-input :id="'comment_'+cmt.pk" :value="cmt.content"/>
+            <template v-slot:append>
+              <b-button variant="primary" @click="modifyComment(cmt.pk, index)">
+                <span class="d-inline-block">수정</span>
+                <i class="simple-icon-arrow-right ml-2"></i>
+              </b-button>
+            </template>
+          </b-input-group>
         </b-colxx>
-        <b-input-group class="comment-contaiener">
+        <b-input-group class="comment-contaiener pl-3 pr-3">
           <b-input placeholder="댓글" id="comment" />
           <template v-slot:append>
             <b-button variant="primary" @click="sendComment">
@@ -166,7 +178,61 @@ export default {
           return;
         }
         commentForm.append("content", document.getElementById("comment").value)
-        http.post(`song/${this.songID}/comment/`,commentForm,{
+        http.post("song/" + this.songID + "/comment/",commentForm,{
+          headers: {
+            Authorization: this.$store.state.authorization
+          },
+          
+        })
+        .then((rest) => {
+          var tag = document.getElementById('comment');
+          console.log(tag);
+          tag.value = "";
+          http
+          .get("song/"+this.songID+"/comment/")
+          .then((rest) => {
+            this.comment = rest.data;
+          })  
+        })     
+      }else{
+        this.showLogin=true;
+      }
+    },
+    deleteCommet: function(pk, index){
+      http.delete("song/"+pk+"/comment/",{
+        headers: {
+          Authorization: this.$store.state.authorization
+        },
+      })
+      .then((rest) => {
+        http
+        .get("song/"+this.songID+"/comment/")
+          .then((rest) => {
+            this.comment = rest.data;
+          })
+      })
+    },
+    showModifyForm : function(index){
+      //$("#modify_format_"+pk).show();
+      var tag1 = document.getElementById('modify_format_'+index);
+      var tag2 = document.getElementById('modify_text_'+index);
+      if(tag1.style.display == "none"){
+        tag1.style.display = 'flex';
+        tag2.text = "취소";
+      }else{
+        tag1.style.display = 'none';
+        tag2.text = "수정";
+      }
+    },
+    modifyComment : function(pk, index){
+      if(this.user){
+        const commentForm = new FormData();
+        if(document.getElementById("comment_"+pk).value==""){
+          this.showAlert=true;
+          return;
+        }
+        commentForm.append("content", document.getElementById("comment_"+pk).value)
+        http.put('song/'+pk+"/comment/",commentForm,{
           headers: {
             Authorization: this.$store.state.authorization
           },
@@ -176,6 +242,7 @@ export default {
           http
           .get("/song/"+this.songID+"/comment/")
           .then((rest) => {
+            this.showModifyForm(index);
             this.comment = rest.data;
           })
         })
@@ -183,26 +250,18 @@ export default {
         this.showLogin=true;
       }
     },
-    deleteCommet: function(pk){
-      http.delete("song/"+pk+"/comment/",{
-        headers: {
-          Authorization: this.$store.state.authorization
-        },
-        
-      })
-      .then((rest) => {
-        http
-        .get("/song/"+this.songID+"/comment/")
-        .then((rest) => {
-          this.comment = rest.data;
-        })
-      })
-    }
   },
   mounted() {
     this.songID = this.$route.params.songID;
   },
   computed: {
+    sortComment() {
+      return this.comment.sort((a, b) => {
+				if( a.updated_at.substr(0,10)+" "+a.updated_at.substr(11,8) > b.updated_at.substr(0,10)+" "+b.updated_at.substr(11,8) ) return 1;
+				else if ( a.updated_at.substr(0,10)+" "+a.updated_at.substr(11,8) < b.updated_at.substr(0,10)+" "+b.updated_at.substr(11,8) ) return -1;
+				else return 0;
+			})
+    },
     ...mapGetters({
       currentUser: "currentUser",
       // menuType: "getMenuType",
