@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, recommend
 
 urlpatterns = [
     path('search/<str:category>/<str:keyword>/', views.SearchResult.as_view()),
@@ -9,5 +9,5 @@ urlpatterns = [
     path('<str:category>/<int:pk>/like/', views.Like.as_view()),
     path('album/<int:pk>/comment/', views.AlbumCommentList.as_view()),
     path('song/<int:pk>/comment/', views.SongCommentList.as_view()),
-    path('recommend/time/', views.TimeRecommend.as_view())
+    path('recommend/time/', recommend.TimeRecommend.as_view())
 ]
