@@ -110,7 +110,7 @@ class PlaylistDetailAPI(APIView):
 
 class PlayListSongAPI(APIView):
     @permission_classes([IsAuthenticated])
-    def patch(self, request, pk, song_pk):
+    def put(self, request, pk, song_pk):
         from music.models import Song
         song = get_object_or_404(Song, pk=song_pk)
         playlist = get_object_or_404(UserPlayList, pk=pk)
@@ -118,13 +118,13 @@ class PlayListSongAPI(APIView):
             if playlist.song.filter(id=song_pk).exists():
                 playlist.song.remove(song)
             else:
-                print("추가", song)
                 playlist.song.add(song)
             context = {
+                'name': playlist.name,
                 'song': playlist.song,
             }
 
-            serializer = UserPlayListSerializer(playlist, data=context, partial=True)
+            serializer = UserPlayListSerializer(playlist, data=context)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
