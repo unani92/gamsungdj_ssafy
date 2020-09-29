@@ -16,9 +16,11 @@
                   <h1 class="mb-0 truncate text-large"><a v-for="(singer, index) in album.artist" v-bind:key="index"><router-link :to="'/A505/artistDetail/'+singer.id" class="text-primary">{{singer.name}}</router-link></a></h1><br>
                   <h3 class="mb-0 truncate " style="display: inline-flex;">장르:<h3 class="ml-1" v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</h3></h3><br>
                   <h3 class="mb-0 truncate">발매일: {{album.released_date}}</h3><br>
-                  <h1 v-if="!checkLikeAlbum() && this.album.user_like"><img src="../../assets/img/heart/heart_empty.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{this.album.like + this.album.user_like.length}}</h1>
-                  <h1 v-if="checkLikeAlbum() && this.album.user_like"><img src="../../assets/img/heart/heart_full.png" style="width:32px; cursor:pointer;" @click="likeAlbum(album.id)"/> {{this.album.like + this.album.user_like.length}}</h1>
-                
+                  <h1 v-if="!checkLikeAlbum() && this.album.user_like" class="mb-0 truncate mt-5 text-large glyph-icon" style="cursor:pointer;" @click="likeAlbum(album.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px;vertical-align:top;"/> {{this.album.like + this.album.user_like.length}}</h1>
+                  <h1 v-if="checkLikeAlbum() && this.album.user_like" class="mb-0 truncate mt-5 text-large glyph-icon" style="cursor:pointer;" @click="likeAlbum(album.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px;vertical-align:top;"/> {{this.album.like + this.album.user_like.length}}</h1>
+                  <!-- <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-control-play pb-0" style="cursor:pointer;"> 재생</h1></h1>
+                  <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-playlist pb-0" style="cursor:pointer;"> 추가</h1></h1> -->
+                  <h1 class="mb-0 truncate mt-5 ml-5 text-large" @click="focusComment"><h1 class="glyph-icon simple-icon-bubble pb-0" style="cursor:pointer;"> {{comment.length}}</h1></h1>
                 </div>
         </b-colxx>
       </b-colxx>
@@ -80,7 +82,7 @@
     </b-row>
     <b-row>
       <b-colxx xxs="12">
-        <h2>댓글></h2>
+        <h2 id="commentTitle">댓글></h2>
         <b-colxx xxs="12" class="mb-1 pl-3 pr-3 mt-1"  v-for="(cmt, index) in sortComment" v-bind:key="index">
           <b-colxx xxs="12" style="display: inline-flex;">
             <div style="width:16%;" class="mr-2">
@@ -93,26 +95,17 @@
             <div style="margin-left: auto;">
               <p v-if="cmt.updated_at" class="text-muted mb-0 text-small">{{cmt.updated_at.substr(0,10)+" "+cmt.updated_at.substr(11,8)}}</p>
               <div v-if="checkComment(cmt.user.id)" calss="mb-0" style=" text-align:end;">
-                <a class="mb-0 text-small text-primary" :id="'modify_text_'+index" style="cursor:pointer;" @click="showModifyForm(index)">수정</a>
+                <a class="mb-0 text-small text-primary" :id="'modify_text_'+index" style="cursor:pointer;" @click="ModifyMode(cmt.pk, index)">수정</a>
                 <a class="mb-0 text-small text-primary" style="cursor:pointer;" @click="deleteCommet(cmt.pk, index)">삭제</a>
               </div>
             </div>
           </b-colxx>
-          <b-input-group class="comment-contaiener mb-2" :id="'modify_format_'+index" style="display:none">
-            <b-input :id="'comment_'+cmt.pk" :value="cmt.content"/>
-            <template v-slot:append>
-              <b-button variant="primary" @click="modifyComment(cmt.pk, index)">
-                <span class="d-inline-block">수정</span>
-                <i class="simple-icon-arrow-right ml-2"></i>
-              </b-button>
-            </template>
-          </b-input-group>
         </b-colxx>
         <b-input-group class="comment-contaiener pl-3 pr-3">
           <b-input placeholder="댓글" id="comment" />
           <template v-slot:append>
             <b-button variant="primary" @click="sendComment">
-              <span class="d-inline-block">작성</span>
+              <span class="d-inline-block" id="commentButton">작성</span>
               <i class="simple-icon-arrow-right ml-2"></i>
             </b-button>
           </template>
@@ -124,7 +117,7 @@
             :hide-backdrop="true"
             :no-close-on-backdrop="true">
         <b-row style="justify-content: center;">
-          <h4>댓글을 작성해주세요.</h4>
+          <h4>{{alertText}}</h4>
         </b-row>
         <b-row class="mt-1" style="justify-content: center;">
           <b-button variant="secondary" @click="showAlert=!showAlert">확인</b-button>
@@ -167,7 +160,11 @@ export default {
   },
   data () {
     return {
+      modifyComment: false,
+      modifyPK: 0,
+      modifyIndex: -1,
       showAlert: false,
+      alertText: "",
       likeCount:0,
       showLogin: false,
       sort_value : "",
@@ -305,30 +302,61 @@ export default {
       if(this.user){
         const commentForm = new FormData();
         if(document.getElementById("comment").value==""){
+          this.alertText="댓글을 작성해주세요.";
           this.showAlert=true;
-          return;
+          return; 
         }
         commentForm.append("content", document.getElementById("comment").value)
-        http.post(`album/${this.albumID}/comment/`,commentForm,{
-          headers: {
-            Authorization: this.$store.state.authorization
-          },
+        if(!this.modifyComment){
+          http.post(`album/${this.albumID}/comment/`,commentForm,{
+            headers: {
+              Authorization: this.$store.state.authorization
+            },
           
-        })
-        .then((rest) => {
-          var tag = document.getElementById('comment');
-          tag.value = "";
-          http
-          .get("album/"+this.albumID+"/comment/")
-          .then((rest) => {
-            this.comment = rest.data.songComment.concat(rest.data.albumComment);
           })
-        })
+          .then((rest) => {
+            var tag = document.getElementById('comment');
+            tag.value = "";
+            http
+            .get("album/"+this.albumID+"/comment/")
+            .then((rest) => {
+              this.comment = rest.data.songComment.concat(rest.data.albumComment);
+            })
+          })
+        }else{
+          var type;
+          if(this.comment[this.modifyIndex].song){
+            type = "song/";
+          }else{
+            type = "album/"
+          }
+          http.put(type+this.modifyPK+"/comment/",commentForm,{
+            headers: {
+              Authorization: this.$store.state.authorization
+            },
+            
+          })
+          .then((rest) => {
+            http
+            .get("/album/"+this.albumID+"/comment/")
+            .then((rest) => {
+              this.ModifyMode(this.modifyPK, this.modifyIndex);
+              this.comment = rest.data.songComment.concat(rest.data.albumComment);
+            })
+          })
+        }
+        
       }else{
         this.showLogin=true;
       }
     },
     deleteCommet: function(pk, index){
+      if(this.modifyComment){
+        this.alertText="수정을 취소해주세요.";
+        this.showAlert=true;
+        return;
+      }
+
       var type;
       if(this.comment[index].song){
         type = "song/";
@@ -349,50 +377,35 @@ export default {
           })
       })
     },
-    showModifyForm : function(index){
+    ModifyMode : function(pk, index){
       //$("#modify_format_"+pk).show();
-      var tag1 = document.getElementById('modify_format_'+index);
+      var tag1 = document.getElementById('comment');
       var tag2 = document.getElementById('modify_text_'+index);
+      var tag3 = document.getElementById('commentButton');
       console.log(tag1);
-      if(tag1.style.display == "none"){
-        tag1.style.display = 'flex';
+      if(tag2.text == "수정"){
+        tag1.value=this.comment[index].content;
         tag2.text = "취소";
+        tag3.innerHTML = "수정";
+        if(this.modifyIndex!=-1){
+          var tag4 = document.getElementById('modify_text_'+this.modifyIndex);
+          tag4.text = "수정";
+        }
+        this.modifyComment = true;
+        this.modifyPK = pk;
+        this.modifyIndex = index;
       }else{
-        tag1.style.display = 'none';
+        tag1.value="";
         tag2.text = "수정";
+        tag3.innerHTML = "작성";
+        this.modifyComment = false;
+        this.modifyPK = 0;
+        this.modifyIndex = -1;
       }
     },
-    modifyComment : function(pk, index){
-      if(this.user){
-        const commentForm = new FormData();
-        if(document.getElementById("comment_"+pk).value==""){
-          this.showAlert=true;
-          return;
-        }
-        var type;
-        if(this.comment[index].song){
-          type = "song/";
-        }else{
-          type = "album/"
-        }
-        commentForm.append("content", document.getElementById("comment_"+pk).value)
-        http.put(type+pk+"/comment/",commentForm,{
-          headers: {
-            Authorization: this.$store.state.authorization
-          },
-          
-        })
-        .then((rest) => {
-          http
-          .get("/album/"+this.albumID+"/comment/")
-          .then((rest) => {
-            this.showModifyForm(index);
-            this.comment = rest.data.songComment.concat(rest.data.albumComment);
-          })
-        })
-      }else{
-        this.showLogin=true;
-      }
+    focusComment: function(){
+      var tag = document.getElementById('commentTitle');
+      tag.scrollIntoView(true);
     },
   },
   computed: {
