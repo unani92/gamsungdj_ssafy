@@ -62,9 +62,9 @@
                     <td style="width:5%; vertical-align: middle;">
                         <b-form-checkbox :value="song.id" :id="'delete-checkbox-'+song.id"/>
                     </td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 35%;" @click="addDeleteList(song.id)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; padding-left:85px;">{{limitString(song.name)}}</div></td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%;" @click="addDeleteList(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%;" @click="addDeleteList(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 35%; font-size: 0.85rem;" @click="addDeleteList(song.id)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; padding-left:85px;">{{limitString(song.name)}}</div></td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%; font-size: 0.85rem;" @click="addDeleteList(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%; font-size: 0.85rem;" @click="addDeleteList(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                     <td style="vertical-align: middle; width:10%;" @click.prevent="addToPlaylistAndPlay(song)" ><div class="glyph-icon simple-icon-control-play"/></td>
                     <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width:10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:15px;"/></td>
                     <td v-if="checkLikeSong(song.id)" style="vertical-align: middle; width:10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:15px;"/></td>
@@ -100,7 +100,7 @@
             </div>
         </template>
         <!-- 곡 추가 모달 바디 -->
-        <b-row style="justify-content: center; height:400px;">
+        <b-row style="justify-content: center; min-height:400px;">
             <h5 v-if="searchBodyKeyword">> {{searchBodyKeyword}}에 대한 검색 결과</h5>
             
             <table class="table table-sm" style="margin-bottom:0px; display:block; width:100%;" v-if="searchBodyKeyword">
@@ -121,9 +121,9 @@
                     <td style="width:5%; vertical-align: middle;">
                         <b-form-checkbox :value="song.id" :id="'checkbox-'+song.id"/>
                     </td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 35%;" @click="addSelectList(song.id)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; text-align:left; padding-left:85px;">{{limitString(song.name)}}</div></td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%;" @click="addSelectList(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%;" @click="addSelectList(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 35%; font-size: 0.85rem;" @click="addSelectList(song.id)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; text-align:left; padding-left:85px;">{{limitString(song.name)}}</div></td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%; font-size: 0.85rem;" @click="addSelectList(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%; font-size: 0.85rem;" @click="addSelectList(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                     <td style="vertical-align: middle; width:10%;" @click.prevent="addToPlaylistAndPlay(song)" ><div class="glyph-icon simple-icon-control-play"/></td>
                     <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width:10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:15px;"/></td>
                     <td v-if="checkLikeSong(song.id)" style="vertical-align: middle; width:10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:15px;"/></td>
@@ -152,22 +152,20 @@
                 <b-card class="mb-0" style="text-align: center;">
                     <table  class="table table-sm" style="margin-bottom:0px;">
                         <thead style="font-size: initial;">
-                            <th></th>
-                            <th id='song' @click="changeSortValue('name')" style="cursor:pointer">곡</th>
-                            <th id='artist' @click="changeSortValue('artist')" style="cursor:pointer">가수</th>
-                            <th>장르</th>
-                            <th style="width:10%">재생</th>
-                            <th style="width:10%">좋아요</th>
+                            <th id='song' @click="changeSortValue('name')" style="cursor:pointer; width: 40%;">곡</th>
+                            <th id='artist' @click="changeSortValue('artist')" style="cursor:pointer; width: 20%;">가수</th>
+                            <th id='genre' style="cursor:pointer; width: 20%;">장르</th>
+                            <th id='play' style="width:10%;">재생</th>
+                            <th id='like' style="width:10%;">좋아요</th>
                         </thead>
-                        <tbody style="font-size: x-large;">
+                        <tbody>
                             <tr :class="{'flex-row':true}" v-for="(song, index) in playlist.song" v-bind:key="index" style="cursor:pointer;">
-                            <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)" alt="song_img"/></td>
-                            <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{limitString(song.name)}}</td>
-                            <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
-                            <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
-                            <td style="vertical-align: middle;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
-                            <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                            <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
+                            <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 40%;" @click="detailSong(song.id)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; padding-left:85px; padding-right:85px;">{{limitString(song.name)}}</div></td>
+                            <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
+                            <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
+                            <td style="vertical-align: middle; width: 10%;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
+                            <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
+                            <td v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -186,7 +184,6 @@ import httpUser from '@/utils/http-user'
 import http from '@/utils/http-common'
 import { mapState, mapGetters } from 'vuex'
 import { adminRoot } from "@/constants/config"
-// import AdminPlayList from './AdminPlayList.vue'
 export default {
     
     data() {
@@ -203,8 +200,6 @@ export default {
             // 관리 모달
             updateName: false,
             deleteItems: [],
-
-
             // 곡 추가 모달
             searchKeyword: "",
             searchBodyKeyword: "",
@@ -224,7 +219,7 @@ export default {
         createPlayList(name) {
             httpUser.post('playlist/', {"name": name}, this.config)
             .then(res => {
-                this.playlists.push(res.data)
+                this.playlists.unshift(res.data)
                 this.name = ''
             })
         },
@@ -298,8 +293,13 @@ export default {
             })
         },
         deletePlayList(id) {
-            httpUser.delete(`playlist/${this.adminList.id}/`, {}, this.config)
-            this.showAdmin = false
+            if (confirm(`${this.adminList.name}을 삭제하시겠습니까?`) == true) {
+                httpUser.delete(`playlist/${this.adminList.id}/`, this.config)
+                .then((res) => {
+                    this.playlists = res.data
+                    this.hideAdmin()
+                })
+            }   
         },
         addDeleteList(id) {
             var checkbox = document.getElementById("delete-checkbox-"+id)
@@ -313,12 +313,11 @@ export default {
             }
         },
         deleteSong() {
-            for (var i = 0; i < this.deleteItems.length; i++) {
-                
-                httpUser.put(`playlist/${this.adminList.id}/song/${this.deleteItems[i]}/`, {}, this.config)
-                .then((res) => {setTimeout(1000)})
-            }
-            this.adminPlayList(this.adminList.id) 
+            httpUser.delete(`playlist/${this.adminList.id}/song/`, {data: {"songs":this.deleteItems}, headers: {Authorization: this.authorization}})
+            .then((res) => {
+                this.adminList = res.data
+                this.getPlaylist()
+            })
         },
         search() {
             const keyword = this.searchKeyword
@@ -349,19 +348,19 @@ export default {
             }          
         },
         addPlayList() {
-            for (var i = 0; i < this.selectedItems.length; i++) {
-                
-                httpUser.put(`playlist/${this.adminList.id}/song/${this.selectedItems[i]}/`, {}, this.config)
-                .then((res) => {setTimeout(1000)})
-            }
-            this.hideSearch()
-            this.adminPlayList(this.adminList.id)   
+            httpUser.post(`playlist/${this.adminList.id}/song/`, {"songs":this.selectedItems}, this.config)
+            .then((res) => {
+                this.adminList = res.data
+                this.hideSearch()
+                this.getPlaylist()
+            })    
         },
         hideAdmin() {
             this.showAdmin = false
             this.adminList = []
             this.deleteItems = []
             this.updateName = false
+            this.getPlaylist()
         },
         hideSearch() {
             this.showSearch = false
