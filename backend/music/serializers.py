@@ -44,12 +44,12 @@ class AlbumCommentSerializer(serializers.ModelSerializer):
     album = AlbumSerializer(required=False)
     class Meta:
         model = AlbumComment
-        fields = ['user', 'album', 'content', 'updated_at']
+        fields = ['pk','user', 'album', 'content', 'updated_at']
 
 class SongCommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
     song = SongSerializer(required=False)
     class Meta:
         model = SongComment
-        fields = ['user', 'song', 'content', 'updated_at']
+        fields = ['pk','user', 'song', 'content', 'updated_at']
 

@@ -8,5 +8,6 @@ urlpatterns = [
     path('<str:category>/<int:pk>/', views.CategoryDetail.as_view()),
     path('<str:category>/<int:pk>/like/', views.Like.as_view()),
     path('album/<int:pk>/comment/', views.AlbumCommentList.as_view()),
-    path('song/<int:pk>/comment/', views.SongCommentList.as_view())
+    path('song/<int:pk>/comment/', views.SongCommentList.as_view()),
+    path('recommend/time/', views.TimeRecommend.as_view())
 ]

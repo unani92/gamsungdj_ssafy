@@ -5,6 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Song, Album, Artist, Log, AlbumComment, SongComment
 from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
 from random import sample
+from datetime import datetime
+from collections import Counter
+import math
 # Create your views here.
 
 class SongType(APIView):
@@ -43,7 +46,15 @@ class CategoryDetail(APIView):
         elif category == 'artist':
             artist = get_object_or_404(Artist, pk=pk)
             serializer = ArtistSerializer(artist)
-            return Response(serializer.data)
+            songs = Song.objects.filter(artist=pk)
+            song_serializer = SongSerializer(songs, many=True)
+            albums = Album.objects.filter(artist=pk)
+            album_serializer = AlbumSerializer(albums, many=True)
+            return Response({
+                'data': serializer.data,
+                'songs': song_serializer.data,
+                'albums': album_serializer.data
+            })
         else:
             return Response({
                 "status": 401,
@@ -54,6 +65,13 @@ class SearchResult(APIView):
     def get(self, request, category, keyword):
         if category == 'song':
             songs = Song.objects.filter(name__contains=keyword).order_by('-pk')
+            try:
+                artist = Artist.objects.get(name__contains=keyword)
+                artist_songs = Song.objects.filter(artist=artist.pk)
+            except:
+                artist_songs = []
+
+            songs = list(artist_songs) + list(songs)
             serializer = SongSerializer(songs, many=True)
             return Response(serializer.data)
         elif category == 'album':
@@ -132,8 +150,14 @@ class AlbumCommentList(APIView):
     def get(self, request, pk):
         album = get_object_or_404(Album, pk=pk)
         comments = AlbumComment.objects.filter(album=album)
+        song_comments = SongComment.objects.filter(song__album=pk)
+
+        song_serializer = SongCommentSerializer(song_comments, many=True)
         serializer = AlbumCommentSerializer(comments, many=True)
-        return Response(serializer.data)
+        return Response({
+            'albumComment': serializer.data,
+            'songComment': song_serializer.data
+        })
 
     @permission_classes([IsAuthenticated])
     def post(self, request, pk):
@@ -193,6 +217,7 @@ class SongCommentList(APIView):
     def post(self, request, pk):
         song = get_object_or_404(Song, pk=pk)
         serializer = SongCommentSerializer(data=request.data)
+        print(request.user)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, song=song)
             return Response(serializer.data)
@@ -234,4 +259,56 @@ class SongCommentList(APIView):
             return Response({
                 "status": 401,
                 "msg": "게시글 삭제 권한이 없습니다."
+            })
+
+class TimeRecommend(APIView):
+    def get(self, request):
+        now = datetime.now()
+        hour = now.hour
+
+        if request.user.is_authenticated:  # logged in user
+            recommend = []
+
+            # 사용자가 좋아요를 누른 곡은 추천에서 제외
+            sad_songs_all = Song.objects.filter(type__exact='sad').exclude(user_like__in=[request.user]).order_by('-like')
+            love_songs_all = Song.objects.filter(type__exact='love').exclude(user_like__in=[request.user.pk]).order_by('-like')
+            joy_songs_all = Song.objects.filter(type__exact='joy').exclude(user_like__in=[request.user.pk]).order_by('-like')
+
+            # extract all user's logs by time
+            if 0<= hour < 7:
+                logs = Log.objects.filter(user=request.user, time__hour__range=(0,7))
+            elif 7<= hour < 11:
+                logs = Log.objects.filter(user=request.user, time__hour__range=(7,11))
+            elif 12 <= hour < 14:
+                logs = Log.objects.filter(user=request.user, time__hour__range=(12,14))
+            elif 20 <= hour <= 23:
+                logs = Log.objects.filter(user=request.user, time__hour__range=(20,24))
+            else:
+                logs = Log.objects.filter(user=request.user)
+
+            # log based recommend
+            if logs:
+                feelings = [log.song.type for log in logs]
+                counts = {'sad': 0, 'joy': 0, 'love': 0}
+                for feel in feelings:
+                    counts[feel] += 1
+                sad_prop = int(counts['sad'] / len(feelings)*100)
+                joy_prop = int(counts['joy'] / len(feelings) * 100)
+                love_prop = int(counts['love'] / len(feelings) * 100)
+
+                sad_songs = math.ceil(sad_prop/100 * 12)
+                joy_songs = math.ceil(joy_prop/100 * 12)
+                love_songs = math.ceil(love_prop/100 * 12)
+
+            else:    # if user's log not exist
+                pass
+
+            return Response({
+                'status': 200
+            })
+
+
+        else:    # not logged in
+            return Response({
+                'data': 'noooooooooo'
             })
