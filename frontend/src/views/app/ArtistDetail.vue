@@ -119,16 +119,6 @@
     </b-colxx>
   </b-row>
   <LoginModal :showLogin="showLogin" @hideModal="showLogin=!showLogin"/>
-  <b-modal v-model="emptyModal"  hide-header hide-footer
-            :hide-backdrop="true"
-            :no-close-on-backdrop="true">
-        <b-row style="justify-content: center;">
-          <h4>'{{keyword}}' 검색 결과가 없습니다.</h4>
-        </b-row>
-        <b-row class="mt-1" style="justify-content: center;">
-          <b-button variant="secondary" @click="toMain()">메인으로</b-button>
-        </b-row>
-    </b-modal>
   </div>
 </template>
 <script>
