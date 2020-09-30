@@ -1,25 +1,25 @@
 <template>
     <div>
         <div class="mb-4">
-            <h3>김유창님은 2010.05.10부터 1,672개의 곡의 음악을 감상하고 있습니다.</h3>
+            <h3>{{ user.username }}님은 2010.05.10부터 1,672개의 곡의 음악을 감상하고 있습니다.</h3>
         </div>
         <b-row>
             <b-colxx lg="3" xl="3" class="mb-4">
                 <gradient-with-radial-progress-card
                     icon="simple-icon-heart"
                     title="ambience"
-                    detail="선호하는 감성은 슬픔입니다."
-                    :percent="45"
-                    progressText="45%"
+                    :detail=favAmbiance
+                    :percent=favAmbianceProp
+                    :progressText=favAmbianceProp
                 />
             </b-colxx>
             <b-colxx lg="3" xl="3" class="mb-4">
                 <gradient-with-radial-progress-card
                     icon="simple-icon-star"
                     title="Genre"
-                    detail="선호하는 장르는 발라드입니다."
-                    :percent="61"
-                    progressText="61%"
+                    :detail=favGenre
+                    :percent=favGenreProp
+                    :progressText=favGenreProp
                 />
             </b-colxx>
             <b-colxx lg="3" xl="3" class="mb-4">
@@ -49,7 +49,7 @@
                     </div>
                 </b-card>
             </b-colxx>
-            
+
             <b-colxx lg="9" xl="9">
                 <b-card title="시간대별 이용 현황">
                     <div class="dashboard-line-chart">
@@ -71,9 +71,9 @@
                 </b-card>
             </b-colxx>
 
-            
+
             <b-colxx lg="9" xl="9">
-                <b-card> 
+                <b-card>
                     <b-colxx xxs="12" class="pl-0 pr-0">
                         <glide-component :settings="glideNoControlsSettings">
                             <div class="pr-3 pl-3 mt-2 mb-2 glide__slide" v-for="(data, index) in dummyData1" :key="index">
@@ -94,11 +94,11 @@
         </b-row>
         <b-row>
             <b-colxx lg="3" xl="3" class="mb-4">
-                <b-card title="가수">    
+                <b-card title="가수">
                     <vue-perfect-scrollbar
                         class="scroll dashboard-list-with-user"
                         :settings="{ suppressScrollX: true, wheelPropagation: false }"
-                    >   
+                    >
                         <div class="d-flex flex-row mb-3 pb-3 border-bottom" v-for="(data, index) in artists" :key="index">
                             <img :src="data.thumb" :alt="data.title" class="img-thumbnail border-0 rounded-circle list-thumbnail align-self-center xsmall" />
                             <div class="pl-3 pr-2">
@@ -110,7 +110,7 @@
                 </b-card>
             </b-colxx>
             <b-colxx lg="9" xl="9">
-                <b-card> 
+                <b-card>
                     <b-colxx xxs="12" class="pl-0 pr-0">
                         <glide-component :settings="glideNoControlsSettings">
                             <div class="pr-3 pl-3 mt-2 mb-2 glide__slide" v-for="(data, index) in dummyData1" :key="index">
@@ -139,46 +139,51 @@ import DoughnutChart from "../../components/Charts/Doughnut"
 import { ThemeColors } from '../../utils'
 import LineChart from "../../components/Charts/Line"
 import http from '../../utils/http-common'
+import { mapState, mapGetters } from 'vuex'
 const colors = ThemeColors()
 export default {
-    components: {    
+    components: {
         "gradient-with-radial-progress-card": GradientWithRadialProgressCard,
         'glide-component': GlideComponent,
         "doughnut-chart": DoughnutChart,
         "line-chart": LineChart
     },
+    computed: {
+      ...mapState(['user']),
+      ...mapGetters(['config']),
+      favGenre() {
+        if (this.genres.length) return `가장 좋아하는 장르는 ${this.genres[0].title} 입니다.`
+        else return ''
+      },
+      favGenreProp() {
+        if (this.genres.length) return Math.ceil(this.genres[0].status/this.genresCnt * 100)
+        else return 0
+      },
+      favAmbiance() {
+        return `가장 선호하는 감정의 음악은 ${this.doughnutChartData1.labels[0]} 입니다.`
+      },
+      favAmbianceProp() {
+        let arr = this.doughnutChartData1.datasets[0].data
+        const sum = arr.reduce((a,b) => a+b)
+        console.log(sum)
+        console.log(arr[0])
+        return Math.ceil(arr[0]/sum * 100)
+      },
+    },
     mounted() {
+      this.fetchLog()
     },
     data() {
         return {
-            genres:
-            [
-                {
-                    title: '발라드',
-                    total: 783,
-                    status: 392
-                },
-                {
-                    title: '댄스',
-                    total: 783,
-                    status: 252
-                },
-                {
-                    title: '랩/힙합',
-                    total: 783,
-                    status: 92
-                },
-                {
-                    title: 'R&B/Soul',
-                    total: 783,
-                    status: 32
-                },
-                {
-                    title: '트로트',
-                    total: 783,
-                    status: 15
-                }
-            ],
+            genresCnt: '',
+            genres: [],
+            // [
+            //     {
+            //         title: '발라드',
+            //         total: 783,
+            //         status: 392
+            //     },
+            // ],
             doughnutChartData1: {
                 labels: ['Sad', 'Joy', 'Love'],
                 datasets: [
@@ -191,23 +196,7 @@ export default {
                         colors.themeColor1_10
                     ],
                     borderWidth: 2,
-                    data: [65, 27, 13]
-                    }
-                ]
-            },
-            doughnutChartData2: {
-                labels: ['Sad', 'Love', 'Joy'],
-                datasets: [
-                    {
-                    label: '',
-                    borderColor: [colors.themeColor3, colors.themeColor2, colors.themeColor1],
-                    backgroundColor: [
-                        colors.themeColor3_10,
-                        colors.themeColor2_10,
-                        colors.themeColor1_10
-                    ],
-                    borderWidth: 2,
-                    data: [65, 27, 13]
+                    data: [50, 80, 50]
                     }
                 ]
             },
@@ -321,6 +310,57 @@ export default {
         }
     },
     methods: {
+      async fetchLog() {
+        const { data } = await http.get('log/', this.config)
+        const genresArr = []
+        const ambianceArr = []
+        const artistsArr = []
+        data.forEach(obj => {
+          const genres = obj.song.genres
+          genres.forEach(gerne => genresArr.push(gerne.name))
+          const ambiance = obj.song.type
+          ambianceArr.push(ambiance)
+          const artists = obj.song.artist
+          artists.forEach(artist => artistsArr.push(artist.name))
+        })
+
+        // genre 통계처리
+        this.genresCnt = genresArr.length
+        const genreSet = new Set(genresArr)
+        genreSet.forEach(genre => {
+          let cnt = 0
+          for (let elem of genresArr) {
+            if (elem === genre) cnt ++
+          }
+          this.genres.push({
+            'title': genre,
+            'total': genresArr.length,
+            'status': cnt
+          })
+        })
+        this.genres.sort((a,b) => {
+          return b['status'] - a['status']
+        })
+
+        // ambiance 통계처리
+        const ambianceObj = {'sad': 0, 'love': 0, 'joy': 0}
+        ambianceArr.forEach(ambiance => ambianceObj[ambiance]++)
+        console.log(ambianceObj)
+        const sortable = []
+        for (let amb in ambianceObj) {
+          sortable.push([amb, ambianceObj[amb]])
+        }
+        sortable.sort((a,b) => b[1] - a[1])
+        console.log(sortable)
+        const ambiance = []
+        const cnt = []
+        sortable.forEach(arr => {
+          ambiance.push(arr[0])
+          cnt.push(arr[1])
+        })
+        this.doughnutChartData1.labels = ambiance
+        this.doughnutChartData1.datasets[0].data = cnt
+      }
     }
 }
 </script>
