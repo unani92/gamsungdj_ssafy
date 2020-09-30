@@ -52,6 +52,10 @@ const routes = [
     path: "*",
     component: () => import("./views/Error")
   },
+  {
+    path: '/myplaylist',
+    component: () => import("@/components/User/MyPlayList")
+  }
   
 ];
 

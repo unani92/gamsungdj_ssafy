@@ -115,21 +115,42 @@ class PlaylistDetailAPI(APIView):
 
 class PlayListSongAPI(APIView):
     @permission_classes([IsAuthenticated])
-    def patch(self, request, pk, song_pk):
+    def post(self, request, pk):
         from music.models import Song
-        song = get_object_or_404(Song, pk=song_pk)
         playlist = get_object_or_404(UserPlayList, pk=pk)
         if request.user == playlist.user:
-            if playlist.song.filter(id=song_pk).exists():
-                playlist.song.remove(song)
-            else:
-                print("추가", song)
-                playlist.song.add(song)
+            for song_id in request.data["songs"]:
+                song = get_object_or_404(Song, id=song_id)
+                if not playlist.song.filter(id=song_id).exists():
+                    playlist.song.add(song)
             context = {
-                'song': playlist.song,
+                'name': playlist.name,
+                'song': playlist.song
             }
+            serializer = UserPlayListSerializer(playlist, data=context)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
-            serializer = UserPlayListSerializer(playlist, data=context, partial=True)
+
+    @permission_classes([IsAuthenticated])
+    def delete(self, request, pk):
+        from music.models import Song
+        playlist = get_object_or_404(UserPlayList, pk=pk)
+        print(request.user)
+        if request.user == playlist.user:
+            for song_id in request.data["songs"]:
+                song = get_object_or_404(Song, id=song_id)
+                if playlist.song.filter(id=song_id).exists():
+                    playlist.song.remove(song)
+            context = {
+                'name': playlist.name,
+                'song': playlist.song
+            }
+            serializer = UserPlayListSerializer(playlist, data=context)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)

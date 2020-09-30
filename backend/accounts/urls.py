@@ -15,5 +15,5 @@ urlpatterns = [
     # playlist put, delete
     path('playlist/<int:pk>/', views.PlaylistDetailAPI.as_view()),
     # add or delete song in playlist
-    path('playlist/<int:pk>/song/<int:song_pk>/', views.PlayListSongAPI.as_view()),
+    path('playlist/<int:pk>/song/', views.PlayListSongAPI.as_view()),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
