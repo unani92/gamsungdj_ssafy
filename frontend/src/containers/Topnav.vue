@@ -65,6 +65,16 @@
       </div>
     </div>
     <LoginModal :showLogin="showLogin" @hideModal="showLogin=false"/>
+    <b-modal v-model="emptyModal"  hide-header hide-footer
+    :hide-backdrop="true"
+    :no-close-on-backdrop="true">
+      <b-row style="justify-content: center;">
+        <h4>검색어를 입력해주세요.</h4>
+      </b-row>
+      <b-row class="mt-1" style="justify-content: center;">
+        <b-button variant="secondary" @click="emptyModal=!emptyModal">확인</b-button>
+      </b-row>
+    </b-modal>
   </nav>
 </template>
 
@@ -84,6 +94,7 @@ export default {
   },
   data() {
     return {
+      emptyModal:false,
       searchKeyword: "",
       isMobileSearch: false,
       isDarkActive: false,
@@ -94,6 +105,10 @@ export default {
   methods: {
     ...mapActions(['logout']),
     search() {
+      if(this.searchKeyword.trim()==""){
+        this.emptyModal=true;
+        return;
+      }
       this.$router.push(`${adminRoot}/search/${this.searchKeyword}`);
       this.searchKeyword = "";
     },
