@@ -379,44 +379,43 @@ export default {
                 el[i].style.display="none"
             }
         },
-        addToPlaylistAndPlay(data) {
-            axios.get(youtubeURL, {
-                params: {
-                    key: API_KEY,
-                    part: 'snippet',
-                    maxResults: 1,
-                    type: 'video',
-                    q: data.artist[0].name + ' ' + data.name
-                }
-            })
-            .then(res => {
-                const { items } = res.data
-                const { videoId } = items[0].id
-                data['src'] = videoId
-                this.playlist.unshift(data)
-                this.$store.state.playerControl = "add"
-                this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-            })
-            .catch(err => console.log(err))
+        async fetchYoutubeId(song) {
+          const { data } = await axios.get(youtubeURL, {
+            params: {
+              key: API_KEY,
+              part: 'snippet',
+              maxResults: 1,
+              type: 'video',
+              q: song.artist[0].name + ' ' + song.name
+            }
+          })
+          const { items } = data
+          const { videoId } = items[0].id
+          const reqData = {'src': videoId}
+          song['src'] = videoId
+          await http.post(`addsrc/${song.id}/`, reqData,'')
         },
-        addToPlaylist(data) {
-            axios.get(youtubeURL, {
-                params: {
-                    key: API_KEY,
-                    part: 'snippet',
-                    maxResults: 1,
-                    type: 'video',
-                    q: data.artist[0].name + ' ' + data.name
-                }
-            })
-            .then(res => {
-                const { items } = res.data
-                const { videoId } = items[0].id
-                data['src'] = videoId
-                this.playlist.push(data)
-                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-            })
-            .catch(err => console.log(err))
+        async addToPlaylistAndPlay(data) {
+          if (data['src']) {
+            this.playlist.unshift(data)
+            this.$store.state.playerControl = "add"
+            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          } else {
+            await this.fetchYoutubeId(data)
+            this.playlist.unshift(data)
+            this.$store.state.playerControl = "add"
+            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          }
+        },
+        async addToPlaylist(data) {
+          if (data['src']) {
+            this.playlist.push(data)
+            this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          } else {
+            await this.fetchYoutubeId(data)
+            this.playlist.push(data)
+            this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          }
         },
         search(word){
             this.$router.push(`/A505/search/${word}`);
