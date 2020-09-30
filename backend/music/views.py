@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Song, Album, Artist, Log, AlbumComment, SongComment
 from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
 from random import sample
+import re
 # Create your views here.
 
 class SongType(APIView):
@@ -23,22 +24,30 @@ class CategoryDetail(APIView):
             return Response(serializer.data)
         elif category == 'album':
             album = get_object_or_404(Album, pk=pk)
-            songs = [song for song in album.songs.split(',')]
-            print(songs)
-            artist = album.artist.name
+
+            songs = re.sub(r'\([^)]*\)', '', album.songs)
+            songs = [song for song in songs.split(',')]
+
+            artist = album.artist.all()
+            print(artist)
             arr = []
             for idx,song in enumerate(songs):
                 try:
-                    s = Song.objects.filter(name__exact=song, album=album)[0]
-                    serializer = SongSerializer(s)
-                    arr.append(serializer.data)
+                    print(song)
+                    s = Song.objects.filter(name__contains=song, album=album)[0]
+                    print(f'name: {s.name}')
+                    arr.append(s)
                 except:
-                    arr.append('')
+                    s = Song.objects.filter(name__contains=song[:-1], album=album)[0]
+                    print(f'name: {s.name}')
+                    arr.append(s)
 
             serializer = AlbumSerializer(album)
+
+            song_serializer = SongSerializer(arr, many=True)
             return Response({
                 "data": serializer.data,
-                "songs": arr
+                "songs": song_serializer.data
             })
         elif category == 'artist':
             artist = get_object_or_404(Artist, pk=pk)
