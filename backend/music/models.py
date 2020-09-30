@@ -58,6 +58,7 @@ class Song(models.Model):
     img = models.URLField(null=True)
     lyric = models.TextField(null=True)
     released = models.CharField(max_length=300)
+    src = models.CharField(max_length=300, null=True, default='')
     type = models.CharField(max_length=300, null=True)
 
 class Log(models.Model):

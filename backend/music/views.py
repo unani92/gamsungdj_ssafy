@@ -257,3 +257,17 @@ class SongCommentList(APIView):
                 "status": 401,
                 "msg": "게시글 삭제 권한이 없습니다."
             })
+
+class AddYoutubeId(APIView):
+    def post(self, request, pk):
+        song = get_object_or_404(Song, pk=pk)
+        src = request.data['src']
+        if not song.src:
+            song.src = src
+            song.save()
+            serializer = SongSerializer(song)
+            return Response(serializer.data)
+        else:
+            return Response({
+                'msg': 'failed'
+            })
