@@ -1,7 +1,12 @@
 <template>
   <nav class="navbar fixed-top">
-    <div class="d-flex align-items-center navbar-left"></div>
-
+    <div class="d-flex align-items-center navbar-left">
+      <div style="margin-left:50px;">
+        <router-link to="/A505/main">
+          home..
+        </router-link>
+      </div>
+    </div>
     <div
       :class="{'search':true, 'mobile-view':isMobileSearch}"
       ref="searchContainer"

@@ -18,7 +18,7 @@
                             <switches v-model="playerToggleFlag" theme="custom" color="primary-inverse"></switches>
                         </div>
                         <div class="player" v-show="playerToggleFlag">
-                            <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended(selectedSong.index)" ref="youtube"></youtube>
+                            <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended(selectedSong.index)" @error="error()" ref="youtube"></youtube>
                         </div>
                         <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
                     </div>
@@ -276,6 +276,11 @@ export default {
                 this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 this.player.playVideo()
             }
+        },
+        error() {
+            console.log(this.selectedSong)
+            this.$notify('error', "재생 불가능한 곡입니다.", this.selectedSong.title+" - "+this.selectedSong.artist, { duration: 5000, permanent: false })
+            this.$store.state.playerControl = "next"
         },
         selectPlaylist(index) {
             console.log(this.userPlayList[index])
