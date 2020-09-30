@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="songs.length">
     <b-row>
       <b-colxx xxs="12">
         <div class="separator mb-5"></div>
@@ -137,7 +137,7 @@ const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
 
 export default {
-  
+
   components: {
     LoginModal,
   },
@@ -232,8 +232,8 @@ export default {
     },
     checkLikeSong(index){
       if(this.user){
-        for(var i=0;i<this.songs[index].user_like.length;i++){
-          if(this.songs[index].user_like[i].id==this.user.id){
+        for(let i=0;i<this.songs[index].user_like.length;i++){
+          if(this.songs[index].user_like[i].id===this.user.id){
             return true;
           }
         }
@@ -249,7 +249,6 @@ export default {
           },
         })
         .then((rest) => {
-          console.log(rest.data)
           if(rest.data.liked){
             this.songs[index].user_like.push(this.user);
             this.$notify('primary', "♥ 좋아요", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
@@ -318,7 +317,7 @@ export default {
         if(document.getElementById("comment").value.trim()==""){
           this.alertText="댓글을 작성해주세요.";
           this.showAlert=true;
-          return; 
+          return;
         }
         commentForm.append("content", document.getElementById("comment").value)
         if(!this.modifyComment){
@@ -326,7 +325,7 @@ export default {
             headers: {
               Authorization: this.$store.state.authorization
             },
-          
+
           })
           .then((rest) => {
             var tag = document.getElementById('comment');
@@ -348,7 +347,7 @@ export default {
             headers: {
               Authorization: this.$store.state.authorization
             },
-            
+
           })
           .then((rest) => {
             http
@@ -359,7 +358,7 @@ export default {
             })
           })
         }
-        
+
       }else{
         this.showLogin=true;
       }

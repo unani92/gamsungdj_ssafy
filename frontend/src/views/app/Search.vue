@@ -228,7 +228,7 @@ export default {
     })
   },
   data () {
-    return {  
+    return {
       endPage:1,
       currentPage: 1,
       emptyModal: false,
