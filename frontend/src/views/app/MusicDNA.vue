@@ -9,7 +9,7 @@
                     icon="simple-icon-heart"
                     title="ambience"
                     :detail=favAmbiance
-                    :percent=favAmbianceProp
+                    :percent=Number(favAmbianceProp.slice(0,favAmbianceProp.length-1))
                     :progressText=favAmbianceProp
                 />
             </b-colxx>
@@ -18,7 +18,7 @@
                     icon="simple-icon-star"
                     title="Genre"
                     :detail=favGenre
-                    :percent=favGenreProp
+                    :percent=Number(favGenreProp.slice(0,favGenreProp.length-1))
                     :progressText=favGenreProp
                 />
             </b-colxx>
@@ -27,7 +27,7 @@
                     icon="simple-icon-user"
                     title="Artist"
                     :detail=favArtist
-                    :percent=favArtistProp
+                    :percent=Number(favArtistProp.slice(0,favArtistProp.length-1))
                     :progressText=favArtistProp
                 />
             </b-colxx>
@@ -35,9 +35,9 @@
                 <gradient-with-radial-progress-card
                     icon="simple-icon-clock"
                     title="Time"
-                    detail="주로 오후에 감상을 하고 있습니다."
-                    :percent="36"
-                    progressText="36%"
+                    :detail=favTime
+                    :percent=Number(favTimeProp.slice(0,favTimeProp.length-1))
+                    :progressText=favTimeProp
                 />
             </b-colxx>
         </b-row>
@@ -158,8 +158,8 @@ export default {
         else return ''
       },
       favGenreProp() {
-        if (this.genres.length) return Math.ceil(this.genres[0].status/this.genresCnt * 100)
-        else return 0
+        if (this.genres.length) return Math.ceil(this.genres[0].status/this.genresCnt * 100) + '%'
+        else return 0 + '%'
       },
       favAmbiance() {
         if (this.doughnutChartData1.labels[0])
@@ -169,9 +169,9 @@ export default {
         let arr = this.doughnutChartData1.datasets[0].data
         if (arr.length) {
           const sum = arr.reduce((a,b) => a+b)
-          return Math.ceil(arr[0]/sum * 100)
+          return Math.ceil(arr[0]/sum * 100) + '%'
         } else {
-          return 0
+          return 0 + '%'
         }
       },
       favArtist() {
@@ -179,7 +179,14 @@ export default {
         else return ''
       },
       favArtistProp() {
-        if (this.artists.length) return Math.ceil(this.a[0].detail/this.artistCnt * 100)
+        if (this.artists.length) return Math.ceil(this.a[0].detail/this.artistCnt * 100) + '%'
+        else return 0 + '%'
+      },
+      favTime() {
+        if (this.time.length) return `${this.time[0][0]} 시에서 ~ ${Number(this.time[0][0]) + 2} 시 사이에 가장 많이 들었습니다.`
+      },
+      favTimeProp() {
+        if (this.timeSum) return Math.ceil(Number(this.time[0][0] / this.timeSum) * 100) + '%'
         else return 0
       }
     },
@@ -236,7 +243,7 @@ export default {
                 [
                     {
                         label: '',
-                        data: [12, 5, 0, 1, 35, 7, 11, 13,  35, 92, 75, 15],
+                        data: [],
                         borderColor: colors.themeColor1,
                         pointBackgroundColor: colors.foregroundColor,
                         pointBorderColor: colors.themeColor1,
@@ -291,19 +298,18 @@ export default {
             //         detail: '1,524번 감상',
             //         thumb: '/assets/img/profiles/l-1.jpg'
             //     },
-            // ]
+            // ],
+            timeSum: '',
+            time: []
         }
     },
     methods: {
       async fetchLog() {
         const { data } = await http.get('log/', this.config)
-        data.forEach(d => {
-          let time = new Date(d.time)
-          console.log(time.getHours())
-        })
         const genresArr = []
         const ambianceArr = []
         const artistsArr = []
+        const timeArr = []
         data.forEach(obj => {
           const genres = obj.song.genres
           genres.forEach(gerne => genresArr.push(gerne.name))
@@ -314,7 +320,9 @@ export default {
             name: artist.name,
             img: artist.img,
           }))
+          timeArr.push(new Date(obj.time).getHours())
         })
+        this.timeSum = timeArr.reduce((a,b) => a+b)
 
         // genre 통계처리
         this.genresCnt = genresArr.length
@@ -375,6 +383,32 @@ export default {
             thumb: artist.thumb
           })
         })
+        // 감상시간 통계처리
+        const timeObj = {0:0, 2:0, 4:0, 6:0, 8:0, 10:0, 12:0, 14:0, 16:0, 18:0, 20:0, 22:0}
+        timeArr.forEach(time => {
+          if (time >=0 && time < 2) timeObj[0]++
+          else if (time >=2 && time < 4) timeObj[2]++
+          else if (time >=4 && time < 6) timeObj[4]++
+          else if (time >=6 && time < 8) timeObj[6]++
+          else if (time >=8 && time < 10) timeObj[8]++
+          else if (time >=10 && time < 12) timeObj[10]++
+          else if (time >=12 && time < 14) timeObj[12]++
+          else if (time >=14 && time < 16) timeObj[14]++
+          else if (time >=16 && time < 18) timeObj[16]++
+          else if (time >=18 && time < 20) timeObj[18]++
+          else if (time >=20 && time < 22) timeObj[20]++
+          else timeObj['22']++
+        })
+        const timeSet = []
+        const timeSortable = []
+        for (let time in timeObj) {
+          timeSet.push(timeObj[time])
+          timeSortable.push([time, timeObj[time]])
+        }
+        this.lineChartData.datasets[0].data = timeSet
+        timeSortable.sort((a,b) => b[1] - a[1])
+        this.time = timeSortable
+        console.log(this.time)
       }
     }
 }
