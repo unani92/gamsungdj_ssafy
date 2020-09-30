@@ -20,7 +20,14 @@
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <b-dropdown v-else variant="empty" toggle-class="p-0 m-0" no-caret style="position:absolute;">
+                                                <template slot="button-content">
+                                                    <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
+                                                </template>
+                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                            </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -37,7 +44,14 @@
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret style="position:absolute;">
+                                                <template slot="button-content">
+                                                    <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
+                                                </template>
+                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                            </b-dropdown>
                                         </div>
 										<h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -66,7 +80,14 @@
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <b-dropdown v-else variant="empty" toggle-class="p-0 m-0" no-caret style="position:absolute;">
+                                                <template slot="button-content">
+                                                    <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
+                                                </template>
+                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                            </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -83,7 +104,14 @@
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret style="position:absolute;">
+                                                <template slot="button-content">
+                                                    <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
+                                                </template>
+                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                            </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -112,7 +140,14 @@
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <b-dropdown v-else variant="empty" toggle-class="p-0 m-0" no-caret style="position:absolute;">
+                                                <template slot="button-content">
+                                                    <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
+                                                </template>
+                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                            </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -129,7 +164,14 @@
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret style="position:absolute;">
+                                                <template slot="button-content">
+                                                    <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
+                                                </template>
+                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
+                                            </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
 										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
@@ -213,6 +255,7 @@
 <script>
 import GlideComponent from '../../components/Carousel/GlideComponent'
 import http from '../../utils/http-common'
+import http2 from '../../utils/http-user'
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
 
@@ -300,7 +343,8 @@ export default {
       ...mapState([
         'playlist',
         'songLikeList',
-        'isLoggedin'
+        'isLoggedin',
+        'userPlayList'
       ]),
       ...mapGetters(['config'])
     },
@@ -414,9 +458,19 @@ export default {
                 const { videoId } = items[0].id
                 data['src'] = videoId
                 this.playlist.push(data)
-                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+                this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
             })
             .catch(err => console.log(err))
+        },
+        addToUserPlaylist(data, playlist, index) {
+            http2
+            .post(`playlist/${playlist.id}/song/`,{
+                'songs': [data.id]
+            },this.config)
+            .then((value)=> {
+                this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+                this.userPlayList[index].song.push(data)
+            })
         },
         search(word){
             this.$router.push(`/A505/search/${word}`);
@@ -427,7 +481,7 @@ export default {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     alert(position.coords.latitude + ' ' +position.coords.longitude)
                     http
-                    .get('api.openweathermap.org/data/2.5/weather?lat='+position.coords.latitude+'&lon={lon}&appid='+apikey)
+                    .get('http://api.openweathermap.org/data/2.5/weather?lat='+position.coords.latitude+'&lon='+position.coords.longitude+'&appid='+apikey)
                     .then((value) => {
                         console.log(value)
                     })

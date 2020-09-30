@@ -50,7 +50,6 @@
           </template>
           <b-dropdown-item>My Page</b-dropdown-item>
           <b-dropdown-item @click="link">Music DNA</b-dropdown-item>
-          </router-link>
           <b-dropdown-divider />
           <b-dropdown-item @click="signout">로그아웃</b-dropdown-item>
         </b-dropdown>
