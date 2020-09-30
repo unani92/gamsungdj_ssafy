@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div v-if="genres.length">
         <div class="mb-4">
-            <h3>{{ user.username }}님은 2010.05.10부터 1,672개의 곡의 음악을 감상하고 있습니다.</h3>
+            <h3>{{ user.username }}님은 {{ new Date().getFullYear() }}.{{ new Date().getMonth() + 1 }}.{{ new Date().getDate() }}까지 {{ genresCnt }}개의 곡의 음악을 감상하고 있습니다.</h3>
         </div>
         <b-row>
             <b-colxx lg="3" xl="3" class="mb-4">
@@ -162,12 +162,17 @@ export default {
         else return 0
       },
       favAmbiance() {
+        if (this.doughnutChartData1.labels[0])
         return `가장 선호하는 감정의 음악은 ${this.doughnutChartData1.labels[0]} 입니다.`
       },
       favAmbianceProp() {
         let arr = this.doughnutChartData1.datasets[0].data
-        const sum = arr.reduce((a,b) => a+b)
-        return Math.ceil(arr[0]/sum * 100)
+        if (arr.length) {
+          const sum = arr.reduce((a,b) => a+b)
+          return Math.ceil(arr[0]/sum * 100)
+        } else {
+          return 0
+        }
       },
       favArtist() {
         if (this.artists.length) return `가장 많이 들은 가수는 ${this.artists[0].title} 입니다.`
@@ -292,6 +297,10 @@ export default {
     methods: {
       async fetchLog() {
         const { data } = await http.get('log/', this.config)
+        data.forEach(d => {
+          let time = new Date(d.time)
+          console.log(time.getHours())
+        })
         const genresArr = []
         const ambianceArr = []
         const artistsArr = []
