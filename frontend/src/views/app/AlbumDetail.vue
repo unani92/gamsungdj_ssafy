@@ -96,7 +96,7 @@
               <p v-if="cmt.updated_at" class="text-muted mb-0 text-small">{{cmt.updated_at.substr(0,10)+" "+cmt.updated_at.substr(11,8)}}</p>
               <div v-if="checkComment(cmt.user.id)" calss="mb-0" style=" text-align:end;">
                 <a class="mb-0 text-small text-primary" :id="'modify_text_'+index" style="cursor:pointer;" @click="ModifyMode(cmt.pk, index)">수정</a>
-                <a class="mb-0 text-small text-primary" style="cursor:pointer;" @click="deleteCommet(cmt.pk, index)">삭제</a>
+                <a class="mb-0 text-small text-primary" style="cursor:pointer;" @click="checkDelete(cmt.pk, index)">삭제</a>
               </div>
             </div>
           </b-colxx>
@@ -120,7 +120,9 @@
           <h4>{{alertText}}</h4>
         </b-row>
         <b-row class="mt-1" style="justify-content: center;">
-          <b-button variant="secondary" @click="showAlert=!showAlert">확인</b-button>
+          <b-button v-if="deleteCheck" class="mr-3" variant="danger" @click="showAlert=!showAlert;deleteCommet();">삭제</b-button>
+          <b-button v-if="deleteCheck" variant="secondary" @click="showAlert=!showAlert;deleteCheck=!deleteCheck">취소</b-button>
+          <b-button v-if="!deleteCheck" variant="secondary" @click="showAlert=!showAlert">확인</b-button>
         </b-row>
     </b-modal>
   </div>
@@ -165,6 +167,9 @@ export default {
   },
   data () {
     return {
+      deleteCheck: false,
+      deletePK: 0,
+      deleteIndex:-1,
       modifyComment: false,
       modifyPK: 0,
       modifyIndex: -1,
@@ -247,10 +252,12 @@ export default {
           console.log(rest.data)
           if(rest.data.liked){
             this.songs[index].user_like.push(this.user);
+            this.$notify('primary', "♥ 좋아요", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
           }else{
             for(var i=0;i<this.songs[index].user_like.length;i++){
               if(this.songs[index].user_like[i].id==this.user.id){
                 this.songs[index].user_like.splice(i, 1);
+                this.$notify('primary', "♡ 좋아요 취소", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
                 break;
               }
             }
@@ -282,10 +289,12 @@ export default {
           console.log(rest.data)
           if(rest.data.liked){
             this.album.user_like.push(this.user);
+            this.$notify('primary', "♥ 좋아요", this.album.name, { duration: 5000, permanent: false });
           }else{
             for(var i=0;i<this.album.user_like.length;i++){
               if(this.album.user_like[i].id==this.user.id){
                 this.album.user_like.splice(i, 1);
+                this.$notify('primary', "♡ 좋아요 취소", this.album.name, { duration: 5000, permanent: false });
                 break;
               }
             }
@@ -306,7 +315,7 @@ export default {
     sendComment: function(){
       if(this.user){
         const commentForm = new FormData();
-        if(document.getElementById("comment").value==""){
+        if(document.getElementById("comment").value.trim()==""){
           this.alertText="댓글을 작성해주세요.";
           this.showAlert=true;
           return; 
@@ -355,21 +364,28 @@ export default {
         this.showLogin=true;
       }
     },
-    deleteCommet: function(pk, index){
+    checkDelete: function(pk, index){
       if(this.modifyComment){
         this.alertText="수정을 취소해주세요.";
         this.showAlert=true;
         return;
       }
-
+      this.deletePK =pk;
+      this.deleteIndex = index;
+      this.deleteCheck=true;
+      this.alertText="댓글을 삭제하시겠습니까?";
+      this.showAlert=true;
+      return;
+    },
+    deleteCommet: function(){
       var type;
-      if(this.comment[index].song){
+      if(this.comment[this.deleteIndex].song){
         type = "song/";
       }else{
         type = "album/"
       }
 
-      http.delete(type+pk+"/comment/",{
+      http.delete(type+this.deletePK+"/comment/",{
         headers: {
           Authorization: this.$store.state.authorization
         },
