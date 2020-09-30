@@ -19,8 +19,8 @@
                   <h3 class="mb-0 truncate">감정: {{song.type}}</h3>
                   <h1 v-if="!checkLikeSong() && this.song.user_like" class="mb-0 truncate mt-5 text-large glyph-icon" style="cursor:pointer;" @click="likeSong(song.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px;vertical-align:top;"/> {{this.song.like + this.song.user_like.length}}</h1>
                   <h1 v-if="checkLikeSong()" class="mb-0 truncate mt-5 text-large glyph-icon" style="cursor:pointer;" @click="likeSong(song.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px;vertical-align:top;"/> {{this.song.like + this.song.user_like.length}}</h1>
-                  <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-control-play pb-0" style="cursor:pointer;"> 재생</h1></h1>
-                  <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-playlist pb-0" style="cursor:pointer;"> 추가</h1></h1>
+                  <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-control-play pb-0" style="cursor:pointer;" @click.prevent="addToPlaylistAndPlay(song)"> 재생</h1></h1>
+                  <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-playlist pb-0" style="cursor:pointer;" @click.prevent="addToPlayList(song)"> 추가</h1></h1>
                   <h1 class="mb-0 truncate mt-5 ml-5 text-large" @click="focusComment"><h1 class="glyph-icon simple-icon-bubble pb-0" style="cursor:pointer;"> {{comment.length}}</h1></h1>
                 </div>
         </b-colxx>
@@ -70,7 +70,7 @@
           </b-colxx>
         </b-colxx>
         <b-input-group class="comment-contaiener pl-3 pr-3">
-          <b-input placeholder="댓글" id="comment" />
+          <b-input placeholder="댓글" id="comment" @keyup.enter="sendComment"/>
           <template v-slot:append>
             <b-button variant="primary" @click="sendComment">
               <span class="d-inline-block" id="commentButton">작성</span>
@@ -97,6 +97,10 @@
 import http from "../../utils/http-common";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
+
+const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
+const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
+
 export default {
   components: {
     LoginModal,
@@ -278,6 +282,39 @@ export default {
       var tag = document.getElementById('commentTitle');
       tag.scrollIntoView(true);
     },
+    async addToPlaylistAndPlay(song) {
+      const { data } = await http.get(youtubeURL, {
+        params: {
+          key: API_KEY,
+          part: 'snippet',
+          maxResults: 1,
+          type: 'video',
+          q: song.artist[0].name + ' ' + song.name
+        }
+      })
+      const { items } = data
+      const { videoId } = items[0].id
+      song['src'] = videoId
+      this.playlist.unshift(song)
+      this.$store.state.playerControl = 'add'
+      this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
+    },
+    async addToPlayList(song) {
+      const { data } = await http.get(youtubeURL, {
+        params: {
+          key: API_KEY,
+          part: 'snippet',
+          maxResults: 1,
+          type: 'video',
+          q: song.artist[0].name + ' ' + song.name
+        }
+      })
+      const { items } = data
+      const { videoId } = items[0].id
+      song['src'] = videoId
+      this.playlist.push(song)
+      this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
+    },
   },
   mounted() {
     this.songID = this.$route.params.songID;
@@ -296,7 +333,7 @@ export default {
       // menuClickCount: "getMenuClickCount",
       // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
     }),
-    ...mapState(['authorization', 'user', 'isLoggedin'])
+    ...mapState(['authorization', 'user', 'isLoggedin', 'playlist'])
   },
 }
 </script>

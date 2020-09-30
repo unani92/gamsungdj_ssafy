@@ -26,12 +26,7 @@
   <b-row>
     <b-colxx xxs="12">
       <template v-if="isSong">
-        <template v-if="!moreSong">
-          <h2>곡><a v-if="songs.length>5" @click="showMoreSong" style="font-size:0.7em; float:right; cursor:pointer">더보기∨</a></h2>
-        </template>
-        <template v-else>
-          <h2>곡><a v-if="songs.length>5" @click="showMoreSong" style="font-size:0.7em; float:right; cursor:pointer">접기∧</a></h2>
-        </template>
+        <h2>곡></h2>
         <b-colxx xxs="12" class="pl-0 pr-3">
           <b-colxx xxs="12" class="pl-3 pr-3">
             <b-card class="mb-0" style="text-align: center;">
@@ -46,19 +41,38 @@
                     <th style="width:10%">좋아요</th>
                   </thead>
                   <tbody style="font-size: x-large;">
-                    <tr :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice(0,songListSize)" v-bind:key="index" style="cursor:pointer;">
+                    <tr :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice((currentPage-1)*5,currentPage*5)" v-bind:key="index" style="cursor:pointer;">
                       <td style="width:85px;"><img :src="song.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)">{{limitString(song.name)}}</td>
-                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
+                      <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}   </a></td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                       <td style="vertical-align: middle;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
                       <td style="vertical-align: middle;" @click.prevent="addToPlayList(song)"><div class="glyph-icon simple-icon-playlist"/></td>
                       <!-- <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td> -->
-                      <td v-if="!checkLikeSong(index)" style="vertical-align: middle;" @click="likeSong(song.id, index)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                      <td v-if="checkLikeSong(index)" style="vertical-align: middle;" @click="likeSong(song.id, index)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
+                      <td v-if="!checkLikeSong((currentPage-1)*5+index)" style="vertical-align: middle;" @click="likeSong(song.id, (currentPage-1)*5+index)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td v-if="checkLikeSong((currentPage-1)*5+index)" style="vertical-align: middle;" @click="likeSong(song.id, (currentPage-1)*5+index)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
                   </tbody>
               </table>
+              <b-pagination-nav
+                align="center"
+                :link-gen="linkGen"
+                :number-of-pages="endPage"
+                v-model="currentPage"
+              >
+                <template v-slot:next-text>
+                  <i class="simple-icon-arrow-right"/>
+                </template>
+                <template v-slot:prev-text>
+                  <i class="simple-icon-arrow-left"/>
+                </template>
+                <template v-slot:first-text>
+                  <i class="simple-icon-control-start"/>
+                </template>
+                <template v-slot:last-text>
+                  <i class="simple-icon-control-end"/>
+                </template>
+              </b-pagination-nav>
             </b-card>
           </b-colxx>
         </b-colxx>
@@ -126,6 +140,10 @@ import http from "../../utils/http-common";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 import { adminRoot } from "../../constants/config";
+
+const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
+const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
+
 export default {
   components: {
     LoginModal,
@@ -143,16 +161,18 @@ export default {
         this.songs = rest.data.songs;
         if(this.songs.length!=0){
           this.isSong=true;
+          this.endPage = Math.ceil(this.songs.length/5);
         }
       })
   },
   data () {
     return {
+      endPage:1,
+      currentPage: 1,
       sort_value : "",
 	  	sort_type : 'asc',
       isSong: false,
       isAlbum: false,
-      moreSong: false,
       moreAlbum: false,
       showLogin: false,
       clickAlbumLike: false,
@@ -165,14 +185,6 @@ export default {
     }
   },
   methods: {
-    showMoreSong: function() {
-      this.moreSong = !this.moreSong;
-      if (this.songListSize == 5){
-        this.songListSize = this.songs.length;
-      }else{
-        this.songListSize = 5;
-      }
-    },
     showMoreAlbum: function() {
       this.moreAlbum = !this.moreAlbum;
     },
@@ -295,6 +307,42 @@ export default {
         return false;
        }
       return false;
+    },
+    linkGen (pageNum) {
+      return '#';
+    },
+    async addToPlaylistAndPlay(song) {
+      const { data } = await http.get(youtubeURL, {
+        params: {
+          key: API_KEY,
+          part: 'snippet',
+          maxResults: 1,
+          type: 'video',
+          q: song.artist[0].name + ' ' + song.name
+        }
+      })
+      const { items } = data
+      const { videoId } = items[0].id
+      song['src'] = videoId
+      this.playlist.unshift(song)
+      this.$store.state.playerControl = 'add'
+      this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
+    },
+    async addToPlayList(song) {
+      const { data } = await http.get(youtubeURL, {
+        params: {
+          key: API_KEY,
+          part: 'snippet',
+          maxResults: 1,
+          type: 'video',
+          q: song.artist[0].name + ' ' + song.name
+        }
+      })
+      const { items } = data
+      const { videoId } = items[0].id
+      song['src'] = videoId
+      this.playlist.push(song)
+      this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
     },
   },
   computed: {
