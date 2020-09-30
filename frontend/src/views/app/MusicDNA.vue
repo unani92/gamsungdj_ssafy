@@ -26,9 +26,9 @@
                 <gradient-with-radial-progress-card
                     icon="simple-icon-user"
                     title="Artist"
-                    detail="선호하는 가수는 BTS입니다."
-                    :percent="15"
-                    progressText="15%"
+                    :detail=favArtist
+                    :percent=favArtistProp
+                    :progressText=favArtistProp
                 />
             </b-colxx>
             <b-colxx lg="3" xl="3" class="mb-4">
@@ -140,6 +140,8 @@ import { ThemeColors } from '../../utils'
 import LineChart from "../../components/Charts/Line"
 import http from '../../utils/http-common'
 import { mapState, mapGetters } from 'vuex'
+import {_} from 'vue-underscore'
+
 const colors = ThemeColors()
 export default {
     components: {
@@ -165,10 +167,16 @@ export default {
       favAmbianceProp() {
         let arr = this.doughnutChartData1.datasets[0].data
         const sum = arr.reduce((a,b) => a+b)
-        console.log(sum)
-        console.log(arr[0])
         return Math.ceil(arr[0]/sum * 100)
       },
+      favArtist() {
+        if (this.artists.length) return `가장 많이 들은 가수는 ${this.artists[0].title} 입니다.`
+        else return ''
+      },
+      favArtistProp() {
+        if (this.artists.length) return Math.ceil(this.a[0].detail/this.artistCnt * 100)
+        else return 0
+      }
     },
     mounted() {
       this.fetchLog()
@@ -185,7 +193,7 @@ export default {
             //     },
             // ],
             doughnutChartData1: {
-                labels: ['Sad', 'Joy', 'Love'],
+                labels: [],
                 datasets: [
                     {
                     label: '',
@@ -196,7 +204,7 @@ export default {
                         colors.themeColor1_10
                     ],
                     borderWidth: 2,
-                    data: [50, 80, 50]
+                    data: []
                     }
                 ]
             },
@@ -269,44 +277,16 @@ export default {
                     artist: "박진영",
                 },
             ],
-            artists:
-            [
-                {
-                    title: 'Mayra Sibley',
-                    detail: '1,524번 감상',
-                    thumb: '/assets/img/profiles/l-1.jpg'
-                },
-                {
-                    title: 'Mimi Carreira',
-                    detail: '1,054번 감상',
-                    thumb: '/assets/img/profiles/l-2.jpg'
-                },
-                {
-                    title: 'Philip Nelms',
-                    detail: '643번 감상',
-                    thumb: '/assets/img/profiles/l-3.jpg'
-                },
-                {
-                    title: 'Terese Threadgill',
-                    detail: '214번 감상',
-                    thumb: '/assets/img/profiles/l-4.jpg'
-                },
-                {
-                    title: 'Kathryn Mengel',
-                    detail: '27.07.2018 - 11:45',
-                    thumb: '/assets/img/profiles/l-5.jpg'
-                },
-                {
-                    title: 'Esperanza Lodge',
-                    detail: '24.07.2018 - 15:00',
-                    thumb: '/assets/img/profiles/l-2.jpg'
-                },
-                {
-                    title: 'Laree Munsch',
-                    detail: '24.05.2018 - 11:00',
-                    thumb: '/assets/img/profiles/l-1.jpg'
-                }
-            ]
+            a: [],
+            artists: [],
+            artistCnt: '',
+            // [
+            //     {
+            //         title: 'Mayra Sibley',
+            //         detail: '1,524번 감상',
+            //         thumb: '/assets/img/profiles/l-1.jpg'
+            //     },
+            // ]
         }
     },
     methods: {
@@ -321,7 +301,10 @@ export default {
           const ambiance = obj.song.type
           ambianceArr.push(ambiance)
           const artists = obj.song.artist
-          artists.forEach(artist => artistsArr.push(artist.name))
+          artists.forEach(artist => artistsArr.push({
+            name: artist.name,
+            img: artist.img,
+          }))
         })
 
         // genre 통계처리
@@ -345,13 +328,11 @@ export default {
         // ambiance 통계처리
         const ambianceObj = {'sad': 0, 'love': 0, 'joy': 0}
         ambianceArr.forEach(ambiance => ambianceObj[ambiance]++)
-        console.log(ambianceObj)
         const sortable = []
         for (let amb in ambianceObj) {
           sortable.push([amb, ambianceObj[amb]])
         }
         sortable.sort((a,b) => b[1] - a[1])
-        console.log(sortable)
         const ambiance = []
         const cnt = []
         sortable.forEach(arr => {
@@ -360,6 +341,31 @@ export default {
         })
         this.doughnutChartData1.labels = ambiance
         this.doughnutChartData1.datasets[0].data = cnt
+
+        // artist 통계처리
+        this.artistCnt = artistsArr.length
+        const artistsSet = _.uniq(artistsArr, 'name')
+        artistsSet.forEach(artist => {
+          let cnt = 0
+          for (let elem of artistsArr) {
+            if (elem.name === artist.name) cnt ++
+          }
+          this.a.push({
+            title: artist.name,
+            detail: cnt,
+            thumb: artist.img
+          })
+        })
+        this.a.sort((a,b) => {
+          return b['detail'] - a['detail']
+        })
+        this.a.forEach(artist => {
+          this.artists.push({
+            title: artist.title,
+            detail: `${artist.detail} 번`,
+            thumb: artist.thumb
+          })
+        })
       }
     }
 }
