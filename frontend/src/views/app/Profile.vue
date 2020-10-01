@@ -3,12 +3,12 @@
     <b-colxx xxs="12">
       	<b-colxx xxs="12" class="mb-5 mt-5">
     		<div class="d-flex flex-row ">
-				<img src="/assets/img/profiles/l-1.jpg" alt="thumbnail" class="img-thumbnail card-img mr-5" />
+				<img :src="imgURL" alt="profile" class="card-img mr-5"/>
 				<b-colxx class=" mr-5 mt-3 ">
-					<h1 class="mb-0 text-xlarge">유저명</h1><br>
-					<h1 class="mb-0 text-large">이메일</h1><br>
-					<h3 class="mb-0 truncate">성별: 여</h3><br>
-					<h3 class="mb-0 truncate">나이: 20</h3>
+					<h1 class="mb-0 text-xlarge">{{user.username}}</h1><br>
+					<p class="mb-0">{{user.email}}</p><br>
+					<h5 class="mb-0 truncate">성별: {{genders[user.gender]}}</h5><br>
+					<h5 class="mb-0 truncate">나이: {{ages[user.age]}}</h5>
 				</b-colxx>
     			<div style="margin-top: auto;">
 					<b-button class="mb-1" variant="outline-dark">정보수정</b-button>
@@ -31,6 +31,7 @@
 
 <script>
 import MyPlayList from '@/components/User/MyPlayList.vue'
+import { mapState } from 'vuex'
 export default {
   components: {
 	  MyPlayList
@@ -39,6 +40,18 @@ export default {
     return {
 		sort_value : "",
 		sort_type : 'asc',
+		genders: {
+			"M" : "남성",
+			"F" : "여성"
+		},
+		ages : {
+			"0" : "10세 이하",
+			"1" : "10대",
+			"2" : "20대",
+			"3" : "30대",
+			"4" : "40대",
+			"5" : "50세 이상"
+		}
 		
     };
   },
@@ -83,6 +96,8 @@ export default {
 	},
   },
   computed: {
+	...mapState(['user']),
+	imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
     sortPlaylist() {
 		if(this.sort_value=='name'){
 			if(this.sort_type=='asc'){
@@ -121,3 +136,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.card-img {
+	width: 200px;
+	height: 200px;
+}
+</style>

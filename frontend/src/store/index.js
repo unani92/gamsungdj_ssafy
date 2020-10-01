@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import menu from './modules/menu'
+import httpUser from '@/utils/http-user'
 
 Vue.use(Vuex)
 
@@ -12,7 +13,7 @@ export default new Vuex.Store({
     visiblePlayButton: true,
     visiblePauseButton: false,
     playlist: [],
-    userPlayList: '',     // 로그인하면 풀림, 유저랑 똑같이 세션에 박아놓겟음
+    userPlayList: JSON.parse(sessionStorage.getItem('userPlayList')),     // 로그인하면 풀림, 유저랑 똑같이 세션에 박아놓겟음
     songLikeList: [],
     albumLikeList: [],
     playerControl: '',
@@ -51,6 +52,7 @@ export default new Vuex.Store({
     },
     SET_PLAYLIST(state, value) {
       state.userPlayList = value
+      sessionStorage.setItem("userPlayList", JSON.stringify(value))
     },
     SET_SONG_LIKE(state, value) {
       state.songLikeList = value
@@ -62,6 +64,7 @@ export default new Vuex.Store({
       sessionStorage.removeItem("isLoggedin")
       sessionStorage.removeItem("authorization")
       sessionStorage.removeItem("user")
+      sessionStorage.removeItem("userPlayList")
     },
   },
   actions: {
@@ -74,8 +77,11 @@ export default new Vuex.Store({
     setUser( { commit }, value) {
       commit('SET_USER', value)
     },
-    setPlayList({ commit }, value) {
-      commit('SET_PLAYLIST', value)
+    setPlayList( { commit, getters } ) {
+      httpUser.get('playlist/', getters.config)
+      .then((res) => {
+        commit('SET_PLAYLIST', res.data)
+      })
     },
     logout({commit}){
       commit("LOGOUT")

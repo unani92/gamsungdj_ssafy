@@ -1,6 +1,6 @@
 <template>
 <div>
-    <b-button @click="showCreatePlayList = !showCreatePlayList" variant="primary">플레이리스트 생성</b-button>
+    <b-button @click="showCreatePlayList = !showCreatePlayList" variant="primary" size="xs" id="createBtn" class="d-block ml-auto mr-3">플레이리스트 생성</b-button>
     <!-- 플레이리스트 생성 모달 -->
     <b-modal v-model="showCreatePlayList" id="modalbackdrop" title="플레이리스트 생성"
             :no-close-on-backdrop="true"
@@ -31,13 +31,19 @@
         size="xl">
         <template v-slot:modal-header>
             <div class="d-flex justify-content-between align-items-center" style="width:100%">
-                <div class="d-flex align-items-center" v-if="!updateName">
+                <div class="d-flex align-items-center" v-if="!updateName"> 
                     <h5 class="m-0">{{adminList.name}} 관리</h5><span @click="updateName=true" class="glyph-icon simple-icon-pencil ml-2"></span>
+                    
                 </div>
                 <div class="d-flex align-items-center" v-else>
                     <b-form-input v-model="adminList.name"/><span @click="updatePlayList" class="glyph-icon simple-icon-pencil ml-2"></span>
                 </div>
+                
                 <div>
+                    <div>
+                        <b-button size="xs" variant="primary" @click="playMusic(adminList.song)">전체 재생</b-button>
+                        <b-button size="xs" variant="secondary" @click="addToPlaylistAndPlayBulk(adminSelectedItems)">선택 재생</b-button>
+                    </div>
                     <b-button variant="outline-secondary" size="xs" @click="showSearch=true">노래 추가</b-button>
                     <b-button variant="outline-primary" size="xs" @click="deleteSong">노래 삭제</b-button>
                 </div>
@@ -55,15 +61,15 @@
                 </thead>
                 <tbody style="display:block; height:480px; overflow: auto; text-align:center; width:100%;">
                     <b-form-group>
-                    <b-form-checkbox-group v-model="deleteItems">
+                    <b-form-checkbox-group v-model="adminSelectedItems">
                     <tr :class="{'flex-row':true}" v-for="(song, index) in adminList.song" v-bind:key="index" style="cursor:pointer; width: 100%;">
                     <td></td>
                     <td style="width:5%; vertical-align: middle;">
-                        <b-form-checkbox :value="song.id" :id="'delete-checkbox-'+song.id"/>
+                        <b-form-checkbox :value="song" :id="'delete-checkbox-'+song.id"/>
                     </td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 40%; font-size: 0.85rem;" @click="addDeleteList(song.id)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; padding-left:85px;">{{limitString(song.name)}}</div></td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%; font-size: 0.85rem;" @click="addDeleteList(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
-                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%; font-size: 0.85rem;" @click="addDeleteList(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 40%; font-size: 0.85rem;" @click="addAdminSelectedList(song)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; padding-left:85px;">{{limitString(song.name)}}</div></td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%; font-size: 0.85rem;" @click="addAdminSelectedList(song)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
+                    <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; width: 20%; font-size: 0.85rem;" @click="addAdminSelectedList(song)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                     <td style="vertical-align: middle; width:15%;" @click.prevent="addToPlaylistAndPlay(song)" ><div class="glyph-icon simple-icon-control-play"/></td>
                     </tr>
                     </b-form-checkbox-group>
@@ -132,10 +138,10 @@
         </template>
     </b-modal>
     <!-- 플레이 리스트 -->
-    <div v-for="(playlist, index) in playlists" :key="playlist.id" class="mt-3">
+    <div v-for="(playlist, index) in userPlayList" :key="playlist.id" class="mt-3">
         <div class="d-flex justify-content-between align-items-center px-3">
             <div>
-            <h5>{{playlist.name}}<b-button class="ml-2" size="sm" @click="playMusic(playlist)"><div class="glyph-icon simple-icon-control-play"/></b-button></h5>
+            <h5>{{playlist.name}}<b-button class="ml-2" size="sm" @click="playMusic(playlist.song)"><div class="glyph-icon simple-icon-control-play"/></b-button></h5>
             
             </div>
             <div>
@@ -155,7 +161,7 @@
                             <th id='like' style="width:10%;">좋아요</th>
                         </thead>
                         <tbody>  
-                            <tr :class="{'flex-row':true}" v-for="song in playlist.song.slice(0, 4)" v-bind:key="song.id" style="cursor:pointer;">
+                            <tr :class="{'flex-row':true}" v-for="song in playlist.song.slice(0, 3)" v-bind:key="song.id" style="cursor:pointer;">
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 40%;" @click="detailSong(song.id)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; padding-left:85px; padding-right:85px;">{{limitString(song.name)}}</div></td>
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
@@ -165,7 +171,7 @@
                             </tr>
                         </tbody>
                         <tbody style="border-top: none; display: none;" :id="'toggle'+playlist.id">
-                            <tr :class="{'flex-row':true}" v-for="(song, index) in playlist.showSong" v-bind:key="index" style="cursor:pointer;">
+                            <tr :class="{'flex-row':true}" v-for="(song, index) in playlist.song.slice(3)" v-bind:key="index" style="cursor:pointer;">
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 40%;" @click="detailSong(song.id)"><img :src="song.img" class="responsive border-0" alt="song_img" width="75px" style="float: left;"/><div style="padding-top:25px; height:75px; padding-left:85px; padding-right:85px;">{{limitString(song.name)}}</div></td>
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
@@ -188,13 +194,16 @@
 <script>
 import httpUser from '@/utils/http-user'
 import http from '@/utils/http-common'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import { adminRoot } from "@/constants/config"
+import axios from 'axios'
+
+const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
+const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
 export default {
     
     data() {
         return {
-            playlists: [],
             adminList: [],
             name: '',
             showCreatePlayList: false,
@@ -205,7 +214,7 @@ export default {
             sort_type : 'asc',
             // 관리 모달
             updateName: false,
-            deleteItems: [],
+            adminSelectedItems: [],
             // 곡 추가 모달
             searchKeyword: "",
             searchBodyKeyword: "",
@@ -215,34 +224,20 @@ export default {
         }
     },
     methods: {
-        getPlaylist() {
-            httpUser.get('playlist/', this.config)
-            .then(res => {
-                this.playlists = res.data
-                for (var i = 0; i < this.playlists.length; i++) {
-                    if (this.playlists[i].song.length > 4) {
-                        this.playlists[i].showSong = this.playlists[i].song.slice(4)
-                    }
-                    else {
-                        this.playlists[i].showSong = []
-                    }
-                } 
-            })
-            
-        },
+        ...mapActions(['setPlayList']),
+        
         createPlayList(name) {
             httpUser.post('playlist/', {"name": name}, this.config)
             .then(res => {
-                this.playlists.unshift(res.data)
+                this.userPlayList.unshift(res.data)
+                sessionStorage.setItem('userPlayList', JSON.stringify(this.userPlayList))
                 this.name = ''
             })
         },
         // 펼치기 접기
         showAll(index) {
-            console.log("다보자")
             const showBtn = document.getElementById("showBtn-"+index)
-            const toggleTable = document.getElementById("toggle"+this.playlists[index].id)
-            console.log(toggleTable)
+            const toggleTable = document.getElementById("toggle"+this.userPlayList[index].id)
             if (showBtn.innerText == "펼치기") {
                 showBtn.innerText = "접기"
                 toggleTable.style.display = "table-row-group"
@@ -250,9 +245,7 @@ export default {
             else {
                 showBtn.innerText = "펼치기"
                 toggleTable.style.display = "none"
-            }
-            
-            
+            }      
         },
         detailSong(id) {
             this.$router.push(`${adminRoot}/songDetail/${id}`)
@@ -323,28 +316,31 @@ export default {
             if (confirm(`${this.adminList.name}을 삭제하시겠습니까?`) == true) {
                 httpUser.delete(`playlist/${this.adminList.id}/`, this.config)
                 .then((res) => {
-                    this.playlists = res.data
+                    this.userPlayList = res.data
+                    sessionStorage.setItem('userPlayList', JSON.stringify(this.userPlayList))
                     this.hideAdmin()
                 })
             }   
         },
-        addDeleteList(id) {
-            var checkbox = document.getElementById("delete-checkbox-"+id)
+        addAdminSelectedList(song) {
+            var checkbox = document.getElementById("delete-checkbox-"+song.id)
             checkbox.checked = !checkbox.checked
-            if (this.deleteItems.includes(id)) {
-                const idx = this.deleteItems.indexOf(id)
-                this.deleteItems.splice(idx, 1)
+            if (this.adminSelectedItems.includes(song)) {
+                const idx = this.adminSelectedItems.indexOf(song)
+                this.adminSelectedItems.splice(idx, 1)
             }
             else {
-                this.deleteItems.push(id)
+                this.adminSelectedItems.push(song)
             }
         },
         deleteSong() {
+            const deleteItems = this.adminSelectedItems.map(data => data.id)
+           
             if (confirm("선택한 노래를 삭제하시겠습니까?") == true) {
-                httpUser.delete(`playlist/${this.adminList.id}/song/`, {data: {"songs":this.deleteItems}, headers: {Authorization: this.authorization}})
+                httpUser.delete(`playlist/${this.adminList.id}/song/`, {data: {"songs":deleteItems}, headers: {Authorization: this.authorization}})
                 .then((res) => {
                     this.adminList = res.data
-                    this.getPlaylist()
+                    this.setPlayList()
                 })
             }
             
@@ -382,19 +378,15 @@ export default {
             .then((res) => {
                 this.adminList = res.data
                 this.hideSearch()
-                this.getPlaylist()
+                this.setPlayList()
             })    
-        },
-        playMusic(playlist) {
-            
-
         },
         hideAdmin() {
             this.showAdmin = false
             this.adminList = []
-            this.deleteItems = []
+            this.adminSelectedItems = []
             this.updateName = false
-            this.getPlaylist()
+            this.setPlayList()
         },
         hideSearch() {
             this.showSearch = false
@@ -404,22 +396,96 @@ export default {
             this.selectedItems = []
             this.isSong = false
         },
+        // 노래 재생
+        async fetchYoutubeId(song) {
+          const { data } = await axios.get(youtubeURL, {
+            params: {
+              key: API_KEY,
+              part: 'snippet',
+              maxResults: 1,
+              type: 'video',
+              q: song.artist[0].name + ' ' + song.name
+            }
+          })
+          const { items } = data
+          const { videoId } = items[0].id
+          const reqData = {'src': videoId}
+          song['src'] = videoId
+          await http.post(`addsrc/${song.id}/`, reqData,'')
+        },
+        // 한곡 재생
+        async addToPlaylistAndPlay(song) {
+            this.$store.state.playerControl = "pause"
+            if (song['src']) {
+                this.playlist.unshift(song)
+                this.$store.state.playerControl = "add"
+                this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
+            } else {
+                await this.fetchYoutubeId(song)
+                this.playlist.unshift(song)
+                this.$store.state.playerControl = "add"
+                this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
+            }
+        },
+        // 선택한 곡 재생
+        async addToPlaylistAndPlayBulk(songs) {
+            if (songs.length < 1) {
+                this.$notify('primary', "곡을 선택해주세요.")
+            }
+            else {
+                this.$store.state.playerControl = "pause"
+                this.$store.state.playlist = []
+                for (var i = 0; i < songs.length; i++) {
+                    if (songs[i]['src']) {
+                        this.playlist.push(songs[i])
+                    } 
+                    else {
+                        await this.fetchYoutubeId(songs[i])
+                        this.playlist.push(songs[i])
+                    }
+                }
+                this.$store.state.playerControl = "add"
+                this.$notify('primary', "재생 중인 곡", this.playlist[0].name+" - "+this.playlist[0].artist[0].name, { duration: 4000, permanent: false })
+            }
+        },
+        // 전체 재생
+        async playMusic(songs) {
+            if (songs.length < 1) {
+                this.$notify('primary', "플레이리스트에 곡을 추가해주세요.")
+            }
+            else {
+                this.$store.state.playerControl = "pause"
+                this.$store.state.playlist = []
+                for (var i = 0; i < songs.length; i++) {
+                    if (songs[i]['src']) {
+                        this.playlist.push(songs[i])
+                    } 
+                    else {
+                        await this.fetchYoutubeId(songs[i])
+                        this.playlist.push(songs[i])
+                    }
+                }
+                this.$store.state.playerControl = "add"
+                this.$notify('primary', "재생 중인 곡", this.playlist[0].name+" - "+this.playlist[0].artist[0].name, { duration: 4000, permanent: false })
+            }
+
+        },
     
     },
     computed: {
-        ...mapState(['authorization', 'user']),
+        ...mapState(['authorization', 'user', 'userPlayList', 'playlist']),
         ...mapGetters(['config']),
         
     },
     created() {
-        this.getPlaylist()
-        
-        
+      
     }
 
 }
 </script>
 
-<style>
+<style scoped>
+#createBtn {
 
+}
 </style>
