@@ -237,10 +237,10 @@
                             <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
                             <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
-                                <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                <span v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
-                                <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
-                                <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
+                                <span :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;" @click="songLike"></span>
+                                <span :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;" @click="songLike"></span>
+                                <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
                             </div>
                         </b-card-body>
                     </b-card>

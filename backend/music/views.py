@@ -103,7 +103,7 @@ class MusicDna(APIView):
         if category == 'artist':
             artist = Artist.objects.get(name__contains=keyword)
             songs = Song.objects.filter(artist=artist.pk, type=emotion)\
-                .exclude(user_like__in=[request.user], like__lt=500)
+                .exclude(like__lt=500)
             if len(songs) >= 10:
                 nums = sample(range(len(songs)),10)
             else:
@@ -113,7 +113,13 @@ class MusicDna(APIView):
         elif category == 'genre':
             genre = Genre.objects.get(name__contains=keyword)
             songs = Song.objects.filter(genres__in=[genre], type=emotion)\
-                .exclude(user_like__in=[request.user], like__lt=500)
+                .exclude(like__lt=500)
+
+            if len(songs) >= 20:
+                nums = sample(range(len(songs)), 20)
+            else:
+                nums = range(len(songs))
+            songs = [songs[i] for i in nums]
             serializer = SongSerializer(songs, many=True)
         else:
             return Response({'msg': 'failed'})
@@ -123,7 +129,7 @@ class MusicDna(APIView):
 class CreateLog(APIView):
     @permission_classes([IsAuthenticated])
     def get(self, request):
-        logs = Log.objects.filter(user=request.user)
+        logs = Log.objects.filter(user=request.user).exclude(song__type='no lyric')
         serializer = LogSerializer(logs, many=True)
         return Response(serializer.data)
 

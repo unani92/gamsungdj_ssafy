@@ -60,32 +60,42 @@
         </b-row>
         <b-row class="mb-4" >
             <b-colxx lg="3" xl="3">
-                <b-card title="장르">
-                    <div v-for="(g,index) in genres" :key="index" class="mb-4">
-                    <p class="mb-2">
-                        {{ g.title }}
-                        <span class="float-right text-muted">{{g.status}} / {{g.total}}</span>
-                    </p>
-                    <b-progress :value="(g.status / g.total) * 100"></b-progress>
-                    </div>
-                </b-card>
+              <b-card>
+                <div style="display: flex; justify-content: space-between">
+                  <h4>장르</h4>
+                  <v-select :options="options" v-model="genreEmo"/>
+                </div>
+                <div v-for="(g,index) in genres" :key="index" class="mb-4">
+                <p class="mb-2" style="cursor: pointer;" @click="fetchGenreSong(g.title)">
+                  {{ g.title }}
+                  <span class="float-right text-muted">{{g.status}} / {{g.total}}</span>
+                </p>
+                <b-progress :value="(g.status / g.total) * 100"></b-progress>
+                </div>
+              </b-card>
             </b-colxx>
 
 
-            <b-colxx lg="9" xl="9">
+            <b-colxx lg="9" xl="9" v-if="genreEmotion.length">
                 <b-card>
                     <b-colxx xxs="12" class="pl-0 pr-0">
                         <glide-component :settings="glideNoControlsSettings">
-                            <div class="pr-3 pl-3 mt-2 mb-2 glide__slide" v-for="(data, index) in dummyData1" :key="index">
-                                <b-card no-body>
-                                    <div class="position-relative">
-                                        <img class="card-img-top" :src="data.src" alt="Card cap" />
-                                    </div>
-                                    <b-card-body>
-                                        <h6 class="mb-4">{{ data.title }}</h6>
-                                        <p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p>
-                                    </b-card-body>
-                                </b-card>
+                            <div v-for="(data, index) in genreEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                              <b-card no-body>
+                                <div class="position-relative">
+                                    <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                                </div>
+                                <b-card-body>
+                                  <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                                  <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                                  <div class="mt-4" style="font-size:large;">
+                                    <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNoti(data)"></span>
+                                    <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
+                                    <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
+                                    <span class="glyph-icon simple-icon-playlist mr-2" style="cursor:pointer;" @click="addPlayListNoti(data)"></span>
+                                  </div>
+                                </b-card-body>
+                              </b-card>
                             </div>
                         </glide-component>
                     </b-colxx>
@@ -97,7 +107,7 @@
                 <b-card>
                   <div style="display: flex; justify-content: space-between">
                     <h4>가수</h4>
-                    <v-select :options="options" v-model="emo"/>
+                    <v-select :options="options" v-model="artistEmo"/>
                   </div>
                     <vue-perfect-scrollbar
                         class="scroll dashboard-list-with-user"
@@ -114,29 +124,29 @@
                 </b-card>
             </b-colxx>
             <b-colxx lg="9" xl="9" v-if="artistEmotion.length">
-                <b-card>
-                    <b-colxx xxs="12" class="pl-0 pr-0">
-                        <glide-component :settings="glideNoControlsSettings">
-                            <div v-for="(data, index) in artistEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
-                              <b-card no-body>
-                                <div class="position-relative">
-                                    <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
-                                </div>
-                                <b-card-body>
-                                  <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                                  <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
-                                  <div class="mt-4" style="font-size:x-large;">
-                                    <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-<!--                                    <span v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>-->
-                                    <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
-                                    <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
-                                  </div>
-                                </b-card-body>
-                              </b-card>
+              <b-card>
+                <b-colxx xxs="12" class="pl-0 pr-0">
+                  <glide-component :settings="glideNoControlsSettings">
+                    <div v-for="(data, index) in artistEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                      <b-card no-body>
+                        <div class="position-relative">
+                            <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                        </div>
+                        <b-card-body>
+                          <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                          <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                          <div class="mt-4" style="font-size:large;">
+                            <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNoti(data)"></span>
+                            <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
+                            <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
+                            <span class="glyph-icon simple-icon-playlist mr-2" style="cursor:pointer;" @click="addPlayListNoti(data)"></span>
                           </div>
-                        </glide-component>
-                    </b-colxx>
-                </b-card>
+                        </b-card-body>
+                      </b-card>
+                    </div>
+                  </glide-component>
+              </b-colxx>
+              </b-card>
             </b-colxx>
         </b-row>
     </div>
@@ -149,7 +159,7 @@ import DoughnutChart from "../../components/Charts/Doughnut"
 import { ThemeColors } from '../../utils'
 import LineChart from "../../components/Charts/Line"
 import http from '../../utils/http-common'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import {_} from 'vue-underscore'
 import 'vue-select/dist/vue-select.css';
 import vSelect from "vue-select";
@@ -164,7 +174,7 @@ export default {
         "v-select": vSelect
     },
     computed: {
-      ...mapState(['user']),
+      ...mapState(['user', "isLoggedin"]),
       ...mapGetters(['config']),
       favGenre() {
         if (this.genres.length) return `가장 좋아하는 장르는 ${this.genres[0].title} 입니다.`
@@ -210,16 +220,10 @@ export default {
         return {
             artistEmotion: [],
             options: ['sad','joy','love'],
-            emo: '',
+            artistEmo: '',
+            genreEmo: '',
             genresCnt: '',
             genres: [],
-            // [
-            //     {
-            //         title: '발라드',
-            //         total: 783,
-            //         status: 392
-            //     },
-            // ],
             doughnutChartData1: {
                 labels: [],
                 datasets: [
@@ -272,54 +276,43 @@ export default {
                     }
                 ]
             },
-            dummyData1:
-            [
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/79/150/10479150_20200821103346_500.jpg?21a0dfff48264f87bb4120d95578e9ee/melon/quality/80/optimize",
-                    title: "Dynamite",
-                    artist: "방탄소년단",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/69/416/10469416_20200730151034_500.jpg?dcdcccfa8cd1bc5dae7b668a5910c277/melon/sharpen/0x1",
-                    title: "눈누난나 (NUNU NANA)",
-                    artist: "제시(Jessi)",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/63/600/10463600_20200720152905_500.jpg?4f47c8ca556045d56c9f2016a866e652/melon/quality/80/optimize",
-                    title: "취기를 빌려 (취향저격 그녀 X 산들)",
-                    artist: "산들",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/62/799/10462799_20200717150822_500.jpg?adcaec1a0d99e7a379c098d31dca68da/melon/quality/80/optimize",
-                    title: "다시 여기 바닷가",
-                    artist: "싹쓰리 (유두래곤, 린다G, 비룡)",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/52/351/10452351_20200629152036_500.jpg?40db717ac487b870724b0bab06e4b0d7/melon/quality/80/optimize",
-                    title: "마리아 (Maria)",
-                    artist: "화사 (Hwa Sa)",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/75/061/10475061_20200812120927_500.jpg?e0e2a4331bb0aa6e525f679804f35f8e/melon/quality/80/optimize",
-                    title: "When We Disco (Duet with 선미)",
-                    artist: "박진영",
-                },
-            ],
+            genreEmotion: [],
             a: [],
             artists: [],
             artistCnt: '',
-            // [
-            //     {
-            //         title: 'Mayra Sibley',
-            //         detail: '1,524번 감상',
-            //         thumb: '/assets/img/profiles/l-1.jpg'
-            //     },
-            // ],
             timeSum: '',
             time: []
         }
     },
     methods: {
+      ...mapActions(['addToPlaylistAndPlay', 'addToPlaylist']),
+      isLiked(data) {
+        if (this.user) {
+          return this.user.like_songs.includes(data.id);
+          } else return false
+        },
+      async songLike(e) {
+        if (this.isLoggedin) {
+          const { id } = e.target
+          console.log(id)
+          const { data: { liked } } = await http.post(`song/${id}/like/`, '',this.config)
+          if (liked) {
+            this.$store.state.user.like_songs.push(Number(id))
+          } else {
+            this.$store.state.user.like_songs = this.$store.state.user.like_songs.filter(song => {
+              return song !== Number(id)
+            })
+          }
+        }
+      },
+      async addPlayListAndPlayNoti(data) {
+        this.addToPlaylistAndPlay(data)
+        this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+      },
+      async addPlayListNoti(data) {
+        this.addToPlaylist(data)
+        this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+      },
       async fetchLog() {
         const { data } = await http.get('log/', this.config)
         const genresArr = []
@@ -371,7 +364,8 @@ export default {
           ambiance.push(arr[0])
           cnt.push(arr[1])
         })
-        this.emo = ambiance[0]
+        this.artistEmo = ambiance[0]
+        this.genreEmo = ambiance[0]
         this.doughnutChartData1.labels = ambiance
         this.doughnutChartData1.datasets[0].data = cnt
 
@@ -429,16 +423,23 @@ export default {
           timesum += i[1]
         }
         this.timeSum = timesum
-        // this.fetchArtistSong()
+        await this.fetchArtistSong(this.artists[0]['title'])
+        await this.fetchGenreSong(this.genres[0]['title'])
       },
       async fetchArtistSong(artistName) {
-        const { data } = await http.get(`musicdna/artist/?emotion=${this.emo}&keyword=${artistName}`, this.config)
+        const { data } = await http.get(`musicdna/artist/?emotion=${this.artistEmo}&keyword=${artistName}`, this.config)
         this.artistEmotion = data
+      },
+      async fetchGenreSong(genre) {
+        const { data } = await http.get(`musicdna/genre/?emotion=${this.genreEmo}&keyword=${genre}`, this.config)
+        this.genreEmotion = data
       }
     }
 }
 </script>
 
-<style>
-
+<style scoped>
+.liked {
+  color: red !important;
+}
 </style>
