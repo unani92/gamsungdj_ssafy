@@ -113,21 +113,27 @@
                     </vue-perfect-scrollbar>
                 </b-card>
             </b-colxx>
-            <b-colxx lg="9" xl="9">
+            <b-colxx lg="9" xl="9" v-if="artistEmotion.length">
                 <b-card>
                     <b-colxx xxs="12" class="pl-0 pr-0">
                         <glide-component :settings="glideNoControlsSettings">
-                            <div class="pr-3 pl-3 mt-2 mb-2 glide__slide" v-for="(data, index) in dummyData1" :key="index">
-                                <b-card no-body>
-                                    <div class="position-relative">
-                                        <img class="card-img-top" :src="data.src" alt="Card cap" />
-                                    </div>
-                                    <b-card-body>
-                                        <h6 class="mb-4">{{ data.title }}</h6>
-                                        <p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p>
-                                    </b-card-body>
-                                </b-card>
-                            </div>
+                            <div v-for="(data, index) in artistEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                              <b-card no-body>
+                                <div class="position-relative">
+                                    <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                                </div>
+                                <b-card-body>
+                                  <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                                  <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                                  <div class="mt-4" style="font-size:x-large;">
+                                    <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+<!--                                    <span v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>-->
+                                    <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
+                                    <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                  </div>
+                                </b-card-body>
+                              </b-card>
+                          </div>
                         </glide-component>
                     </b-colxx>
                 </b-card>
@@ -202,6 +208,7 @@ export default {
     },
     data() {
         return {
+            artistEmotion: [],
             options: ['sad','joy','love'],
             emo: '',
             genresCnt: '',
@@ -422,10 +429,11 @@ export default {
           timesum += i[1]
         }
         this.timeSum = timesum
+        // this.fetchArtistSong()
       },
       async fetchArtistSong(artistName) {
         const { data } = await http.get(`musicdna/artist/?emotion=${this.emo}&keyword=${artistName}`, this.config)
-        console.log(data)
+        this.artistEmotion = data
       }
     }
 }
