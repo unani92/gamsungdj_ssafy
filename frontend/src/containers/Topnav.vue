@@ -53,7 +53,7 @@
               <b-avatar></b-avatar>
             </span>
           </template>
-          <b-dropdown-item>My Page</b-dropdown-item>
+          <b-dropdown-item @click="goMyPage">My Page</b-dropdown-item>
           <b-dropdown-item @click="link">Music DNA</b-dropdown-item>
           <b-dropdown-divider />
           <b-dropdown-item @click="signout">로그아웃</b-dropdown-item>
@@ -136,9 +136,13 @@ export default {
     },
     signout() {
       this.logout()
+      this.$router.push(`${adminRoot}/main`)
     },
     link() {
       this.$router.push(`${adminRoot}/musicDNA`)
+    },
+    goMyPage() {
+      this.$router.push(`${adminRoot}/profile`)
     }
   },
   computed: {
