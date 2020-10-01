@@ -347,7 +347,7 @@ export default {
             .then((value)=> {
                 this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
                 this.userPlayList[index].song.push(data)
-             })
+            })
         },
         async getTimeRecommend() {
             const { data: { data } } = await http.get('recommend/time/', this.config)
