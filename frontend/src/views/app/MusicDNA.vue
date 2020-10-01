@@ -94,7 +94,11 @@
         </b-row>
         <b-row>
             <b-colxx lg="3" xl="3" class="mb-4">
-                <b-card title="가수">
+                <b-card>
+                  <div style="display: flex; justify-content: space-between">
+                    <h4>가수</h4>
+                    <v-select :options="options" v-model="emo"/>
+                  </div>
                     <vue-perfect-scrollbar
                         class="scroll dashboard-list-with-user"
                         :settings="{ suppressScrollX: true, wheelPropagation: false }"
@@ -102,7 +106,7 @@
                         <div class="d-flex flex-row mb-3 pb-3 border-bottom" v-for="(data, index) in artists" :key="index">
                             <img :src="data.thumb" :alt="data.title" class="img-thumbnail border-0 rounded-circle list-thumbnail align-self-center xsmall" />
                             <div class="pl-3 pr-2">
-                                <p class="font-weight-medium mb-0 ">{{ data.title }}</p>
+                                <p class="font-weight-medium mb-0 " @click="fetchArtistSong(data.title)" style="cursor:pointer;">{{ data.title }}</p>
                                 <p class="text-muted mb-0 text-small">{{ data.detail }}</p>
                             </div>
                         </div>
@@ -141,6 +145,8 @@ import LineChart from "../../components/Charts/Line"
 import http from '../../utils/http-common'
 import { mapState, mapGetters } from 'vuex'
 import {_} from 'vue-underscore'
+import 'vue-select/dist/vue-select.css';
+import vSelect from "vue-select";
 
 const colors = ThemeColors()
 export default {
@@ -148,7 +154,8 @@ export default {
         "gradient-with-radial-progress-card": GradientWithRadialProgressCard,
         'glide-component': GlideComponent,
         "doughnut-chart": DoughnutChart,
-        "line-chart": LineChart
+        "line-chart": LineChart,
+        "v-select": vSelect
     },
     computed: {
       ...mapState(['user']),
@@ -195,6 +202,8 @@ export default {
     },
     data() {
         return {
+            options: ['sad','joy','love'],
+            emo: '',
             genresCnt: '',
             genres: [],
             // [
@@ -355,6 +364,7 @@ export default {
           ambiance.push(arr[0])
           cnt.push(arr[1])
         })
+        this.emo = ambiance[0]
         this.doughnutChartData1.labels = ambiance
         this.doughnutChartData1.datasets[0].data = cnt
 
@@ -412,6 +422,10 @@ export default {
           timesum += i[1]
         }
         this.timeSum = timesum
+      },
+      async fetchArtistSong(artistName) {
+        const { data } = await http.get(`musicdna/artist/?emotion=${this.emo}&keyword=${artistName}`, this.config)
+        console.log(data)
       }
     }
 }
