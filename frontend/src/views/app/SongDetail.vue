@@ -19,9 +19,16 @@
                   <h3 class="mb-0 truncate">감정: {{song.type}}</h3>
                   <h1 v-if="!checkLikeSong() && this.song.user_like" class="mb-0 truncate mt-5 text-large glyph-icon" style="cursor:pointer;" @click="likeSong(song.id)"><img src="../../assets/img/heart/heart_empty.png" style="width:32px;vertical-align:top;"/> {{this.song.like + this.song.user_like.length}}</h1>
                   <h1 v-if="checkLikeSong()" class="mb-0 truncate mt-5 text-large glyph-icon" style="cursor:pointer;" @click="likeSong(song.id)"><img src="../../assets/img/heart/heart_full.png" style="width:32px;vertical-align:top;"/> {{this.song.like + this.song.user_like.length}}</h1>
-                  <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-control-play pb-0" style="cursor:pointer;" @click.prevent="addToPlaylistAndPlay(song)"> 재생</h1></h1>
-                  <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-playlist pb-0" style="cursor:pointer;" @click.prevent="addToPlayList(song)"> 추가</h1></h1>
                   <h1 class="mb-0 truncate mt-5 ml-5 text-large" @click="focusComment"><h1 class="glyph-icon simple-icon-bubble pb-0" style="cursor:pointer;"> {{comment.length}}</h1></h1>
+                  <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-control-play pb-0" style="cursor:pointer;" @click.prevent="addToPlaylistAndPlayNotify(song)"> 재생</h1></h1>
+                  <h1 v-if="!isLoggedin" class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-playlist pb-0" style="cursor:pointer;" @click.prevent="addToPlayListAndNotify(song)"> 추가</h1></h1>
+                  <b-dropdown v-else variant="empty" toggle-class="p-0 m-0" no-caret style="position:absolute">
+                      <template slot="button-content">
+                          <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-playlist pb-0 text-color" style="cursor:pointer;"> 추가</h1></h1>
+                      </template>
+                      <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                      <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
+                  </b-dropdown>
                 </div>
         </b-colxx>
       </b-colxx>
@@ -141,6 +148,23 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+    async addToPlaylistAndPlayNotify(data) {
+      this.addToPlaylistAndPlay(data)
+      this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+    },
+    async addToPlaylistAndNotify(data) {
+      this.addToPlaylist(data)
+      this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+    },
+    addToUserPlaylist(data, playlist, index) {
+      http2
+      .post(`playlist/${playlist.id}/song/`,{'songs': [data.id]},this.config)
+      .then((value)=> {
+        this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+        this.userPlayList[index].song.push(data)
+      })
+    },
     checkLikeSong(){
       if(this.user && this.song.user_like){
         for(var i=0;i<this.song.user_like.length;i++){

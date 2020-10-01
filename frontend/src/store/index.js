@@ -15,7 +15,7 @@ export default new Vuex.Store({
     visiblePlayButton: true,
     visiblePauseButton: false,
     playlist: [],
-    userPlayList: JSON.parse(sessionStorage.getItem('userPlayList')),     // 로그인하면 풀림, 유저랑 똑같이 세션에 박아놓겟음
+    userPlayList: JSON.parse(sessionStorage.getItem('userPlayList')),
     songLikeList: [],
     albumLikeList: [],
     playerControl: '',
@@ -62,8 +62,8 @@ export default new Vuex.Store({
       state.isLoggedin = true
     },
     SET_PLAYLIST(state, value) {
-      sessionStorage.setItem('userPlayList', JSON.stringify(value))
       state.userPlayList = value
+      sessionStorage.setItem("userPlayList", JSON.stringify(value))
     },
     SET_SONG_LIKE(state, value) {
       state.songLikeList = value
@@ -88,8 +88,11 @@ export default new Vuex.Store({
     setUser( { commit }, value) {
       commit('SET_USER', value)
     },
-    setPlayList({ commit }, value) {
-      commit('SET_PLAYLIST', value)
+    setPlayList( { commit, getters } ) {
+      http2.get('playlist/', getters.config)
+      .then((res) => {
+        commit('SET_PLAYLIST', res.data)
+      })
     },
     logout({commit}){
       commit("LOGOUT")
@@ -135,20 +138,7 @@ export default new Vuex.Store({
         await dispatch('fetchYoutubeId', data)
         commit('SET_PLIST', value)
       }
-    },
-    addToUserPlaylist(data, playlist, index) {
-        http2
-        .post(`playlist/${playlist.id}/song/`,{
-          'songs': [data.id]
-        },this.config)
-        .then((value)=> {
-          this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-          this.userPlayList[index].song.push(data)
-      })
-    },
-
-
-
+    }
   },
   modules: {
     menu,

@@ -9,7 +9,7 @@
     <transition name="slide-up">
       <maskLayer id="mask" v-show="this.$store.state.visiblePlaylist" />
     </transition>
-    <footer-component id="footer" />
+    <footer-component id="footer" style="z-index:10;" />
   </div>
 </template>
 

@@ -101,7 +101,7 @@ export default {
                 console.log("user info", res.data)
                 if (res.data.data.is_signed_up) {
                     this.setUser(res.data.data)
-                    this.setPlayList(res.data.playlists)
+                    this.setPlayList(res.data.playlists.reverse())
                     this.hideModal('loginmodal')
                 }
                 else {
