@@ -25,8 +25,8 @@
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
                                                 </template>
-                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
-                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                                <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -49,8 +49,8 @@
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
                                                 </template>
-                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
-                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                                <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
 										<h5 class="card-title">{{ data.name }}</h5>
@@ -85,8 +85,8 @@
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
                                                 </template>
-                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
-                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                                <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -109,8 +109,8 @@
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
                                                 </template>
-                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
-                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                                <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -145,8 +145,8 @@
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
                                                 </template>
-                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
-                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist)">{{ playlist.name }}</b-dropdown-item>
+                                                <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
                                         <h5 class="card-title">{{ data.name }}</h5>
@@ -162,14 +162,14 @@
 									<div class="card-img-overlay tempclass" :class="'overlayClass'+(index+25)">
                                         <div style="position:absolute; bottom:10%;">
                                             <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
-                                            <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
+                                            <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer; font-size:x-large;"></span>
+                                            <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer; font-size:x-large;"></span>
                                             <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
                                             <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret style="position:absolute;">
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
                                                 </template>
-                                                <b-dropdown-item @click="addToPlaylist(data)">현재 재생목록</b-dropdown-item>
+                                                <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
                                                 <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
@@ -189,27 +189,33 @@
 	<!-- 감정 카테고리별 음악 추천 끝 -->
 
 	<!-- 날씨 매칭 추천 시작 -->
+    <div v-if="timeRecommend">
     <b-row>
         <b-colxx xxs="12">
             <a href="#" @click.prevent=""><h5 class="mb-4 card-title">오늘 같은 날에는 ></h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
-                <div v-for="(data, index) in dummyData1" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                <div v-for="(data, index) in timeRecommend" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
-                        <div class="position-relative" @mouseover="showOverlayWeather(index)" @mouseout="hideOverlayWeather(index)">
-                            <a href="#" @click.prevent="search(data.title)">
-                                <img class="card-img-top" :src="data.src" alt="Card cap" />
-                            </a>
+                        <div class="position-relative">
+                            <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="tempFunction"><h6 class="mb-4 ellipsis">{{ data.title }}</h6></a>
-                            <a href="#" @click.prevent="tempFunction"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist }}</p>
-                            </a>
+                            <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                            <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
-                                <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
-                                <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
+                                <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer;"></span>
+                                <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
+                                <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
+                                <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret>
+                                    <template slot="button-content">
+                                        <span class="glyph-icon simple-icon-playlist text-color" style="font-size:x-large; cursor:pointer;"></span>
+                                    </template>
+                                    <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                                    <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
+                                </b-dropdown>
                             </div>
                         </b-card-body>
                     </b-card>
@@ -218,6 +224,7 @@
 
         </b-colxx>
     </b-row>
+    </div>
 	<!-- 날씨 매칭 추천 끝 -->
 
 	<!-- 시간 매칭 추천 시작 -->
@@ -237,10 +244,17 @@
                             <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
                             <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
-                                <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
-                                <span v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
-                                <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
-                                <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
+                                <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer;"></span>
+                                <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
+                                <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
+                                <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret>
+                                    <template slot="button-content">
+                                        <span class="glyph-icon simple-icon-playlist text-color" style="font-size:x-large; cursor:pointer;"></span>
+                                    </template>
+                                    <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                                    <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
+                                </b-dropdown>
                             </div>
                         </b-card-body>
                     </b-card>
@@ -298,39 +312,6 @@ export default {
                 },
                 hideNav: true
             },
-            dummyData1:
-            [
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/79/150/10479150_20200821103346_500.jpg?21a0dfff48264f87bb4120d95578e9ee/melon/quality/80/optimize",
-                    title: "Dynamite",
-                    artist: "방탄소년단",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/69/416/10469416_20200730151034_500.jpg?dcdcccfa8cd1bc5dae7b668a5910c277/melon/sharpen/0x1",
-                    title: "눈누난나 (NUNU NANA)",
-                    artist: "제시(Jessi)",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/63/600/10463600_20200720152905_500.jpg?4f47c8ca556045d56c9f2016a866e652/melon/quality/80/optimize",
-                    title: "취기를 빌려 (취향저격 그녀 X 산들)",
-                    artist: "산들",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/62/799/10462799_20200717150822_500.jpg?adcaec1a0d99e7a379c098d31dca68da/melon/quality/80/optimize",
-                    title: "다시 여기 바닷가",
-                    artist: "싹쓰리 (유두래곤, 린다G, 비룡)",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/52/351/10452351_20200629152036_500.jpg?40db717ac487b870724b0bab06e4b0d7/melon/quality/80/optimize",
-                    title: "마리아 (Maria)",
-                    artist: "화사 (Hwa Sa)",
-                },
-                {
-                    src: "https://cdnimg.melon.co.kr/cm2/album/images/104/75/061/10475061_20200812120927_500.jpg?e0e2a4331bb0aa6e525f679804f35f8e/melon/quality/80/optimize",
-                    title: "When We Disco (Duet with 선미)",
-                    artist: "박진영",
-                },
-            ],
             timeRecommend: null,
             carouselData1_1: '',
             carouselData1_2: '',
@@ -351,28 +332,26 @@ export default {
       ...mapGetters(['config'])
     },
 	methods: {
-    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+        ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
         async addToPlaylistAndPlayNotify(data) {
-          this.addToPlaylistAndPlay(data)
-          this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+            this.addToPlaylistAndPlay(data)
+            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
         },
         async addToPlaylistAndNotify(data) {
-          this.addToPlaylist(data)
-          this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+            this.addToPlaylist(data)
+            this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
         },
         addToUserPlaylist(data, playlist, index) {
-          http2
-            .post(`playlist/${playlist.id}/song/`,{
-                'songs': [data.id]
-          },this.config)
-          .then((value)=> {
-            this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-            this.userPlayList[index].song.push(data)
-          })
+            http2
+            .post(`playlist/${playlist.id}/song/`,{'songs': [data.id]},this.config)
+            .then((value)=> {
+                this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+                this.userPlayList[index].song.push(data)
+             })
         },
         async getTimeRecommend() {
-          const { data: { data } } = await http.get('recommend/time/')
-          this.timeRecommend = data
+            const { data: { data } } = await http.get('recommend/time/', this.config)
+            this.timeRecommend = data
         },
         async getSadSong() {
             const { data } = await http.get('sad')
@@ -390,20 +369,25 @@ export default {
             this.carouselData3_2 = data.slice(5, 10)
         },
         isLiked(data) {
-            if (this.user) {
-              return this.user.like_songs.includes(data.id);
-            } else return false
+            if (this.user)
+                return this.user.like_songs.includes(data.id)
+            else
+                return false
         },
         async songLike(e) {
             if (this.isLoggedin) {
                 const { id } = e.target
-                const span = document.getElementById(id)
-                const { data } = await http.post(`song/${id}/like/`, '',this.config)
-                span.classList.toggle('liked')
-            }
-            else {
-                const loginBtn = document.querySelector('#loginFlag')
-                loginBtn.click()
+                const { data: { liked } } = await http.post(`song/${id}/like/`, '',this.config)
+                if (liked) {
+                    // this.$notify('primary', "좋아요", this.song.name+" - "+this.song.artist[0].name, { duration: 5000, permanent: false });
+                    this.$store.state.user.like_songs.push(Number(id))
+                }
+                else {
+                    // this.$notify('primary', "좋아요 취소", '', { duration: 5000, permanent: false });
+                    this.$store.state.user.like_songs = this.$store.state.user.like_songs.filter(song => {
+                        return song !== Number(id)
+                    })
+                }
             }
         },
 		tempFunction() {
@@ -487,9 +471,6 @@ export default {
     word-wrap: normal;
     width: 100%;
     overflow: hidden;
-}
-.liked {
-  color: red !important;
 }
 .card-img-overlay {
     display: none;

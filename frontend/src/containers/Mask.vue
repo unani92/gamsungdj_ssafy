@@ -279,7 +279,7 @@ export default {
         },
         error() {
             console.log(this.selectedSong)
-            this.$notify('error', "재생 불가능한 곡입니다.", this.selectedSong.title+" - "+this.selectedSong.artist, { duration: 5000, permanent: false })
+            this.$notify('error', "지원하지 않는 곡입니다.", this.selectedSong.title+" - "+this.selectedSong.artist, { duration: 5000, permanent: false })
             this.$store.state.playerControl = "next"
         },
         selectPlaylist(index) {
