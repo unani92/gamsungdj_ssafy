@@ -64,7 +64,6 @@ export default new Vuex.Store({
       state.isLoggedin = true
     },
     SET_PLAYLIST(state, value) {
-      sessionStorage.setItem('userPlayList', JSON.stringify(value))
       state.userPlayList = value
       sessionStorage.setItem("userPlayList", JSON.stringify(value))
     },

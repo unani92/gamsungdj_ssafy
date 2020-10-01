@@ -23,6 +23,7 @@
         </b-tab>
 
         <b-tab title="좋아요">
+			<MyLikeMusic/>
         </b-tab>
       </b-tabs>
     </b-colxx>
@@ -31,10 +32,13 @@
 
 <script>
 import MyPlayList from '@/components/User/MyPlayList.vue'
-import { mapState } from 'vuex'
+import MyLikeMusic from '@/components/User/MyLikeMusic.vue'
+import httpUser from '@/utils/http-user'
+import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
   components: {
-	  MyPlayList
+	  MyPlayList,
+	  MyLikeMusic
   },
   data() {
     return {
@@ -56,6 +60,7 @@ export default {
     };
   },
   methods: {
+	...mapActions(['setUser']),
 	showMoreSong: function() {
       this.moreSong = !this.moreSong;
 	},
@@ -97,6 +102,7 @@ export default {
   },
   computed: {
 	...mapState(['user']),
+	...mapGetters(['config']),
 	imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
     sortPlaylist() {
 		if(this.sort_value=='name'){
@@ -133,6 +139,13 @@ export default {
 		})
 
     },
+  },
+  created() {
+	  httpUser.get('', this.config)
+	  .then((res) => {
+		  this.setUser(res.data.data)
+	  })
+
   }
 };
 </script>
