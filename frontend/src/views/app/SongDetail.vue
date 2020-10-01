@@ -99,6 +99,7 @@
 import http from "../../utils/http-common";
 import LoginModal from '@/components/User/LoginModal.vue'
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
+import axios from 'axios'
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
@@ -296,8 +297,8 @@ export default {
       var tag = document.getElementById('commentTitle');
       tag.scrollIntoView(true);
     },
-    async addToPlaylistAndPlay(song) {
-      const { data } = await http.get(youtubeURL, {
+    async fetchYoutubeId(song) {
+      const { data } = await axios.get(youtubeURL, {
         params: {
           key: API_KEY,
           part: 'snippet',
@@ -308,26 +309,32 @@ export default {
       })
       const { items } = data
       const { videoId } = items[0].id
+      const reqData = {'src': videoId}
       song['src'] = videoId
-      this.playlist.unshift(song)
-      this.$store.state.playerControl = 'add'
-      this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
+      await http.post(`addsrc/${song.id}/`, reqData,'')
+    },
+    async addToPlaylistAndPlay(song) {
+      if (song['src']) {
+        this.playlist.unshift(song)
+        this.$store.state.playerControl = "add"
+        this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
+      } else {
+        await this.fetchYoutubeId(song)
+        this.playlist.unshift(song)
+        this.$store.state.playerControl = "add"
+        this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
+      }
     },
     async addToPlayList(song) {
-      const { data } = await http.get(youtubeURL, {
-        params: {
-          key: API_KEY,
-          part: 'snippet',
-          maxResults: 1,
-          type: 'video',
-          q: song.artist[0].name + ' ' + song.name
-        }
-      })
-      const { items } = data
-      const { videoId } = items[0].id
-      song['src'] = videoId
-      this.playlist.push(song)
-      this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 5000, permanent: false })
+      if (song['src']) {
+          this.playlist.push(song)
+          this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
+      }
+      else {
+          await this.fetchYoutubeId(song)
+          this.playlist.push(song)
+          this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
+      }
     },
   },
   mounted() {

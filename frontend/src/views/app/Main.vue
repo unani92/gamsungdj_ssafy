@@ -17,10 +17,10 @@
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+0)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
                                             <b-dropdown v-else variant="empty" toggle-class="p-0 m-0" no-caret style="position:absolute;">
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
@@ -41,10 +41,10 @@
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+5)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
                                             <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret style="position:absolute;">
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
@@ -77,10 +77,10 @@
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+10)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
                                             <b-dropdown v-else variant="empty" toggle-class="p-0 m-0" no-caret style="position:absolute;">
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
@@ -101,10 +101,10 @@
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+15)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
                                             <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret style="position:absolute;">
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
@@ -137,10 +137,10 @@
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay" :class="'overlayClass'+(index+20)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
                                             <b-dropdown v-else variant="empty" toggle-class="p-0 m-0" no-caret style="position:absolute;">
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
@@ -161,10 +161,10 @@
 									<img :src="data.img" class="card-img" />
 									<div class="card-img-overlay tempclass" :class="'overlayClass'+(index+25)">
                                         <div style="position:absolute; bottom:10%;">
-                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                            <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                             <span v-if="isLiked(data)" :id="data.id" class="glyph-icon simple-icon-heart mr-3 liked" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
                                             <span v-else :id="data.id" class="glyph-icon simple-icon-heart mr-3" style="font-size:x-large; cursor:pointer;" @click="songLike"></span>
-                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                            <span v-if="!isLoggedin" class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndNotify(data)"></span>
                                             <b-dropdown v-else variant="empty" dropup toggle-class="p-0 m-0" no-caret style="position:absolute;">
                                                 <template slot="button-content">
                                                     <span class="glyph-icon simple-icon-playlist text-white" style="font-size:x-large; cursor:pointer;"></span>
@@ -224,20 +224,21 @@
     <div v-if="timeRecommend">
     <b-row >
         <b-colxx xxs="12">
-            <a href="#" @click.prevent=""><h5 class="mb-4 card-title">이시간에는 ></h5></a>
+            <a href="#timeRecommend" id="timeRecommend" @click="getTimeRecommend"><h5 class="mb-4 card-title">이시간에는 ></h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
                 <div v-for="(data, index) in timeRecommend" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <a href="#" @click.prevent="search(data.title)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                            <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="search(data.title)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                            <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
                             <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                <span v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
                                 <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
                                 <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
                             </div>
@@ -256,7 +257,7 @@
 import GlideComponent from '../../components/Carousel/GlideComponent'
 import http from '../../utils/http-common'
 import http2 from '../../utils/http-user'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
@@ -344,11 +345,31 @@ export default {
         'playlist',
         'songLikeList',
         'isLoggedin',
-        'userPlayList'
+        'userPlayList',
+        'user'
       ]),
       ...mapGetters(['config'])
     },
 	methods: {
+    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+        async addToPlaylistAndPlayNotify(data) {
+          this.addToPlaylistAndPlay(data)
+          this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+        },
+        async addToPlaylistAndNotify(data) {
+          this.addToPlaylist(data)
+          this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+        },
+        addToUserPlaylist(data, playlist, index) {
+          http2
+            .post(`playlist/${playlist.id}/song/`,{
+                'songs': [data.id]
+          },this.config)
+          .then((value)=> {
+            this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+            this.userPlayList[index].song.push(data)
+          })
+        },
         async getTimeRecommend() {
           const { data: { data } } = await http.get('recommend/time/')
           this.timeRecommend = data
@@ -369,10 +390,11 @@ export default {
             this.carouselData3_2 = data.slice(5, 10)
         },
         isLiked(data) {
-            return this.songLikeList.includes(data.id);
+            if (this.user) {
+              return this.user.like_songs.includes(data.id);
+            } else return false
         },
         async songLike(e) {
-            console.log("liek")
             if (this.isLoggedin) {
                 const { id } = e.target
                 const span = document.getElementById(id)
@@ -422,55 +444,6 @@ export default {
             for(var i=0; i<el.length; i++){
                 el[i].style.display="none"
             }
-        },
-        async fetchYoutubeId(song) {
-          const { data } = await axios.get(youtubeURL, {
-            params: {
-              key: API_KEY,
-              part: 'snippet',
-              maxResults: 1,
-              type: 'video',
-              q: song.artist[0].name + ' ' + song.name
-            }
-          })
-          const { items } = data
-          const { videoId } = items[0].id
-          const reqData = {'src': videoId}
-          song['src'] = videoId
-          await http.post(`addsrc/${song.id}/`, reqData,'')
-        },
-        async addToPlaylistAndPlay(data) {
-          if (data['src']) {
-            this.playlist.unshift(data)
-            this.$store.state.playerControl = "add"
-            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-          } else {
-            await this.fetchYoutubeId(data)
-            this.playlist.unshift(data)
-            this.$store.state.playerControl = "add"
-            this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-          }
-        },
-        async addToPlaylist(data) {
-            if (data['src']) {
-                this.playlist.push(data)
-                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-            }
-            else {
-                await this.fetchYoutubeId(data)
-                this.playlist.push(data)
-                this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-            }
-        },
-        addToUserPlaylist(data, playlist, index) {
-            http2
-            .post(`playlist/${playlist.id}/song/`,{
-                'songs': [data.id]
-            },this.config)
-            .then((value)=> {
-                this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-                this.userPlayList[index].song.push(data)
-            })
         },
         search(word){
             this.$router.push(`/A505/search/${word}`);

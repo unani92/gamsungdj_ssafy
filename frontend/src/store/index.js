@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import menu from './modules/menu'
-import httpUser from '@/utils/http-user'
+import axios from "axios";
+import http from "../utils/http-common";
+import http2 from "../utils/http-user";
 
 Vue.use(Vuex)
 
@@ -38,6 +40,17 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    SET_PLIST(state, { command, data }) {
+      if (command === 'addAndPlay') {
+        console.log(command)
+        state.playerControl = 'add'
+        state.playlist.unshift(data)
+      } else {
+        console.log(command)
+        state.playerControl = ''
+        state.playlist.push(data)
+      }
+    },
     SET_AUTH(state, value){
       sessionStorage.setItem("authorization", value)
       state.authorization = value
@@ -51,6 +64,7 @@ export default new Vuex.Store({
       state.isLoggedin = true
     },
     SET_PLAYLIST(state, value) {
+      sessionStorage.setItem('userPlayList', JSON.stringify(value))
       state.userPlayList = value
       sessionStorage.setItem("userPlayList", JSON.stringify(value))
     },
@@ -64,7 +78,7 @@ export default new Vuex.Store({
       sessionStorage.removeItem("isLoggedin")
       sessionStorage.removeItem("authorization")
       sessionStorage.removeItem("user")
-      sessionStorage.removeItem("userPlayList")
+      sessionStorage.removeItem('userPlayList')
     },
   },
   actions: {
@@ -78,13 +92,65 @@ export default new Vuex.Store({
       commit('SET_USER', value)
     },
     setPlayList( { commit, getters } ) {
-      httpUser.get('playlist/', getters.config)
+      http2.get('playlist/', getters.config)
       .then((res) => {
         commit('SET_PLAYLIST', res.data)
       })
     },
     logout({commit}){
       commit("LOGOUT")
+    },
+    async fetchYoutubeId({ commit }, song) {
+      const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
+      const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
+      const { data } = await axios.get(youtubeURL, {
+        params: {
+          key: API_KEY,
+          part: 'snippet',
+          maxResults: 1,
+          type: 'video',
+          q: song.artist[0].name + ' ' + song.name
+        }
+      })
+      const { items } = data
+      const { videoId } = items[0].id
+      const reqData = {'src': videoId}
+      song['src'] = videoId
+      await http.post(`addsrc/${song.id}/`, reqData,'')
+    },
+    async addToPlaylistAndPlay({ commit, dispatch }, data) {
+      let value = {
+        'command': 'addAndPlay',
+        'data': data
+      }
+      if (data['src']) {
+        commit('SET_PLIST', value)
+      } else {
+        await dispatch('fetchYoutubeId', data)
+        commit('SET_PLIST', value)
+      }
+    },
+    async addToPlaylist({ commit, dispatch }, data) {
+      let value = {
+        'command': '',
+        'data': data
+        }
+      if (data['src']) {
+        commit('SET_PLIST', value)
+      } else {
+        await dispatch('fetchYoutubeId', data)
+        commit('SET_PLIST', value)
+      }
+    },
+    addToUserPlaylist(data, playlist, index) {
+        http2
+        .post(`playlist/${playlist.id}/song/`,{
+          'songs': [data.id]
+        },this.config)
+        .then((value)=> {
+          this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          this.userPlayList[index].song.push(data)
+      })
     },
 
 

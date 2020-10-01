@@ -94,7 +94,11 @@
         </b-row>
         <b-row>
             <b-colxx lg="3" xl="3" class="mb-4">
-                <b-card title="가수">
+                <b-card>
+                  <div style="display: flex; justify-content: space-between">
+                    <h4>가수</h4>
+                    <v-select :options="options" v-model="emo"/>
+                  </div>
                     <vue-perfect-scrollbar
                         class="scroll dashboard-list-with-user"
                         :settings="{ suppressScrollX: true, wheelPropagation: false }"
@@ -102,28 +106,34 @@
                         <div class="d-flex flex-row mb-3 pb-3 border-bottom" v-for="(data, index) in artists" :key="index">
                             <img :src="data.thumb" :alt="data.title" class="img-thumbnail border-0 rounded-circle list-thumbnail align-self-center xsmall" />
                             <div class="pl-3 pr-2">
-                                <p class="font-weight-medium mb-0 ">{{ data.title }}</p>
+                                <p class="font-weight-medium mb-0 " @click="fetchArtistSong(data.title)" style="cursor:pointer;">{{ data.title }}</p>
                                 <p class="text-muted mb-0 text-small">{{ data.detail }}</p>
                             </div>
                         </div>
                     </vue-perfect-scrollbar>
                 </b-card>
             </b-colxx>
-            <b-colxx lg="9" xl="9">
+            <b-colxx lg="9" xl="9" v-if="artistEmotion.length">
                 <b-card>
                     <b-colxx xxs="12" class="pl-0 pr-0">
                         <glide-component :settings="glideNoControlsSettings">
-                            <div class="pr-3 pl-3 mt-2 mb-2 glide__slide" v-for="(data, index) in dummyData1" :key="index">
-                                <b-card no-body>
-                                    <div class="position-relative">
-                                        <img class="card-img-top" :src="data.src" alt="Card cap" />
-                                    </div>
-                                    <b-card-body>
-                                        <h6 class="mb-4">{{ data.title }}</h6>
-                                        <p class="text-muted text-small mb-0 font-weight-light">{{ data.artist }}</p>
-                                    </b-card-body>
-                                </b-card>
-                            </div>
+                            <div v-for="(data, index) in artistEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                              <b-card no-body>
+                                <div class="position-relative">
+                                    <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                                </div>
+                                <b-card-body>
+                                  <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                                  <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                                  <div class="mt-4" style="font-size:x-large;">
+                                    <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+<!--                                    <span v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>-->
+                                    <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
+                                    <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
+                                  </div>
+                                </b-card-body>
+                              </b-card>
+                          </div>
                         </glide-component>
                     </b-colxx>
                 </b-card>
@@ -141,6 +151,8 @@ import LineChart from "../../components/Charts/Line"
 import http from '../../utils/http-common'
 import { mapState, mapGetters } from 'vuex'
 import {_} from 'vue-underscore'
+import 'vue-select/dist/vue-select.css';
+import vSelect from "vue-select";
 
 const colors = ThemeColors()
 export default {
@@ -148,7 +160,8 @@ export default {
         "gradient-with-radial-progress-card": GradientWithRadialProgressCard,
         'glide-component': GlideComponent,
         "doughnut-chart": DoughnutChart,
-        "line-chart": LineChart
+        "line-chart": LineChart,
+        "v-select": vSelect
     },
     computed: {
       ...mapState(['user']),
@@ -186,7 +199,7 @@ export default {
         if (this.time.length) return `${this.time[0][0]} 시에서 ~ ${Number(this.time[0][0]) + 2} 시 사이에 가장 많이 들었습니다.`
       },
       favTimeProp() {
-        if (this.timeSum) return Math.ceil(Number(this.time[0][0] / this.timeSum) * 100) + '%'
+        if (this.timeSum) return Math.ceil(Number(this.time[0][1] / this.timeSum) * 100) + '%'
         else return 0
       }
     },
@@ -195,6 +208,9 @@ export default {
     },
     data() {
         return {
+            artistEmotion: [],
+            options: ['sad','joy','love'],
+            emo: '',
             genresCnt: '',
             genres: [],
             // [
@@ -322,7 +338,6 @@ export default {
           }))
           timeArr.push(new Date(obj.time).getHours())
         })
-        this.timeSum = timeArr.reduce((a,b) => a+b)
 
         // genre 통계처리
         this.genresCnt = genresArr.length
@@ -356,6 +371,7 @@ export default {
           ambiance.push(arr[0])
           cnt.push(arr[1])
         })
+        this.emo = ambiance[0]
         this.doughnutChartData1.labels = ambiance
         this.doughnutChartData1.datasets[0].data = cnt
 
@@ -408,7 +424,16 @@ export default {
         this.lineChartData.datasets[0].data = timeSet
         timeSortable.sort((a,b) => b[1] - a[1])
         this.time = timeSortable
-        console.log(this.time)
+        let timesum = 0
+        for (let i of timeSortable) {
+          timesum += i[1]
+        }
+        this.timeSum = timesum
+        // this.fetchArtistSong()
+      },
+      async fetchArtistSong(artistName) {
+        const { data } = await http.get(`musicdna/artist/?emotion=${this.emo}&keyword=${artistName}`, this.config)
+        this.artistEmotion = data
       }
     }
 }
