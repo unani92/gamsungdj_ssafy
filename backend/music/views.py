@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import Song, Album, Artist, Log, AlbumComment, SongComment
+from .models import Song, Album, Artist, Log, AlbumComment, SongComment, Genre
 from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
 from random import sample
 import re
@@ -93,6 +93,32 @@ class SearchResult(APIView):
                 "status": 401,
                 "msg": "invalid approach"
             })
+
+class MusicDna(APIView):
+    @permission_classes([IsAuthenticated])
+    def get(self, request, category):
+        print(request.GET)
+        emotion = request.GET['emotion']
+        keyword = request.GET['keyword']
+        if category == 'artist':
+            artist = Artist.objects.get(name__contains=keyword)
+            songs = Song.objects.filter(artist=artist.pk, type=emotion)\
+                .exclude(user_like__in=[request.user], like__lt=500)
+            if len(songs) >= 10:
+                nums = sample(range(len(songs)),10)
+            else:
+                nums = range(len(songs))
+            songs = [songs[i] for i in nums]
+            serializer = SongSerializer(songs, many=True)
+        elif category == 'genre':
+            genre = Genre.objects.get(name__contains=keyword)
+            songs = Song.objects.filter(genres__in=[genre], type=emotion)\
+                .exclude(user_like__in=[request.user], like__lt=500)
+            serializer = SongSerializer(songs, many=True)
+        else:
+            return Response({'msg': 'failed'})
+
+        return Response(serializer.data)
 
 class CreateLog(APIView):
     @permission_classes([IsAuthenticated])
