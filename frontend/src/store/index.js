@@ -12,7 +12,7 @@ export default new Vuex.Store({
     visiblePlayButton: true,
     visiblePauseButton: false,
     playlist: [],
-    userPlayList: '',     // 로그인하면 풀림, 유저랑 똑같이 세션에 박아놓겟음
+    userPlayList: JSON.parse(sessionStorage.getItem('userPlayList')),     // 로그인하면 풀림, 유저랑 똑같이 세션에 박아놓겟음
     songLikeList: [],
     albumLikeList: [],
     playerControl: '',
@@ -50,6 +50,7 @@ export default new Vuex.Store({
       state.isLoggedin = true
     },
     SET_PLAYLIST(state, value) {
+      sessionStorage.setItem('userPlayList', JSON.stringify(value))
       state.userPlayList = value
     },
     SET_SONG_LIKE(state, value) {
@@ -62,6 +63,7 @@ export default new Vuex.Store({
       sessionStorage.removeItem("isLoggedin")
       sessionStorage.removeItem("authorization")
       sessionStorage.removeItem("user")
+      sessionStorage.removeItem('userPlayList')
     },
   },
   actions: {

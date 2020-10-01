@@ -186,7 +186,7 @@ export default {
         if (this.time.length) return `${this.time[0][0]} 시에서 ~ ${Number(this.time[0][0]) + 2} 시 사이에 가장 많이 들었습니다.`
       },
       favTimeProp() {
-        if (this.timeSum) return Math.ceil(Number(this.time[0][0] / this.timeSum) * 100) + '%'
+        if (this.timeSum) return Math.ceil(Number(this.time[0][1] / this.timeSum) * 100) + '%'
         else return 0
       }
     },
@@ -322,7 +322,6 @@ export default {
           }))
           timeArr.push(new Date(obj.time).getHours())
         })
-        this.timeSum = timeArr.reduce((a,b) => a+b)
 
         // genre 통계처리
         this.genresCnt = genresArr.length
@@ -408,7 +407,11 @@ export default {
         this.lineChartData.datasets[0].data = timeSet
         timeSortable.sort((a,b) => b[1] - a[1])
         this.time = timeSortable
-        console.log(this.time)
+        let timesum = 0
+        for (let i of timeSortable) {
+          timesum += i[1]
+        }
+        this.timeSum = timesum
       }
     }
 }

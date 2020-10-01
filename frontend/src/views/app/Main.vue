@@ -224,20 +224,21 @@
     <div v-if="timeRecommend">
     <b-row >
         <b-colxx xxs="12">
-            <a href="#" @click.prevent=""><h5 class="mb-4 card-title">이시간에는 ></h5></a>
+            <a href="#timeRecommend" id="timeRecommend" @click="getTimeRecommend"><h5 class="mb-4 card-title">이시간에는 ></h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
                 <div v-for="(data, index) in timeRecommend" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <a href="#" @click.prevent="search(data.title)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                            <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="search(data.title)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                            <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
                             <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(data)"></span>
+                                <span v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
                                 <span class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
                                 <span class="glyph-icon simple-icon-playlist mr-3" style="cursor:pointer;" @click="addToPlaylist(data)"></span>
                             </div>
@@ -344,7 +345,8 @@ export default {
         'playlist',
         'songLikeList',
         'isLoggedin',
-        'userPlayList'
+        'userPlayList',
+        'user'
       ]),
       ...mapGetters(['config'])
     },
@@ -369,10 +371,9 @@ export default {
             this.carouselData3_2 = data.slice(5, 10)
         },
         isLiked(data) {
-            return this.songLikeList.includes(data.id);
+            return this.user.like_songs.includes(data.id);
         },
         async songLike(e) {
-            console.log("liek")
             if (this.isLoggedin) {
                 const { id } = e.target
                 const span = document.getElementById(id)
