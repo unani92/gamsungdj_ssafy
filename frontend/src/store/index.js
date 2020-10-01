@@ -66,6 +66,7 @@ export default new Vuex.Store({
     SET_PLAYLIST(state, value) {
       sessionStorage.setItem('userPlayList', JSON.stringify(value))
       state.userPlayList = value
+      sessionStorage.setItem("userPlayList", JSON.stringify(value))
     },
     SET_SONG_LIKE(state, value) {
       state.songLikeList = value
@@ -90,8 +91,11 @@ export default new Vuex.Store({
     setUser( { commit }, value) {
       commit('SET_USER', value)
     },
-    setPlayList({ commit }, value) {
-      commit('SET_PLAYLIST', value)
+    setPlayList( { commit, getters } ) {
+      http2.get('playlist/', getters.config)
+      .then((res) => {
+        commit('SET_PLAYLIST', res.data)
+      })
     },
     logout({commit}){
       commit("LOGOUT")
