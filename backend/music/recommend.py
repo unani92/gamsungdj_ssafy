@@ -1,10 +1,8 @@
-from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from rest_framework.response import Response
-from rest_framework.decorators import permission_classes, APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import APIView
 from .models import Song, Log, Genre
-from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
+from .serializers import SongSerializer
 from datetime import datetime
 from random import sample, shuffle
 import math
@@ -173,4 +171,15 @@ class TimeRecommend(APIView):
             })
 
 class ClimateRecommend(APIView):
-    pass
+    def get(self, request):
+
+        rain_contains = Song.objects.filter(Q(name__contains='비 ') | Q(name__contains='빗') | Q(name__contains='비가') | Q(name__contains='빗물'))
+        rain_cnt = sample(range(rain_contains), 6)
+        rain_contains = [rain_contains[i] for i in rain_cnt]
+        ballad = Song.objects.filter(Q(type='love') | Q(type='joy'), genres__name__in=['발라드', '국내드라마'])
+        ballad_cnt = sample(range(ballad), 12)
+        ballad = [ballad[i] for i in ballad_cnt]
+        rain_all = rain_contains + ballad
+        serializer = SongSerializer(rain_all, many=True)
+        shuffle(rain_all)
+        return Response(serializer.data)

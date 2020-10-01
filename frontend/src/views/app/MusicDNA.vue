@@ -292,7 +292,6 @@ export default {
           } else return false
         },
       async songLike(e) {
-        console.log
         if (this.isLoggedin) {
           const { id } = e.target
           console.log(id)

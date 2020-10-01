@@ -42,11 +42,9 @@ export default new Vuex.Store({
   mutations: {
     SET_PLIST(state, { command, data }) {
       if (command === 'addAndPlay') {
-        console.log(command)
         state.playerControl = 'add'
         state.playlist.unshift(data)
       } else {
-        console.log(command)
         state.playerControl = ''
         state.playlist.push(data)
       }
