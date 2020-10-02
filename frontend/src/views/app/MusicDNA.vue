@@ -315,6 +315,10 @@ export default {
       },
       async fetchLog() {
         const { data } = await http.get('log/', this.config)
+        if (data.length === 0) {
+          alert('로그 데이터가 충분히 쌓이지 않았습니다.')
+          this.$router.push('/A505')
+        }
         const genresArr = []
         const ambianceArr = []
         const artistsArr = []
