@@ -25,14 +25,14 @@
             <b-button variant="secondary" @click="hideModal('loginmodal')">취소</b-button>
         </template>
     </b-modal>
-    <JoinForm :showJoin="showJoin" @hideModal="hideModal"/>
+    <JoinForm :showJoin="showJoin" :username="username" @hideModal="hideModal"/>
 </div>
 </template>
 
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
 import JoinForm from './JoinForm.vue'
-const baseURL = "http://localhost:8000/api/"
+import httpUser from'@/utils/http-user'
 import axios from 'axios'
 import { mapActions, mapState, mapGetters } from 'vuex'
 
@@ -48,6 +48,7 @@ export default {
                 client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID
             },
             user: [],
+            username: ''
         }
     },
     methods: {
@@ -56,7 +57,7 @@ export default {
         onGoogleSignInSuccess (response) {
             const token = response.wc.access_token
             console.log(response)
-            axios.post(baseURL+"accounts/google/", {
+            httpUser.post("google/", {
                 access_token: token
             })
             .then(resp => {
@@ -85,7 +86,7 @@ export default {
             })
         },
         getKaKaoInfo(authInfo) {
-            axios.post(baseURL + "accounts/kakao/", { access_token: authInfo.access_token })
+            httpUser.post("kakao/", { access_token: authInfo.access_token })
             .then(response => {
                 console.log(response)
                 this.setAuth("JWT " + response.data.token)
@@ -94,22 +95,20 @@ export default {
         },
         // 회원가입시 프로필 생성
         createUserProfile(auth) {
-            console.log("config", this.authorization)
-            console.log(this.config)
-            axios.get(baseURL+"accounts/", this.config)
+            httpUser.get('', this.config)
             .then(res => {
-                console.log("user info", res.data)
                 if (res.data.data.is_signed_up) {
                     this.setUser(res.data.data)
                     this.setPlayList(res.data.playlists)
                     this.hideModal('loginmodal')
                 }
                 else {
-                    this.joinForm()
+                    this.joinForm(res.data.data.username)
                 }
             })
         },
-        joinForm() {
+        joinForm(username) {
+            this.username = username
             this.showJoin = true
             this.$emit("hideModal")
         },
