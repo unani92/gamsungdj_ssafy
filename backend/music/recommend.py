@@ -36,7 +36,7 @@ class TimeRecommend(APIView):
             elif 20 <= hour <= 23:
                 logs = Log.objects.filter(user=request.user, time__hour__range=(20, 24)).exclude(song__type='no lyric')
             else:
-                logs = Log.objects.filter(user=request.user).exclude(type='no lyric')
+                logs = Log.objects.filter(user=request.user).exclude(song__type='no lyric')
 
             # log based recommend
             if logs:
