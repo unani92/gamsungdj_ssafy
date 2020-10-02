@@ -203,7 +203,7 @@
                         </div>
                         <b-card-body>
                             <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                            <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                            <a href="#" @click.prevent="search(data.artist[0].name)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                 <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer;"></span>
@@ -242,7 +242,7 @@
                         </div>
                         <b-card-body>
                             <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                            <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                            <a href="#" @click.prevent="search(data.artist[0].name)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                 <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer;"></span>
@@ -343,7 +343,7 @@ export default {
         },
         addToUserPlaylist(data, playlist, index) {
             http2
-            .post(`playlist/${playlist.id}/song/`,{'songs': [data.id]},this.config)
+            .post(`playlist/${playlist.id}/song/`, {'songs': [data.id]}, this.config)
             .then((value)=> {
                 this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
                 this.userPlayList[index].song.push(data)

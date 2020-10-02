@@ -83,8 +83,16 @@
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}} </a></td>
                       <td class="list-item-heading mb-0 truncate" style="vertical-align: middle;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                       <td style="vertical-align: middle;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
-                      <td style="vertical-align: middle;" @click.prevent="addToPlayList(song)"><div class="glyph-icon simple-icon-playlist"/></td>
-                      <!-- <td style="vertical-align: middle;" @click.prevent="likeSong(song.id)" ><div class="glyph-icon simple-icon-heart" /></td> -->
+                      <td v-if="!isLoggedin" style="vertical-align: middle;" @click.prevent="addToPlaylistAndNotify(song)"><div class="glyph-icon simple-icon-playlist"/></td>
+                      <td v-else style="vertical-align: middle;">
+                      <b-dropdown variant="empty" toggle-class="p-0 m-0" no-caret style="position:relative;">
+                          <template slot="button-content">
+                            <div class="glyph-icon simple-icon-playlist text-color" style="font-size:x-large;"/>
+                          </template>
+                          <b-dropdown-item @click="addToPlaylistAndNotify(song)">현재 재생목록</b-dropdown-item>
+                          <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(song, playlist, index)">{{ playlist.name }}</b-dropdown-item>
+                      </b-dropdown>
+                      </td>
                       <td v-if="!checkLikeSong((currentPage-1)*5+index)" style="vertical-align: middle;" @click="likeSong(song.id, (currentPage-1)*5+index)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
                       <td v-if="checkLikeSong((currentPage-1)*5+index)" style="vertical-align: middle;" @click="likeSong(song.id, (currentPage-1)*5+index)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
@@ -182,11 +190,11 @@
   </div>
 </template>
 <script>
-import http from "../../utils/http-common";
+import http from "../../utils/http-common"
+import http2 from "../../utils/http-user"
 import LoginModal from '@/components/User/LoginModal.vue'
-import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
-import { adminRoot } from "../../constants/config";
-import axios from 'axios'
+import { adminRoot } from '../../constants/config'
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex"
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
@@ -252,6 +260,26 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+    async addToPlaylistAndPlayNotify(data) {
+      this.addToPlaylistAndPlay(data)
+      this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+    },
+    async addToPlaylistAndNotify(data) {
+      this.addToPlaylist(data)
+      this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+    },
+    addToUserPlaylist(data, playlist, index) {
+      console.log(data)
+      console.log(playlist)
+      console.log(index)
+      http2
+      .post(`playlist/${playlist.id}/song/`, {'songs': [data.id]}, this.config)
+      .then((value)=> {
+        this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+        this.userPlayList[index].song.push(data)
+      })
+    },
     showMoreArtist: function() {
       this.moreArtist = !this.moreArtist;
     },
@@ -271,45 +299,6 @@ export default {
         this.clickAlbumLike=false;
       }
 
-    },
-    async fetchYoutubeId(song) {
-      const { data } = await axios.get(youtubeURL, {
-        params: {
-          key: API_KEY,
-          part: 'snippet',
-          maxResults: 1,
-          type: 'video',
-          q: song.artist[0].name + ' ' + song.name
-        }
-      })
-      const { items } = data
-      const { videoId } = items[0].id
-      const reqData = {'src': videoId}
-      song['src'] = videoId
-      await http.post(`addsrc/${song.id}/`, reqData,'')
-    },
-    async addToPlaylistAndPlay(song) {
-      if (song['src']) {
-        this.playlist.unshift(song)
-        this.$store.state.playerControl = "add"
-        this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
-      } else {
-        await this.fetchYoutubeId(song)
-        this.playlist.unshift(song)
-        this.$store.state.playerControl = "add"
-        this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
-      }
-    },
-    async addToPlayList(song) {
-      if (song['src']) {
-          this.playlist.push(song)
-          this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
-      }
-      else {
-          await this.fetchYoutubeId(song)
-          this.playlist.push(song)
-          this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
-      }
     },
     likeSong: function(id, index) {
       if(this.user){
@@ -469,13 +458,8 @@ export default {
         return b.id - a.id
       })
     },
-    ...mapGetters({
-      currentUser: "currentUser",
-      // menuType: "getMenuType",
-      // menuClickCount: "getMenuClickCount",
-      // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
-    }),
-    ...mapState(['authorization', 'user', 'isLoggedin', 'playlist'])
+    ...mapState(['authorization', 'user', 'isLoggedin', 'playlist', 'userPlayList']),
+    ...mapGetters(['config'])
   },
   watch : {
     dataCheck: function(){

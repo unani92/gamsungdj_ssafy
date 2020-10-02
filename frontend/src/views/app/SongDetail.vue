@@ -26,13 +26,13 @@
                       <template slot="button-content">
                           <h1 class="mb-0 truncate mt-5 ml-5 text-large"><h1 class="glyph-icon simple-icon-playlist pb-0 text-color" style="cursor:pointer;"> 추가</h1></h1>
                       </template>
-                      <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
-                      <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
+                      <b-dropdown-item @click="addToPlaylistAndNotify(song)">현재 재생목록</b-dropdown-item>
+                      <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(song, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                   </b-dropdown>
                 </div>
         </b-colxx>
       </b-colxx>
-    </b-row>
+    </b-row>  
     <b-row>
       <b-colxx xxs="12">
         <div class="separator mb-5"></div>
@@ -103,10 +103,10 @@
   </div>
 </template>
 <script>
-import http from "../../utils/http-common";
+import http from "../../utils/http-common"
+import http2 from "../../utils/http-user"
 import LoginModal from '@/components/User/LoginModal.vue'
-import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
-import axios from 'axios'
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex"
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
@@ -159,7 +159,7 @@ export default {
     },
     addToUserPlaylist(data, playlist, index) {
       http2
-      .post(`playlist/${playlist.id}/song/`,{'songs': [data.id]},this.config)
+      .post(`playlist/${playlist.id}/song/`, {'songs': [data.id]}, this.config)
       .then((value)=> {
         this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
         this.userPlayList[index].song.push(data)
@@ -337,29 +337,6 @@ export default {
       song['src'] = videoId
       await http.post(`addsrc/${song.id}/`, reqData,'')
     },
-    async addToPlaylistAndPlay(song) {
-      if (song['src']) {
-        this.playlist.unshift(song)
-        this.$store.state.playerControl = "add"
-        this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
-      } else {
-        await this.fetchYoutubeId(song)
-        this.playlist.unshift(song)
-        this.$store.state.playerControl = "add"
-        this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
-      }
-    },
-    async addToPlayList(song) {
-      if (song['src']) {
-          this.playlist.push(song)
-          this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
-      }
-      else {
-          await this.fetchYoutubeId(song)
-          this.playlist.push(song)
-          this.$notify('primary', "재생 목록에 추가 었습니다.", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
-      }
-    },
   },
   mounted() {
     this.songID = this.$route.params.songID;
@@ -378,7 +355,8 @@ export default {
       // menuClickCount: "getMenuClickCount",
       // selectedMenuHasSubItems: "getSelectedMenuHasSubItems"
     }),
-    ...mapState(['authorization', 'user', 'isLoggedin', 'playlist'])
+    ...mapState(['authorization', 'user', 'isLoggedin', 'playlist', 'userPlayList']),
+    ...mapGetters(['config'])
   },
 }
 </script>
