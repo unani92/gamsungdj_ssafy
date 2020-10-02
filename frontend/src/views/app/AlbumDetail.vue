@@ -199,17 +199,32 @@ export default {
   methods: {
     ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
     async addToPlaylistAndPlayNotify(data) {
+      for(let i=0; i<this.playlist.length; i++) {
+        if(this.playlist[i].id == data.id) {
+          this.$notify('warning', "재생 목록에 이미 포함 된 곡입니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          return
+        }
+      }
       this.addToPlaylistAndPlay(data)
       this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
     },
     async addToPlaylistAndNotify(data) {
+      for(let i=0; i<this.playlist.length; i++) {
+        if(this.playlist[i].id == data.id) {
+          this.$notify('warning', "재생 목록에 이미 포함 된 곡입니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          return
+        }
+      }
       this.addToPlaylist(data)
       this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
     },
     addToUserPlaylist(data, playlist, index) {
-      console.log(data)
-      console.log(playlist)
-      console.log(index)
+      for(let i=0; i<playlist.song.length; i++) {
+        if(playlist.song[i].id == data.id) {
+          this.$notify('warning', "사용자 재생 목록에 이미 포함 된 곡입니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          return
+        }
+      }
       http2
       .post(`playlist/${playlist.id}/song/`, {'songs': [data.id]}, this.config)
       .then((value)=> {

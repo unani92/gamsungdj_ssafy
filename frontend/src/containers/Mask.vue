@@ -81,10 +81,9 @@
 import MusicBar from "../components/Playlist/Musicbar"
 import Player from "../components/Playlist/Player"
 import Analyze from "../components/Playlist/Analyze"
-import { mapState } from "vuex"
 import Switches from "vue-switches"
 import http from "../utils/http-common"
-import axios from 'axios'
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex"
 
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
@@ -224,6 +223,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
         selectSong(index, data) {
             if(this.selectedSong.index == -1) {
                 this.selectedSong.index = index
@@ -254,7 +254,6 @@ export default {
                 song: this.playlist[index].id
             }, this.$store.getters.config)
             .then((value) => {
-                console.log(value)
             })
             if(this.selectedSong.index >= this.playlist.length-1) {
                 this.unmarkPlayingIndex(this.selectedSong.index)
@@ -278,29 +277,19 @@ export default {
             }
         },
         error() {
-            console.log(this.selectedSong)
             this.$notify('error', "지원하지 않는 곡입니다.", this.selectedSong.title+" - "+this.selectedSong.artist, { duration: 5000, permanent: false })
             this.$store.state.playerControl = "next"
         },
         selectPlaylist(index) {
-            console.log(this.userPlayList[index])
-            for(let i=0; i<this.userPlayList[index].song.length; i++){
-                axios.get(youtubeURL, {
-                    params: {
-                        key: API_KEY,
-                        part: 'snippet',
-                        maxResults: 1,
-                        type: 'video',
-                        q: this.userPlayList[index].song[i].artist[0].name + ' ' + this.userPlayList[index].song[i].name
+            // console.log(this.userPlayList[index].song)
+            // console.log(this.playlist)
+            L:for(let i=0; i<this.userPlayList[index].song.length; i++) {
+                for(let j=0; j<this.playlist.length; j++){
+                    if(this.userPlayList[index].song[i].id == this.playlist[j].id) {
+                        continue L
                     }
-                })
-                .then(res => {
-                    const { items } = res.data
-                    const { videoId } = items[0].id
-                    this.userPlayList[index].song[i]['src'] = videoId
-                    this.playlist.push(this.userPlayList[index].song[i])
-                })
-                .catch(err => console.log(err))
+                }
+                this.addToPlaylist(this.userPlayList[index].song[i])
             }
             // this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
         },
