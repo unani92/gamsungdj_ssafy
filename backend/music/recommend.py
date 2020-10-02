@@ -36,7 +36,7 @@ class TimeRecommend(APIView):
             elif 20 <= hour <= 23:
                 logs = Log.objects.filter(user=request.user, time__hour__range=(20, 24)).exclude(song__type='no lyric')
             else:
-                logs = Log.objects.filter(user=request.user).exclude(type='no lyric')
+                logs = Log.objects.filter(user=request.user).exclude(song__type='no lyric')
 
             # log based recommend
             if logs:
@@ -174,10 +174,10 @@ class ClimateRecommend(APIView):
     def get(self, request):
 
         rain_contains = Song.objects.filter(Q(name__contains='비 ') | Q(name__contains='빗') | Q(name__contains='비가') | Q(name__contains='빗물'))
-        rain_cnt = sample(range(rain_contains), 6)
+        rain_cnt = sample(range(len(rain_contains)), 6)
         rain_contains = [rain_contains[i] for i in rain_cnt]
         ballad = Song.objects.filter(Q(type='love') | Q(type='joy'), genres__name__in=['발라드', '국내드라마'])
-        ballad_cnt = sample(range(ballad), 12)
+        ballad_cnt = sample(range(len(ballad)), 12)
         ballad = [ballad[i] for i in ballad_cnt]
         rain_all = rain_contains + ballad
         serializer = SongSerializer(rain_all, many=True)
