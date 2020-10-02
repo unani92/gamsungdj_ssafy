@@ -284,7 +284,7 @@ export default {
     addToUserPlaylist(data, playlist, index) {
       for(let i=0; i<playlist.song.length; i++) {
         if(playlist.song[i].id == data.id) {
-          this.$notify('warning', "재생 목록에 이미 포함 된 곡입니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+          this.$notify('warning', "사용자 재생 목록에 이미 포함 된 곡입니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
           return
         }
       }
