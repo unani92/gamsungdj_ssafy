@@ -51,6 +51,10 @@
         <b-tab title="좋아요">
 			<MyLikeMusic/>
         </b-tab>
+
+		<b-tab title="최근 재생목록">
+			<MyMusicLog/>
+        </b-tab>
       </b-tabs>
     </b-colxx>
   </b-row>
@@ -59,6 +63,7 @@
 <script>
 import MyPlayList from '@/components/User/MyPlayList.vue'
 import MyLikeMusic from '@/components/User/MyLikeMusic.vue'
+import MyMusicLog from '@/components/User/MyMusicLog.vue'
 import UpdateForm from '@/components/User/UpdateForm.vue'
 import httpUser from '@/utils/http-user'
 import { mapState, mapActions, mapGetters } from 'vuex'
@@ -66,6 +71,7 @@ export default {
   components: {
 	  MyPlayList,
 	  MyLikeMusic,
+	  MyMusicLog,
 	  UpdateForm
   },
   data() {
