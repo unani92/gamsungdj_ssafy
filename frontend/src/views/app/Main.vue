@@ -189,14 +189,14 @@
 	<!-- 감정 카테고리별 음악 추천 끝 -->
 
 	<!-- 날씨 매칭 추천 시작 -->
-    <div v-if="timeRecommend">
+    <div v-if="climateRecommend">
     <b-row>
         <b-colxx xxs="12">
-            <a href="#" @click.prevent=""><h5 class="mb-4 card-title">오늘 같은 날에는 ></h5></a>
+            <a href="#" @click.prevent="getWeather"><h5 class="mb-4 card-title">오늘 같은 날에는 ></h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
-                <div v-for="(data, index) in timeRecommend" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                <div v-for="(data, index) in climateRecommend" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
                             <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
@@ -231,7 +231,7 @@
     <div v-if="timeRecommend">
     <b-row >
         <b-colxx xxs="12">
-            <a href="#timeRecommend" id="timeRecommend" @click="getTimeRecommend"><h5 class="mb-4 card-title">이시간에는 ></h5></a>
+            <a href="#" id="timeRecommend" @click.prevent="getTimeRecommend"><h5 class="mb-4 card-title">이시간에는 ></h5></a>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
@@ -286,7 +286,7 @@ export default {
         this.getSadSong()
         this.getJoySong()
         this.getLoveSong()
-        // this.getWeather()
+        this.getWeather()
     },
     data() {
         return {
@@ -313,6 +313,7 @@ export default {
                 hideNav: true
             },
             timeRecommend: null,
+            climateRecommend: null,
             carouselData1_1: '',
             carouselData1_2: '',
             carouselData2_1: '',
@@ -327,12 +328,13 @@ export default {
         'songLikeList',
         'isLoggedin',
         'userPlayList',
-        'user'
+        'user',
+        'climate',
       ]),
       ...mapGetters(['config'])
     },
 	methods: {
-        ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+        ...mapActions(["addToPlaylistAndPlay", "addToPlaylist", "setClimate"]),
         async addToPlaylistAndPlayNotify(data) {
             this.addToPlaylistAndPlay(data)
             this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
@@ -433,26 +435,65 @@ export default {
             this.$router.push(`/A505/search/${word}`);
         },
         getWeather(){
+          if (this.climate === null) {
             if(navigator.geolocation) {
-                var apikey = '28de7356f776313b2637236fb7961f04'
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    alert(position.coords.latitude + ' ' +position.coords.longitude)
-                    http
-                    .get('http://api.openweathermap.org/data/2.5/weather?lat='+position.coords.latitude+'&lon='+position.coords.longitude+'&appid='+apikey)
-                    .then((value) => {
-                        console.log(value)
-                    })
-                }, function(error) {
-                    console.log(error)
-                }, {
-                    enableHighAccuracy: false,
-                    maximumAge: 0,
-                    timeout: Infinity
+              var apikey = '28de7356f776313b2637236fb7961f04'
+              navigator.geolocation.getCurrentPosition(position => {
+                // alert(position.coords.latitude + ' ' +position.coords.longitude)
+                http
+                  .get('http://api.openweathermap.org/data/2.5/weather?lat='+position.coords.latitude+'&lon='+position.coords.longitude+'&appid='+apikey)
+                  .then((res) => {
+                    let weather = res.data.weather[0].description
+                    this.setClimate(weather)
+                    weather = weather.split(' ')
+                    console.log(weather)
+                    if (weather.includes('rain') || weather.includes('thunderstorm')) {
+                      http.get('rain/')
+                        .then(res => {
+                          console.log(res.data)
+                        })
+                        .catch(e => console.log(e))
+                    } else {
+                      http.get('recommend/time/')
+                        .then(res => {
+                        this.climateRecommend = res.data.data
+                      })
+                    }
+                  })
+              }, error => {
+                console.log(error)
+                http.get('recommend/time/')
+                  .then(res => {
+                  this.climateRecommend = res.data.data
                 })
+              }, {
+                enableHighAccuracy: false,
+                maximumAge: 0,
+                timeout: Infinity
+              })
             }
             else {
-                console.log('GPS를 지원하지 않습니다')
+              http.get('recommend/time/')
+                .then(res => {
+                this.climateRecommend = res.data.data
+              })
             }
+          } else {
+            let weather = this.climate.split(' ')
+            if (weather.includes('rain') || weather.includes('thunderstorm')) {
+              http.get('rain/')
+                .then(res => {
+                  this.climateRecommend = res.data
+                })
+                .catch(e => console.log(e))
+            } else {
+              http.get('recommend/time/')
+                .then(res => {
+                this.climateRecommend = res.data.data
+              })
+                .catch(e => console.log(e))
+            }
+          }
         }
 	}
 }

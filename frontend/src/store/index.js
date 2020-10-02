@@ -11,6 +11,7 @@ export default new Vuex.Store({
   state: {
     authorization:sessionStorage.getItem("authorization"),
     user : JSON.parse(sessionStorage.getItem('user')),
+    climate: JSON.parse(sessionStorage.getItem('climate')),
     visiblePlaylist: false,
     visiblePlayButton: true,
     visiblePauseButton: false,
@@ -40,6 +41,10 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    SET_CLIMATE(state, value) {
+      sessionStorage.setItem('climate', value)
+      state.climate = value
+    },
     SET_PLIST(state, { command, data }) {
       if (command === 'addAndPlay') {
         state.playerControl = 'add'
@@ -76,9 +81,13 @@ export default new Vuex.Store({
       sessionStorage.removeItem("authorization")
       sessionStorage.removeItem("user")
       sessionStorage.removeItem('userPlayList')
+      sessionStorage.removeItem('climate')
     },
   },
   actions: {
+    setClimate({ commit }, value) {
+      commit('SET_CLIMATE', value)
+    },
     setLang({ commit }, payload) {
       commit('changeLang', payload)
     },
