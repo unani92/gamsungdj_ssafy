@@ -1,17 +1,42 @@
 <template>
   <b-row>
 	<UpdateForm :showUpdate="showUpdate" @hideModal="showUpdate=false"/>
+	<!-- 플레이리스트 생성 모달 -->
+    <b-modal v-model="showCreatePlayList" id="modalbackdrop" title="플레이리스트 생성"
+            :no-close-on-backdrop="true"
+            :hide-header-close="true"
+            centered>
+        <b-row style="justify-content: center;">
+            <b-form style="width:100%;">
+                <b-form-group id="input-group" label="플레이리스트 이름" label-for="input-name">
+                    <b-form-input
+                    id="input-name"
+                    v-model="name"
+                    required
+                    placeholder="생성할 플레이리스트 이름을 작성해 주세요."
+                    ></b-form-input>
+                </b-form-group>
+            </b-form>
+        </b-row>
+        <template slot="modal-footer">
+            <b-button variant="primary" :disabled="name.length<1" @click="createPlayList(name)">생성</b-button>
+            <b-button variant="secondary" @click="showCreatePlayList = false">취소</b-button>
+        </template>
+    </b-modal>
+
     <b-colxx xxs="12">
       	<b-colxx xxs="12" class="mb-5 mt-5">
     		<div class="d-flex flex-row ">
-				<img :src="imgURL" alt="profile" class="card-img mr-5"/>
+				<img v-if="user.avatar" :src="imgURL" alt="profile" class="card-img mr-5"/>
+				<b-avatar v-else size="200" class="mr-5" rounded></b-avatar>
 				<b-colxx class=" mr-5 mt-3 ">
-					<h1 class="mb-0 text-xlarge">{{user.username}}</h1><br>
+					<h1 class="mb-0 text-xlarge">{{user.nickname}}</h1><br>
 					<p class="mb-0">{{user.email}}</p><br>
 					<h5 class="mb-0 truncate">성별: {{genders[user.gender]}}</h5><br>
 					<h5 class="mb-0 truncate">나이: {{ages[user.age]}}</h5>
 				</b-colxx>
-    			<div style="margin-top: auto;">
+    			<div style="margin-top: auto; display:flex;">
+					<b-button @click="showCreatePlayList = !showCreatePlayList" variant="primary" id="createBtn" class="d-block ml-auto mr-3">플레이리스트 생성</b-button>
 					<b-button class="mb-1" variant="outline-dark" @click="showUpdate=true">정보수정</b-button>
     			</div>
         	</div>
@@ -46,6 +71,8 @@ export default {
   data() {
     return {
 		showUpdate: false,
+		showCreatePlayList: false,
+		name: '',
 		sort_value : "",
 		sort_type : 'asc',
 		genders: {
@@ -65,12 +92,16 @@ export default {
   },
   methods: {
 	...mapActions(['setUser', 'setPlayList']),
-	showMoreSong: function() {
-      this.moreSong = !this.moreSong;
+	createPlayList(name) {
+            httpUser.post('playlist/', {"name": name}, this.config)
+            .then(res => {
+                this.userPlayList.unshift(res.data)
+                sessionStorage.setItem('userPlayList', JSON.stringify(this.userPlayList))
+                this.name = ''
+                this.showCreatePlayList = false
+            })
 	},
-	detailSong: function(id){
-      this.$router.push('/A505/songDetail/'+id)
-	},
+	
 	sortList() {
 		//this.playlist = _.orderBy(this.playlist, this.sort_value, this.sort)
 	},
@@ -105,7 +136,7 @@ export default {
 	},
   },
   computed: {
-	...mapState(['user']),
+	...mapState(['user', 'userPlayList']),
 	...mapGetters(['config']),
 	imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
     sortPlaylist() {

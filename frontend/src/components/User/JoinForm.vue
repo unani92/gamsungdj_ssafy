@@ -106,12 +106,12 @@ export default {
                 joinInfo.append("gender",this.gender)
                 joinInfo.append("age", this.age)
                 joinInfo.append("is_signed_up", true)
-                joinInfo.append("username", this.username)
+                joinInfo.append("nickname", this.username)
                 this.postData(joinInfo, refname)
             }
             else {
                 const joinInfo = {
-                    "username": this.username,
+                    "nickname": this.username,
                     "gender": this.gender,
                     "age": this.age,
                     "is_signed_up":true

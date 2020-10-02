@@ -16,7 +16,7 @@
             </div>
             
             <b-form-group label="닉네임" label-for="username-input"> 
-                <b-form-input v-model="username" id="username-input"></b-form-input>
+                <b-form-input v-model="nickname" id="username-input"></b-form-input>
             </b-form-group>
             <b-form-group label="성별">
                 <v-select v-model="gender" :options="genderData" :reduce="genderData=>genderData.value" />
@@ -49,7 +49,7 @@ export default {
     props: ['showUpdate'],
     data() {
         return {
-            username: '',
+            nickname: '',
             gender: '',
             age: '',
             avatar: null,
@@ -112,7 +112,7 @@ export default {
                 updateInfo.append("avatar", this.avatar)
                 updateInfo.append("gender",this.gender)
                 updateInfo.append("age", this.age)
-                updateInfo.append("username", this.username)
+                updateInfo.append("nickname", this.nickname)
                 updateInfo.append("is_signed_up", true)
                 updateInfo.append("user", this.user.id)
                 this.postData(updateInfo, refname)
@@ -120,7 +120,7 @@ export default {
             else {
                 const updateInfo = {
                     "user": this.user.id,
-                    "username": this.username,
+                    "nickname": this.nickname,
                     "gender": this.gender,
                     "age": this.age,
                     "is_signed_up":true
@@ -165,7 +165,7 @@ export default {
         imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
     },
     created() {
-        this.username = this.user.username
+        this.nickname = this.user.nickname
         this.gender = this.user.gender
         this.age = this.user.age
     }
