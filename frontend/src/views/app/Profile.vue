@@ -1,5 +1,6 @@
 <template>
   <b-row>
+	<UpdateForm :showUpdate="showUpdate" @hideModal="showUpdate=false"/>
     <b-colxx xxs="12">
       	<b-colxx xxs="12" class="mb-5 mt-5">
     		<div class="d-flex flex-row ">
@@ -11,7 +12,7 @@
 					<h5 class="mb-0 truncate">나이: {{ages[user.age]}}</h5>
 				</b-colxx>
     			<div style="margin-top: auto;">
-					<b-button class="mb-1" variant="outline-dark">정보수정</b-button>
+					<b-button class="mb-1" variant="outline-dark" @click="showUpdate=true">정보수정</b-button>
     			</div>
         	</div>
      	</b-colxx>
@@ -33,15 +34,18 @@
 <script>
 import MyPlayList from '@/components/User/MyPlayList.vue'
 import MyLikeMusic from '@/components/User/MyLikeMusic.vue'
+import UpdateForm from '@/components/User/UpdateForm.vue'
 import httpUser from '@/utils/http-user'
 import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
   components: {
 	  MyPlayList,
-	  MyLikeMusic
+	  MyLikeMusic,
+	  UpdateForm
   },
   data() {
     return {
+		showUpdate: false,
 		sort_value : "",
 		sort_type : 'asc',
 		genders: {
@@ -60,7 +64,7 @@ export default {
     };
   },
   methods: {
-	...mapActions(['setUser']),
+	...mapActions(['setUser', 'setPlayList']),
 	showMoreSong: function() {
       this.moreSong = !this.moreSong;
 	},
@@ -145,6 +149,7 @@ export default {
 	  .then((res) => {
 		  this.setUser(res.data.data)
 	  })
+	  this.setPlayList()
 
   }
 };

@@ -57,7 +57,7 @@ class UserAPI(APIView):
         if request.user == profile.user:
             serializer = UserProfileSerializer(profile, data=request.data)
             if serializer.is_valid(raise_exception=True):
-                serializer.save()
+                serializer.save(user=user)
                 user_serializer = UserSerializer(user)
                 return Response(user_serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,16 +1,20 @@
 <template>
 <div>
-<b-modal v-model="showJoin" id="modalbackdrop" ref="modalbackdrop" title="회원가입"
+<b-modal v-model="showUpdate" id="modalbackdrop" ref="modalbackdrop" title="회원 정보 수정"
         :hide-header-close="true"
-        :no-close-on-backdrop="selectedBackdrop=='false'"
+        :no-close-on-backdrop="true"
         centered>
     <b-row>
         <b-form class="form-container">
             <div class="avatar-wrapper mb-3" @click="uploadImg">
-                <b-avatar v-if="!avatar" size="150" class="profile-pic"></b-avatar>
-                <b-avatar v-else size="150" class="profile-pic" id="changeImg" :src="avatarURL"></b-avatar>
+                <b-avatar v-if="!avatar && !imgURL" size="150" class="profile-pic"></b-avatar>
+                <span v-else>
+                    <b-avatar v-if="avatar" size="150" class="profile-pic" id="changeImg" :src="avatarURL"></b-avatar>
+                    <b-avatar v-else size="150" class="profile-pic" :src="imgURL"></b-avatar>
+                </span>
                 <b-form-file v-model="avatar" id="file-upload" accept="image/jpeg, image/png, image/gif" @change="onChangeImg"/>
             </div>
+            
             <b-form-group label="닉네임" label-for="username-input"> 
                 <b-form-input v-model="username" id="username-input"></b-form-input>
             </b-form-group>
@@ -20,7 +24,9 @@
             <b-form-group label="나이">
                 <v-select v-model="age" :options="ageData" :reduce="ageData=>ageData.value" />
             </b-form-group>
+            
         </b-form>
+        
     </b-row>
     <template slot="modal-footer">
         <b-button variant="primary" @click="submit('modalbackdrop')" class="mr-1">작성완료</b-button>
@@ -34,15 +40,16 @@
 import httpUser from'@/utils/http-user'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
+
 export default {
     components: {
         'v-select': vSelect
     },
-    props: ['showJoin', 'username'],
+    props: ['showUpdate'],
     data() {
         return {
-            selectedBackdrop: 'false',
+            username: '',
             gender: '',
             age: '',
             avatar: null,
@@ -88,7 +95,7 @@ export default {
     methods: {
         ...mapActions(['setUser']),
         hideModal (refname) {
-            this.showJoin = false   
+            this.showUpdate = false   
             this.$emit("hideModal")      
         },
         uploadImg() {
@@ -101,29 +108,32 @@ export default {
         },
         submit(refname) {
             if (this.avatar !== null) {
-                const joinInfo = new FormData()
-                joinInfo.append("avatar", this.avatar)
-                joinInfo.append("gender",this.gender)
-                joinInfo.append("age", this.age)
-                joinInfo.append("is_signed_up", true)
-                joinInfo.append("username", this.username)
-                this.postData(joinInfo, refname)
+                const updateInfo = new FormData()
+                updateInfo.append("avatar", this.avatar)
+                updateInfo.append("gender",this.gender)
+                updateInfo.append("age", this.age)
+                updateInfo.append("username", this.username)
+                updateInfo.append("is_signed_up", true)
+                updateInfo.append("user", this.user.id)
+                this.postData(updateInfo, refname)
             }
             else {
-                const joinInfo = {
+                const updateInfo = {
+                    "user": this.user.id,
                     "username": this.username,
                     "gender": this.gender,
                     "age": this.age,
                     "is_signed_up":true
                 }
-                this.postData(joinInfo, refname)
+                this.postData(updateInfo, refname)
             }
             
             
         },
-        postData(joinInfo, refname) {
+        postData(updateInfo, refname) {
+            console.log(updateInfo)
             if (this.gender != "" && this.age !="") {
-                httpUser.post('', joinInfo, {
+                httpUser.put('', updateInfo, {
                     headers: {
                         Authorization: this.$store.state.authorization,
                     }
@@ -148,6 +158,16 @@ export default {
             }
         }
 
+    },
+   
+    computed: {
+        ...mapState(['user']),
+        imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
+    },
+    created() {
+        this.username = this.user.username
+        this.gender = this.user.gender
+        this.age = this.user.age
     }
 
 }
