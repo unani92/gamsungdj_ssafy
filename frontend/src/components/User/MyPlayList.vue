@@ -1,28 +1,5 @@
 <template>
 <div>
-    <b-button @click="showCreatePlayList = !showCreatePlayList" variant="primary" size="xs" id="createBtn" class="d-block ml-auto mr-3">플레이리스트 생성</b-button>
-    <!-- 플레이리스트 생성 모달 -->
-    <b-modal v-model="showCreatePlayList" id="modalbackdrop" title="플레이리스트 생성"
-            :no-close-on-backdrop="true"
-            :hide-header-close="true"
-            centered>
-        <b-row style="justify-content: center;">
-            <b-form style="width:100%;">
-                <b-form-group id="input-group" label="플레이리스트 이름" label-for="input-name">
-                    <b-form-input
-                    id="input-name"
-                    v-model="name"
-                    required
-                    placeholder="생성할 플레이리스트 이름을 작성해 주세요."
-                    ></b-form-input>
-                </b-form-group>
-            </b-form>
-        </b-row>
-        <template slot="modal-footer">
-            <b-button variant="primary" :disabled="name.length<1" @click="createPlayList(name)">생성</b-button>
-            <b-button variant="secondary" @click="showCreatePlayList = false">취소</b-button>
-        </template>
-    </b-modal>
    <!-- 플레이 리스트 관리 모달 -->
     <b-modal v-model="showAdmin" id="modalbackdrop"
         :hide-header-close="true"
@@ -40,10 +17,6 @@
                 </div>
                 
                 <div>
-                    <div>
-                        <b-button size="xs" variant="primary" @click="playMusic(adminList.song)">전체 재생</b-button>
-                        <b-button size="xs" variant="secondary" @click="addToPlaylistAndPlayBulk(adminSelectedItems)">선택 재생</b-button>
-                    </div>
                     <b-button variant="outline-secondary" size="xs" @click="showSearch=true">노래 추가</b-button>
                     <b-button variant="outline-primary" size="xs" @click="deleteSong">노래 삭제</b-button>
                 </div>
@@ -166,8 +139,8 @@
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                             <td style="vertical-align: middle; width: 10%;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
-                            <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
-                            <td v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
+                            <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
+                            <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
                             </tr>
                         </tbody>
                         <tbody style="border-top: none; display: none;" :id="'toggle'+playlist.id">
@@ -176,8 +149,8 @@
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                             <td style="vertical-align: middle; width: 10%;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
-                            <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
-                            <td v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
+                            <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
+                            <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -205,8 +178,6 @@ export default {
     data() {
         return {
             adminList: [],
-            name: '',
-            showCreatePlayList: false,
             showAdmin: false,
             showSearch: false,
             isSong: false,
@@ -226,14 +197,6 @@ export default {
     methods: {
         ...mapActions(['setPlayList']),
         
-        createPlayList(name) {
-            httpUser.post('playlist/', {"name": name}, this.config)
-            .then(res => {
-                this.userPlayList.unshift(res.data)
-                sessionStorage.setItem('userPlayList', JSON.stringify(this.userPlayList))
-                this.name = ''
-            })
-        },
         // 펼치기 접기
         showAll(index) {
             const showBtn = document.getElementById("showBtn-"+index)
@@ -305,6 +268,23 @@ export default {
             }
             return false;
         },
+        async songLike(id) {
+            
+                
+                const { data: { liked } } = await http.post(`song/${id}/like/`, '',this.config)
+                if (liked) {
+                    // this.$notify('primary', "좋아요", this.song.name+" - "+this.song.artist[0].name, { duration: 5000, permanent: false });
+                    this.$store.state.user.like_songs.push(Number(id))
+                }
+                else {
+                    // this.$notify('primary', "좋아요 취소", '', { duration: 5000, permanent: false });
+                    this.$store.state.user.like_songs = this.$store.state.user.like_songs.filter(song => {
+                        return song !== Number(id)
+                    })
+                }
+            
+        },
+        
         updatePlayList() {
             httpUser.put(`playlist/${this.adminList.id}/`, {"name": this.adminList.name}, this.config)
             .then((res) => {
@@ -427,27 +407,7 @@ export default {
                 this.$notify('primary', "재생 중인 곡", song.name+" - "+song.artist[0].name, { duration: 4000, permanent: false })
             }
         },
-        // 선택한 곡 재생
-        async addToPlaylistAndPlayBulk(songs) {
-            if (songs.length < 1) {
-                this.$notify('primary', "곡을 선택해주세요.")
-            }
-            else {
-                this.$store.state.playerControl = "pause"
-                this.$store.state.playlist = []
-                for (var i = 0; i < songs.length; i++) {
-                    if (songs[i]['src']) {
-                        this.playlist.push(songs[i])
-                    } 
-                    else {
-                        await this.fetchYoutubeId(songs[i])
-                        this.playlist.push(songs[i])
-                    }
-                }
-                this.$store.state.playerControl = "add"
-                this.$notify('primary', "재생 중인 곡", this.playlist[0].name+" - "+this.playlist[0].artist[0].name, { duration: 4000, permanent: false })
-            }
-        },
+        
         // 전체 재생
         async playMusic(songs) {
             if (songs.length < 1) {

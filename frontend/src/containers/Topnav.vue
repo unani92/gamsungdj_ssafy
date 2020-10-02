@@ -45,9 +45,9 @@
           no-caret
         >
           <template slot="button-content">
-            <span class="name mr-1">{{user.username}}</span>
+            <span class="name mr-1">{{user.nickname}}</span>
             <span v-if="user.avatar">
-              <img :alt="user.username" :src="imgURL" />
+              <img :alt="user.nickname" :src="imgURL" />
             </span>
             <span v-else>
               <b-avatar></b-avatar>

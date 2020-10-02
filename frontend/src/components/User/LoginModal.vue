@@ -103,6 +103,7 @@ export default {
                     this.hideModal('loginmodal')
                 }
                 else {
+                    console.log(res.data)
                     this.joinForm(res.data.data.username)
                 }
             })
