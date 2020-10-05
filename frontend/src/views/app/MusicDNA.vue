@@ -83,16 +83,22 @@
                             <div v-for="(data, index) in genreEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                               <b-card no-body>
                                 <div class="position-relative">
-                                    <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                                    <a href="#" @click.prevent="search(data.id, 'song')"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                                 </div>
                                 <b-card-body>
-                                  <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                                  <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                                  <a href="#" @click.prevent="search(data.id, 'song')"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                                  <a href="#" @click.prevent="search(data.artist[0].id , 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                                   <div class="mt-4" style="font-size:large;">
-                                    <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNoti(data)"></span>
+                                    <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNotify(data)"></span>
                                     <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
                                     <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
-                                    <span class="glyph-icon simple-icon-playlist mr-2" style="cursor:pointer;" @click="addPlayListNoti(data)"></span>
+                                    <b-dropdown variant="empty" dropup toggle-class="p-0 m-0" no-caret>
+                                      <template slot="button-content">
+                                          <span class="glyph-icon simple-icon-playlist text-color" style="font-size:large; cursor:pointer;"></span>
+                                      </template>
+                                      <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                                      <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
+                                    </b-dropdown>
                                   </div>
                                 </b-card-body>
                               </b-card>
@@ -130,16 +136,22 @@
                     <div v-for="(data, index) in artistEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                       <b-card no-body>
                         <div class="position-relative">
-                            <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                            <a href="#" @click.prevent="search(data.id, 'song')"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                          <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                          <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                          <a href="#" @click.prevent="search(data.id, 'song')"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                          <a href="#" @click.prevent="search(data.artist[0].id, 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                           <div class="mt-4" style="font-size:large;">
-                            <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNoti(data)"></span>
+                            <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNotify(data)"></span>
                             <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
                             <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
-                            <span class="glyph-icon simple-icon-playlist mr-2" style="cursor:pointer;" @click="addPlayListNoti(data)"></span>
+                            <b-dropdown variant="empty" dropup toggle-class="p-0 m-0" no-caret>
+                              <template slot="button-content">
+                                  <span class="glyph-icon simple-icon-playlist text-color" style="font-size:large; cursor:pointer;"></span>
+                              </template>
+                              <b-dropdown-item @click="addToPlaylistAndNotify(data)">현재 재생목록</b-dropdown-item>
+                              <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
+                            </b-dropdown>
                           </div>
                         </b-card-body>
                       </b-card>
@@ -163,6 +175,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import {_} from 'vue-underscore'
 import 'vue-select/dist/vue-select.css';
 import vSelect from "vue-select";
+import http2 from "../../utils/http-user"
 
 const colors = ThemeColors()
 export default {
@@ -175,6 +188,11 @@ export default {
     },
     computed: {
       ...mapState(['user', "isLoggedin"]),
+      ...mapState([
+        'isLoggedin',
+        'userPlayList',
+        'user',
+      ]),
       ...mapGetters(['config']),
       favGenre() {
         if (this.genres.length) return `가장 좋아하는 장르는 ${this.genres[0].title} 입니다.`
@@ -286,6 +304,43 @@ export default {
     },
     methods: {
       ...mapActions(['addToPlaylistAndPlay', 'addToPlaylist']),
+      async addToPlaylistAndPlayNotify(data) {
+          for(let i=0; i<this.playlist.length; i++) {
+              if(this.playlist[i].id == data.id) {
+                  this.$notify('warning', "재생 목록에 이미 포함 된 곡입니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+                  return
+              }
+          }
+          this.addToPlaylistAndPlay(data)
+          this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+      },
+      async addToPlaylistAndNotify(data) {
+          for(let i=0; i<this.playlist.length; i++) {
+              if(this.playlist[i].id == data.id) {
+                  this.$notify('warning', "재생 목록에 이미 포함 된 곡입니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+                  return
+              }
+          }
+          this.addToPlaylist(data)
+          this.$notify('primary', "재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+      },
+      addToUserPlaylist(data, playlist, index) {
+          for(let i=0; i<playlist.song.length; i++) {
+              if(playlist.song[i].id == data.id) {
+                  this.$notify('warning', "사용자 재생 목록에 이미 포함 된 곡입니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+                  return
+              }
+          }
+          http2
+          .post(`playlist/${playlist.id}/song/`, {'songs': [data.id]}, this.config)
+          .then((value)=> {
+              this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
+              this.userPlayList[index].song.push(data)
+          })
+      },
+      search(word, detail){
+          this.$router.push(`/A505/${detail}Detail/${word}`)
+      },
       isLiked(data) {
         if (this.user) {
           return this.user.like_songs.includes(data.id);
@@ -304,14 +359,6 @@ export default {
             })
           }
         }
-      },
-      async addPlayListAndPlayNoti(data) {
-        this.addToPlaylistAndPlay(data)
-        this.$notify('primary', "재생 중인 곡", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
-      },
-      async addPlayListNoti(data) {
-        this.addToPlaylist(data)
-        this.$notify('primary', "재생 목록에 추가 었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
       },
       async fetchLog() {
         const { data } = await http.get('log/', this.config)
