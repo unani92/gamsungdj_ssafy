@@ -140,9 +140,15 @@ export default {
     },
     link() {
       this.$router.push(`${adminRoot}/musicDNA`)
+      if(this.$store.state.visiblePlaylist){
+        this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
+      }
     },
     goMyPage() {
       this.$router.push(`${adminRoot}/profile`)
+      if(this.$store.state.visiblePlaylist){
+        this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
+      }
     }
   },
   computed: {

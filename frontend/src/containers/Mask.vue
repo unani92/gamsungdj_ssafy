@@ -20,7 +20,7 @@
                         <div class="player" v-show="playerToggleFlag">
                             <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended(selectedSong.index)" @error="error()" ref="youtube"></youtube>
                         </div>
-                        <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
+                        <player v-show="!playerToggleFlag" />
                     </div>
                 </b-tab>
                 <b-tab title="Analyze" title-item-class="w-50 text-center">
