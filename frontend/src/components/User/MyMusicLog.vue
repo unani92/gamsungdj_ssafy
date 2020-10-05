@@ -21,7 +21,7 @@
                         <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song.id)" ><img src="@/assets/img/heart/heart_empty.png" style="width:13px;"/></td>
                         <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song.id)" ><img src="@/assets/img/heart/heart_full.png" style="width:13px;"/></td>
                         <td style="vertical-align: middle;">
-                        <b-dropdown variant="empty" toggle-class="p-0 m-0" no-caret style="position:relative;">
+                        <b-dropdown variant="empty" toggle-class="p-0 m-0" dropleft no-caret style="position:relative;">
                             <template slot="button-content">
                                 <div class="glyph-icon simple-icon-playlist text-color" style="font-size: 0.85rem;"/>
                             </template>

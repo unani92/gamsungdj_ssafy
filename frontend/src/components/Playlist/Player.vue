@@ -7,8 +7,7 @@
       <center>
       <h2 style="cursor:pointer" @click="goSongDetail">{{ selectedSong.title }}</h2>
       <h4 class="mt-3" style="cursor:pointer" @click="goArtistDetail">{{ selectedSong.artist }}</h4>
-      <div class="mt-5">-</div>
-      <!-- <div class="mt-5">{{ selectedSong.currentTime }} / {{ selectedSong.duration }}</div> -->
+      <div class="mt-5">{{ currentTime }} / {{ duration }}</div>
       <div class="mt-3">
         <div class="post-icon mr-3 d-inline-block">
           <router-link to="#">
@@ -36,22 +35,13 @@ export default {
       'playlist',
       'selectedSong',
     ]),
-    player() {
-      return this.$refs.youtube.player
+    currentTime: function() {
+      return parseInt(this.selectedSong.currentTime*this.selectedSong.duration/100/60)+':'+parseInt(this.selectedSong.currentTime*this.selectedSong.duration/100%60)
+    },
+    duration: function() {
+      return parseInt(this.selectedSong.duration/60)+':'+parseInt(this.selectedSong.duration%60)
     }
   },
-  // computed: {
-  //   currentTime: function() {
-  //     var min = parseInt(this.selectedSong.currentTime/60)
-  //     var sec = parseInt(this.selectedSong.currentTime%60)
-  //     return min+':'+sec
-  //   },
-  //   duration: function() {
-  //     var min = parseInt(this.selectedSong.duration/60)
-  //     var sec = parseInt(this.selectedSong.duration%60)
-  //     return min+':'+sec
-  //   }
-  // }
   methods: {
     goSongDetail() {
       this.$router.push('/A505/songDetail/'+this.playlist[this.selectedSong.index].id)

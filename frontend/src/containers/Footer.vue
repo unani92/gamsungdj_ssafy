@@ -35,14 +35,15 @@
 </template>
 <script>
 import { mapState } from "vuex"
+import testcomponenet from "./Mask"
 export default {
     computed: {
         ...mapState([
-            'selectedSong'
+            'selectedSong',
         ]),
     },
     mounted(){
-        window.addEventListener("resize", this.handleResize);
+        window.addEventListener("resize", this.handleResize)
     },
     methods:{
         handleResize(e){

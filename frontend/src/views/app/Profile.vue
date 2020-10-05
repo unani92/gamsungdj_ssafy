@@ -104,7 +104,8 @@ export default {
                 this.userPlayList.unshift(res.data)
                 sessionStorage.setItem('userPlayList', JSON.stringify(this.userPlayList))
                 this.name = ''
-                this.showCreatePlayList = false
+				this.showCreatePlayList = false
+				this.$notify('primary', '플레이리스트가 생성되었습니다.', '', { duration: 4000, permanent: false })
             })
 	},
 	

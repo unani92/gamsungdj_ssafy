@@ -1,6 +1,6 @@
 <template>
 <div>
-   <!-- 플레이 리스트 관리 모달 -->
+    <!-- 플레이 리스트 관리 모달 -->
     <b-modal v-model="showAdmin" id="modalbackdrop"
         :hide-header-close="true"
         :no-close-on-backdrop="true"
@@ -18,7 +18,7 @@
                 
                 <div>
                     <b-button variant="outline-secondary" size="xs" @click="showSearch=true">노래 추가</b-button>
-                    <b-button variant="outline-primary" size="xs" @click="deleteSong">노래 삭제</b-button>
+                    <b-button variant="outline-primary" size="xs" @click="confirmDeleteSong=true">노래 삭제</b-button>
                 </div>
             </div>
         </template>
@@ -53,7 +53,7 @@
         </b-row>
         <template slot="modal-footer">
             <div class="d-flex justify-content-between w-100">
-                <b-button variant="primary" @click="deletePlayList(adminList.id)">플레이리스트 삭제</b-button>
+                <b-button variant="primary" @click="confirmDeletePlayList=true">플레이리스트 삭제</b-button>
                 <b-button variant="secondary" @click="hideAdmin">완료</b-button>
             </div>
         </template>
@@ -159,6 +159,21 @@
         </b-colxx>
         <hr>
     </div>
+    <!-- 플레이리스트 삭제 확인 모달 -->
+    <b-modal v-model="confirmDeletePlayList" size="sm" title="삭제하시겠습니까?" hide-footer>
+        <div style="float:right">
+        <b-button variant="primary" @click="deletePlayList">삭제</b-button>
+        <b-button variant="secondary" @click="confirmDeletePlayList=false">취소</b-button>
+        </div>
+    </b-modal>
+
+    <!-- 노래 삭제 확인 모달 -->
+    <b-modal v-model="confirmDeleteSong" title="선택한 노래를 삭제하시겠습니까?" hide-footer>
+        <div style="float:right">
+        <b-button variant="primary" @click="deleteSong">삭제</b-button>
+        <b-button variant="secondary" @click="confirmDeleteSong=false">취소</b-button>
+        </div>
+    </b-modal>
     
 </div>
   
@@ -191,7 +206,8 @@ export default {
             searchBodyKeyword: "",
             searchList: [],
             selectedItems: [],
-            
+            confirmDeletePlayList: false,
+            confirmDeleteSong: false,
         }
     },
     methods: {
@@ -290,17 +306,19 @@ export default {
             .then((res) => {
                 this.adminList = res.data
                 this.updateName = false
+                this.$notify('primary', '수정되었습니다.', '', { duration: 4000, permanent: false })
             })
         },
-        deletePlayList(id) {
-            if (confirm(`${this.adminList.name}을 삭제하시겠습니까?`) == true) {
+        deletePlayList() {
+            // if (confirm(`${this.adminList.name}을 삭제하시겠습니까?`) == true) {
                 httpUser.delete(`playlist/${this.adminList.id}/`, this.config)
                 .then((res) => {
                     this.userPlayList = res.data
                     sessionStorage.setItem('userPlayList', JSON.stringify(this.userPlayList))
                     this.hideAdmin()
+                    this.$notify ('primary', '플레이리스트가 삭제되었습니다.', '', { duration: 4000, permanent: false })
                 })
-            }   
+            // }
         },
         addAdminSelectedList(song) {
             var checkbox = document.getElementById("delete-checkbox-"+song.id)
@@ -315,14 +333,13 @@ export default {
         },
         deleteSong() {
             const deleteItems = this.adminSelectedItems.map(data => data.id)
-           
-            if (confirm("선택한 노래를 삭제하시겠습니까?") == true) {
-                httpUser.delete(`playlist/${this.adminList.id}/song/`, {data: {"songs":deleteItems}, headers: {Authorization: this.authorization}})
-                .then((res) => {
-                    this.adminList = res.data
-                    this.setPlayList()
-                })
-            }
+            httpUser.delete(`playlist/${this.adminList.id}/song/`, {data: {"songs":deleteItems}, headers: {Authorization: this.authorization}})
+            .then((res) => {
+                this.$notify('primary', "선택한 곡이 삭제되었습니다", '', { duration: 4000, permanent: false })
+                this.confirmDeleteSong = false
+                this.adminList = res.data
+                this.setPlayList()
+            })
             
         },
         search() {
@@ -366,6 +383,8 @@ export default {
             this.adminList = []
             this.adminSelectedItems = []
             this.updateName = false
+            this.confirmDeletePlayList = false
+            this.confirmDeleteSong = false
             this.setPlayList()
         },
         hideSearch() {
@@ -443,9 +462,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-#createBtn {
-
-}
-</style>
