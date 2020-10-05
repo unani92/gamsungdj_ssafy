@@ -20,7 +20,7 @@
                         <div class="player" v-show="playerToggleFlag">
                             <youtube id="youtube" :video-id="selectedSong.src" :player-vars="playerVars" @ended="ended(selectedSong.index)" @error="error()" ref="youtube"></youtube>
                         </div>
-                        <player v-show="!playerToggleFlag" :selectedSong="selectedSong" />
+                        <player v-show="!playerToggleFlag" />
                     </div>
                 </b-tab>
                 <b-tab title="Analyze" title-item-class="w-50 text-center">
@@ -137,6 +137,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
                 else{
                     this.player.playVideo()
@@ -145,7 +150,12 @@ export default {
             else if(state === "pause")
                 this.player.pauseVideo()
             else if(state === "prev") {
-                if(this.selectedSong.index == 0) {
+                if(this.playlist.length == 0) {
+                    this.$notify('info', "재생 목록이 비어있습니다.", "", "",{ duration: 5000, permanent: false })
+                    this.$store.state.visiblePlayButton = true
+                    this.$store.state.visiblePauseButton = false
+                }
+                else if(this.selectedSong.index == 0) {
                     this.unmarkPlayingIndex(this.selectedSong.index)
                     this.selectedSong.index = this.playlist.length-1
                     this.markPlayingIndex(this.selectedSong.index)
@@ -155,6 +165,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0
@@ -165,6 +180,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -176,10 +196,20 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
             }
             else if(state === "next") {
-                if(this.selectedSong.index == this.playlist.length-1) {
+                if(this.playlist.length == 0) {
+                    this.$notify('info', "재생 목록이 비어있습니다.", "", "",{ duration: 5000, permanent: false })
+                    this.$store.state.visiblePlayButton = true
+                    this.$store.state.visiblePauseButton = false
+                }
+                else if(this.selectedSong.index == this.playlist.length-1) {
                     this.unmarkPlayingIndex(this.selectedSong.index)
                     this.selectedSong.index = 0
                     this.markPlayingIndex(this.selectedSong.index)
@@ -189,6 +219,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0
@@ -199,6 +234,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -210,6 +250,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
             }
             else if(state === "add") {
@@ -222,6 +267,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -233,6 +283,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
@@ -243,6 +298,7 @@ export default {
     methods: {
         ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
         selectSong(index, data) {
+            console.log(this.playlist)
             if(this.selectedSong.index == -1) {
                 this.selectedSong.index = index
                 this.markPlayingIndex(this.selectedSong.index)
@@ -254,6 +310,12 @@ export default {
                 this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
+                console.log(this.playlist[this.selectedSong.index].id)
+                http
+                .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                .then((res) => {
+                    this.selectedSong.comments = res.data
+                })
             }
             else {
                 this.unmarkPlayingIndex(this.selectedSong.index)
@@ -267,6 +329,11 @@ export default {
                 this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
+                http
+                .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                .then((res) => {
+                    this.selectedSong.comments = res.data
+                })
             }
         },
         ended(index) {
@@ -287,6 +354,11 @@ export default {
                 this.selectedSong.src = this.playlist[0].src
                 this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                 this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 this.player.playVideo()
             }
             else {
@@ -299,6 +371,11 @@ export default {
                 this.selectedSong.src = this.playlist[this.selectedSong.index].src
                 this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                 this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 this.player.playVideo()
             }
         },
@@ -341,6 +418,7 @@ export default {
                 this.unmarkPlayingIndex(this.selectedSong.index)
                 this.markPlayingIndex(this.selectedSong.index-1)
                 this.selectedSong.index=this.selectedSong.index-1
+                
             }
             // 재생 중인 곡일 경우
             else if(index == this.selectedSong.index) {
@@ -354,6 +432,7 @@ export default {
                     this.selectedSong.src = ''
                     this.selectedSong.songID = -1
                     this.selectedSong.singerID = -1
+                    this.selectedSong.comments = ''
                 }
                 // 마지막 곡일 경우
                 else if(index == this.playlist.length-1) {
@@ -366,6 +445,11 @@ export default {
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     this.markPlayingIndex(this.selectedSong.index)
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
                 else {
                     this.playlist = this.playlist.splice(index, 1)
@@ -375,6 +459,11 @@ export default {
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
                     this.selectedSong.songID = this.playlist[this.selectedSong.index].id
                     this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
+                    http
+                    .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
+                    .then((res) => {
+                        this.selectedSong.comments = res.data
+                    })
                 }
             }
             else {      

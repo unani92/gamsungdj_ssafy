@@ -19,7 +19,11 @@ import VueLineClamp from 'vue-line-clamp'
 import VueScrollTo from 'vue-scrollto'
 import GSignInButton from 'vue-google-signin-button'
 import VueYoutube from 'vue-youtube'
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
+ 
 
+Vue.use(VueLodash)
 Vue.use(IconsPlugin)
 Vue.use(GSignInButton)
 Vue.use(BootstrapVue);

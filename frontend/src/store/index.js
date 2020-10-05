@@ -31,7 +31,7 @@ export default new Vuex.Store({
       duration: '',
       volume: '',
       like: '',
-      comment: '',
+      comments: '',
       songID: -1,
       singerID: -1,
     },

@@ -131,7 +131,6 @@ export default {
             
         },
         postData(updateInfo, refname) {
-            console.log(updateInfo)
             if (this.gender != "" && this.age !="") {
                 httpUser.put('', updateInfo, {
                     headers: {
@@ -139,7 +138,6 @@ export default {
                     }
                 })
                 .then(res => {
-                    console.log(res)
                     this.setUser(res.data)
                     this.hideModal(refname)
                 })
@@ -162,7 +160,7 @@ export default {
    
     computed: {
         ...mapState(['user']),
-        imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
+        imgURL: function() { return "http://j3a505.p.ssafy.io:8000/api/accounts/" + this.user.avatar },
     },
     created() {
         this.nickname = this.user.nickname
