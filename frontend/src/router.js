@@ -8,6 +8,7 @@ const routes = [
   {
     path: "/",
     component: () => import("./views/home"),
+    redirect: `${adminRoot}/main`,
   },
   {
     path: "/A505",
