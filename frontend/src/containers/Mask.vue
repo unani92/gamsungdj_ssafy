@@ -135,6 +135,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
                 else{
                     this.player.playVideo()
@@ -151,6 +153,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0
@@ -159,6 +163,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -168,6 +174,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
             }
             else if(state === "next") {
@@ -179,6 +187,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
                 else if(this.selectedSong.src === ''){
                     this.selectedSong.index = 0
@@ -187,6 +197,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -196,6 +208,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
             }
             else if(state === "add") {
@@ -206,6 +220,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
                 else {
                     this.unmarkPlayingIndex(this.selectedSong.index)
@@ -215,6 +231,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
@@ -232,6 +250,8 @@ export default {
                 this.selectedSong.title = data.name
                 this.selectedSong.artist = data.artist[0].name
                 this.selectedSong.src = data.src
+                this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
             }
@@ -243,6 +263,8 @@ export default {
                 this.selectedSong.title = data.name
                 this.selectedSong.artist = data.artist[0].name
                 this.selectedSong.src = data.src
+                this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
             }
@@ -263,6 +285,8 @@ export default {
                 this.selectedSong.title = this.playlist[0].name
                 this.selectedSong.artist = this.playlist[0].artist[0].name
                 this.selectedSong.src = this.playlist[0].src
+                this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 this.player.playVideo()
             }
             else {
@@ -273,6 +297,8 @@ export default {
                 this.selectedSong.title = this.playlist[this.selectedSong.index].name
                 this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                 this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 this.player.playVideo()
             }
         },
@@ -326,6 +352,8 @@ export default {
                     this.selectedSong.title = ''
                     this.selectedSong.artist = ''
                     this.selectedSong.src = ''
+                    this.selectedSong.songID = -1
+                    this.selectedSong.singerID = -1
                 }
                 // 마지막 곡일 경우
                 else if(index == this.playlist.length-1) {
@@ -335,6 +363,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     this.markPlayingIndex(this.selectedSong.index)
                 }
                 else {
@@ -343,6 +373,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 }
             }
             else {      

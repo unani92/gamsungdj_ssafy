@@ -11,7 +11,7 @@ export default new Vuex.Store({
   state: {
     authorization:sessionStorage.getItem("authorization"),
     user : JSON.parse(sessionStorage.getItem('user')),
-    climate: JSON.parse(sessionStorage.getItem('climate')),
+    climate: sessionStorage.getItem('climate'),
     visiblePlaylist: false,
     visiblePlayButton: true,
     visiblePauseButton: false,
@@ -32,6 +32,8 @@ export default new Vuex.Store({
       volume: '',
       like: '',
       comment: '',
+      songID: -1,
+      singerID: -1,
     },
     isLoggedin: sessionStorage.getItem('isLoggedin'),
   },
