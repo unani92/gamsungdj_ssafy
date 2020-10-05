@@ -135,6 +135,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -161,6 +163,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -174,6 +178,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -188,6 +194,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -209,6 +217,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -222,6 +232,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -236,6 +248,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -251,6 +265,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -265,6 +281,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -288,6 +306,8 @@ export default {
                 this.selectedSong.title = data.name
                 this.selectedSong.artist = data.artist[0].name
                 this.selectedSong.src = data.src
+                this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
                 console.log(this.playlist[this.selectedSong.index].id)
@@ -305,6 +325,8 @@ export default {
                 this.selectedSong.title = data.name
                 this.selectedSong.artist = data.artist[0].name
                 this.selectedSong.src = data.src
+                this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 this.$store.state.visiblePlayButton = false
                 this.$store.state.visiblePauseButton = true
                 http
@@ -330,6 +352,8 @@ export default {
                 this.selectedSong.title = this.playlist[0].name
                 this.selectedSong.artist = this.playlist[0].artist[0].name
                 this.selectedSong.src = this.playlist[0].src
+                this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -345,6 +369,8 @@ export default {
                 this.selectedSong.title = this.playlist[this.selectedSong.index].name
                 this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                 this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                 http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
@@ -404,6 +430,8 @@ export default {
                     this.selectedSong.title = ''
                     this.selectedSong.artist = ''
                     this.selectedSong.src = ''
+                    this.selectedSong.songID = -1
+                    this.selectedSong.singerID = -1
                     this.selectedSong.comments = ''
                 }
                 // 마지막 곡일 경우
@@ -414,6 +442,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     this.markPlayingIndex(this.selectedSong.index)
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
@@ -427,6 +457,8 @@ export default {
                     this.selectedSong.title = this.playlist[this.selectedSong.index].name
                     this.selectedSong.artist = this.playlist[this.selectedSong.index].artist[0].name
                     this.selectedSong.src = this.playlist[this.selectedSong.index].src
+                    this.selectedSong.songID = this.playlist[this.selectedSong.index].id
+                    this.selectedSong.singerID = this.playlist[this.selectedSong.index].artist[0].id
                     http
                     .get("/song/"+this.playlist[this.selectedSong.index].id+"/comment/")
                     .then((res) => {
