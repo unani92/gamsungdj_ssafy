@@ -83,25 +83,38 @@ class TimeRecommend(APIView):
 
                 # 사용자가 좋아요 누른 곡 분석을 통한 추천
                 songs_liked = Song.objects.filter(user_like__in=[request.user])
-                liked_types = [song.type for song in songs_liked]
-                liked_genres = [genre.name for song in songs_liked for genre in song.genres.all()]
+                if songs_liked:
+                    liked_types = [song.type for song in songs_liked]
+                    liked_genres = [genre.name for song in songs_liked for genre in song.genres.all()]
 
-                from collections import Counter
-                types_cnt = Counter(liked_types).most_common(2)
-                genres_cnt = Counter(liked_genres).most_common(2)
+                    from collections import Counter
+                    types_cnt = Counter(liked_types).most_common(2)
+                    genres_cnt = Counter(liked_genres).most_common(2)
 
-                genre1 = Genre.objects.get(name__contains=genres_cnt[0][0])
-                genre2 = Genre.objects.get(name__contains=genres_cnt[1][0])
-                rec1 = Song.objects.filter(type=types_cnt[0][0], genres__in=[genre1], like__gt=1000)
-                rec1_sample = sample(range(len(rec1)), 4)
-                rec1 = [rec1[i] for i in rec1_sample]
-                rec2 = Song.objects.filter(type=types_cnt[1][0], genres__in=[genre2], like__gt=1000)
-                rec2_sample = sample(range(len(rec2)),2)
-                rec2 = [rec2[i] for i in rec2_sample]
+                    if len(types_cnt) >= 2 and len(genres_cnt) >= 2:
+                        genre1 = Genre.objects.get(name__contains=genres_cnt[0][0])
+                        genre2 = Genre.objects.get(name__contains=genres_cnt[1][0])
+                        rec1 = Song.objects.filter(type=types_cnt[0][0], genres__in=[genre1], like__gt=1000)
+                        rec1_sample = sample(range(len(rec1)), 4)
+                        rec1 = [rec1[i] for i in rec1_sample]
+                        rec2 = Song.objects.filter(type=types_cnt[1][0], genres__in=[genre2], like__gt=1000)
+                        rec2_sample = sample(range(len(rec2)),2)
+                        rec2 = [rec2[i] for i in rec2_sample]
+                        songs_all = rec1 + logs_all + rest_sad_lst + rest_love_lst + rest_joy_lst + rec2
+                    else:
+                        genre1 = Genre.objects.get(name__contains=genres_cnt[0][0])
+                        rec1 = Song.objects.filter(type=types_cnt[0][0], genres__in=[genre1], like__gt=1000)
+                        rec1_sample = sample(range(len(rec1)), 4)
+                        rec1 = [rec1[i] for i in rec1_sample]
+                        songs_all = rec1 + logs_all + rest_sad_lst + rest_love_lst + rest_joy_lst
 
-                songs_all = rec1 + logs_all + rest_sad_lst + rest_love_lst + rest_joy_lst + rec2
-                shuffle(songs_all)
-                serializer = SongSerializer(songs_all, many=True)
+                    shuffle(songs_all)
+                    serializer = SongSerializer(songs_all, many=True)
+
+                else:
+                    songs_all = logs_all + rest_sad_lst + rest_love_lst + rest_joy_lst
+                    shuffle(songs_all)
+                    serializer = SongSerializer(songs_all, many=True)
 
             else:  # if user's log not exist
                 if 0 <= hour < 7:
