@@ -122,7 +122,7 @@
                         <div class="d-flex flex-row mb-3 pb-3 border-bottom" v-for="(data, index) in artists" :key="index">
                             <img :src="data.thumb" :alt="data.title" class="img-thumbnail border-0 rounded-circle list-thumbnail align-self-center xsmall" />
                             <div class="pl-3 pr-2">
-                                <p class="font-weight-medium mb-0 " @click="fetchArtistSong(data.title)" style="cursor:pointer;">{{ data.title }}</p>
+                                <p class="font-weight-medium mb-0 " @click="fetchArtistSong(data.id)" style="cursor:pointer;">{{ data.title }}</p>
                                 <p class="text-muted mb-0 text-small">{{ data.detail }}</p>
                             </div>
                         </div>
@@ -379,6 +379,7 @@ export default {
           artists.forEach(artist => artistsArr.push({
             name: artist.name,
             img: artist.img,
+            id: artist.id,
           }))
           timeArr.push(new Date(obj.time).getHours())
         })
@@ -431,7 +432,8 @@ export default {
           this.a.push({
             title: artist.name,
             detail: cnt,
-            thumb: artist.img
+            thumb: artist.img,
+            id: artist.id
           })
         })
         this.a.sort((a,b) => {
@@ -441,7 +443,8 @@ export default {
           this.artists.push({
             title: artist.title,
             detail: `${artist.detail} 번`,
-            thumb: artist.thumb
+            thumb: artist.thumb,
+            id: artist.id,
           })
         })
         // 감상시간 통계처리
@@ -474,11 +477,12 @@ export default {
           timesum += i[1]
         }
         this.timeSum = timesum
-        await this.fetchArtistSong(this.artists[0]['title'])
+        await this.fetchArtistSong(this.artists[0]['id'])
         await this.fetchGenreSong(this.genres[0]['title'])
       },
-      async fetchArtistSong(artistName) {
-        const { data } = await http.get(`musicdna/artist/?emotion=${this.artistEmo}&keyword=${artistName}`, this.config)
+      async fetchArtistSong(artistId) {
+        console.log(artistId)
+        const { data } = await http.get(`musicdna/artist/?emotion=${this.artistEmo}&keyword=${Number(artistId)}`, this.config)
         this.artistEmotion = data
       },
       async fetchGenreSong(genre) {
