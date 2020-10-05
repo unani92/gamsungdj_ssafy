@@ -131,7 +131,6 @@ export default {
             
         },
         postData(updateInfo, refname) {
-            console.log(updateInfo)
             if (this.gender != "" && this.age !="") {
                 httpUser.put('', updateInfo, {
                     headers: {
@@ -139,7 +138,6 @@ export default {
                     }
                 })
                 .then(res => {
-                    console.log(res)
                     this.setUser(res.data)
                     this.hideModal(refname)
                 })
