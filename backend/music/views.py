@@ -24,27 +24,10 @@ class CategoryDetail(APIView):
             return Response(serializer.data)
         elif category == 'album':
             album = get_object_or_404(Album, pk=pk)
-
-            songs = re.sub(r'\([^)]*\)', '', album.songs)
-            songs = [song for song in songs.split(',')]
-
-            artist = album.artist.all()
-            print(artist)
-            arr = []
-            for idx,song in enumerate(songs):
-                try:
-                    print(song)
-                    s = Song.objects.filter(name__contains=song, album=album)[0]
-                    print(f'name: {s.name}')
-                    arr.append(s)
-                except:
-                    s = Song.objects.filter(name__contains=song[:-1], album=album)[0]
-                    print(f'name: {s.name}')
-                    arr.append(s)
+            songs = Song.objects.filter(album=pk)
 
             serializer = AlbumSerializer(album)
-
-            song_serializer = SongSerializer(arr, many=True)
+            song_serializer = SongSerializer(songs, many=True)
             return Response({
                 "data": serializer.data,
                 "songs": song_serializer.data
