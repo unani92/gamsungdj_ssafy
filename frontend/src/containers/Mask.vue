@@ -107,7 +107,7 @@ export default {
         }
     },
     mounted() {
-        // setInterval(this.synchronize, 1000);
+        setInterval(this.synchronize, 1000);
     },
     computed: {
         ...mapState([
@@ -124,7 +124,7 @@ export default {
         playerControl: function(state) {
             if(state === "play") {
                 if(this.playlist.length == 0) {
-                    this.$notify('info', "재생 목록이 비어있습니다.", "", "",{ duration: 5000, permanent: false })
+                    this.$notify('info', "재생 목록이 비어있습니다.", "", "",{ duration: 4000, permanent: false })
                     this.$store.state.visiblePlayButton = true
                     this.$store.state.visiblePauseButton = false
                 }
@@ -380,12 +380,10 @@ export default {
             }
         },
         error() {
-            this.$notify('error', "지원하지 않는 곡입니다.", this.selectedSong.title+" - "+this.selectedSong.artist, { duration: 5000, permanent: false })
+            this.$notify('error', "지원하지 않는 곡입니다.", this.selectedSong.title+" - "+this.selectedSong.artist, { duration: 4000, permanent: false })
             this.$store.state.playerControl = "next"
         },
         selectPlaylist(index) {
-            // console.log(this.userPlayList[index].song)
-            // console.log(this.playlist)
             L:for(let i=0; i<this.userPlayList[index].song.length; i++) {
                 for(let j=0; j<this.playlist.length; j++){
                     if(this.userPlayList[index].song[i].id == this.playlist[j].id) {
@@ -470,20 +468,20 @@ export default {
                 this.playlist = this.playlist.splice(index, 1)
             }
         },
-        // youTubePlayerVolumeChange() {   
-        //     this.player.setVolume(this.selectedSong.volume);
-        // },
-        // youTubePlayerCurrentTimeChange() {
-        //     this.player.seekTo(this.selectedSong.currentTime * this.selectedSong.duration / 100)
-        // },
-        // synchronize() {
-        //     this.player.getDuration()
-        //     .then((value) => this.selectedSong.duration = value)
-        //     this.player.getCurrentTime()
-        //     .then((value) => this.selectedSong.currentTime = value / this.selectedSong.duration * 100)
-        //     this.player.getVolume()
-        //     .then((value) => this.selectedSong.volume = value)
-        // }
+        youTubePlayerVolumeChange() {   
+            this.player.setVolume(this.selectedSong.volume);
+        },
+        youTubePlayerCurrentTimeChange() {
+            this.player.seekTo(this.selectedSong.currentTime * this.selectedSong.duration / 100)
+        },
+        synchronize() {
+            this.player.getDuration()
+            .then((value) => this.selectedSong.duration = value)
+            this.player.getCurrentTime()
+            .then((value) => this.selectedSong.currentTime = value / this.selectedSong.duration * 100)
+            this.player.getVolume()
+            .then((value) => this.selectedSong.volume = value)
+        }
     }
 }
 </script>

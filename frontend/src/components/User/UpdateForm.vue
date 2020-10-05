@@ -127,8 +127,7 @@ export default {
                 }
                 this.postData(updateInfo, refname)
             }
-            
-            
+            this.$notify('primary', '회원 정보가 수정되었습니다.', '', { duration: 4000, permanent: false })
         },
         postData(updateInfo, refname) {
             if (this.gender != "" && this.age !="") {

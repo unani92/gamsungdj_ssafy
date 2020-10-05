@@ -411,7 +411,7 @@ export default {
                 const { id } = e.target
                 const { data: { liked } } = await http.post(`song/${id}/like/`, '',this.config)
                 if (liked) {
-                    // this.$notify('primary', "좋아요", this.song.name+" - "+this.song.artist[0].name, { duration: 5000, permanent: false });
+                    // this.$notify('primary', "좋아요", '', { duration: 5000, permanent: false });
                     this.$store.state.user.like_songs.push(Number(id))
                 }
                 else {
@@ -420,6 +420,9 @@ export default {
                         return song !== Number(id)
                     })
                 }
+            }
+            else {
+                this.$notify('warning', "로그인이 필요한 서비스입니다.", '', { duration: 4000, permanent: false })
             }
         },
         showOverlay(index) {

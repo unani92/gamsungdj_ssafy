@@ -39,11 +39,11 @@ import { adminRoot } from '../constants/config'
 export default {
     computed: {
         ...mapState([
-            'selectedSong'
+            'selectedSong',
         ]),
     },
     mounted(){
-        window.addEventListener("resize", this.handleResize);
+        window.addEventListener("resize", this.handleResize)
     },
     methods:{
         handleResize(e){
