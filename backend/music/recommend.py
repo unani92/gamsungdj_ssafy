@@ -108,13 +108,10 @@ class TimeRecommend(APIView):
                         rec1 = [rec1[i] for i in rec1_sample]
                         songs_all = rec1 + logs_all + rest_sad_lst + rest_love_lst + rest_joy_lst
 
-                    shuffle(songs_all)
-                    serializer = SongSerializer(songs_all, many=True)
-
                 else:
                     songs_all = logs_all + rest_sad_lst + rest_love_lst + rest_joy_lst
-                    shuffle(songs_all)
-                    serializer = SongSerializer(songs_all, many=True)
+                shuffle(songs_all)
+                serializer = SongSerializer(songs_all, many=True)
 
             else:  # if user's log not exist
                 if 0 <= hour < 7:
@@ -148,34 +145,38 @@ class TimeRecommend(APIView):
             })
 
         else:  # not logged in
-            sad_songs_all = Song.objects.filter(type__exact='sad').exclude(like__lt=500)
-            love_songs_all = Song.objects.filter(type__exact='love').exclude(like__lt=500)
-            joy_songs_all = Song.objects.filter(type__exact='joy').exclude(like__lt=500)
 
             if 0 <= hour < 7:
-                sad_sample = sample(range(len(sad_songs_all)), 13)
-                love_sample = sample(range(len(love_songs_all)), 5)
-                all = [sad_songs_all[i] for i in sad_sample] + [love_songs_all[i] for i in love_sample]
+                sad_songs = Song.objects.select_related('album').filter(type='sad', like__gt=500)
+                love_songs = Song.objects.select_related('album').filter(type='love', like__gt=500)
+                sad_sample = sample(range(len(sad_songs)), 13)
+                love_sample = sample(range(len(love_songs)), 5)
+                all = [sad_songs[i] for i in sad_sample] + [love_songs[i] for i in love_sample]
 
             elif 7 <= hour < 11:  # 신나는 노래 + 설레는 노래
-                joy_sample = sample(range(len(joy_songs_all)), 12)
-                love_sample = sample(range(len(love_songs_all)), 6)
-                all = [joy_songs_all[i] for i in joy_sample] + [love_songs_all[i] for i in love_sample]
+                joy_songs = Song.objects.select_related('album').filter(type='joy', like__gt=500)
+                love_songs = Song.objects.select_related('album').filter(type='love', like__gt=500)
+                joy_sample = sample(range(len(joy_songs)), 12)
+                love_sample = sample(range(len(love_songs)), 6)
+                all = [joy_songs[i] for i in joy_sample] + [love_songs[i] for i in love_sample]
             elif 12 <= hour < 14:
-                joy_sample = sample(range(len(joy_songs_all)), 18)
-                all = [joy_songs_all[i] for i in joy_sample]
+                joy_songs = Song.objects.select_related('album').filter(type='joy', like__gt=500)
+                joy_sample = sample(range(len(joy_songs)), 18)
+                all = [joy_songs[i] for i in joy_sample]
             elif 20 <= hour <= 23:
-                love_sample = sample(range(len(love_songs_all)), 11)
-                sad_sample = sample(range(len(sad_songs_all)), 5)
-                joy_sample = sample(range(len(joy_songs_all)), 2)
-                all = [love_songs_all[i] for i in love_sample] \
-                      + [sad_songs_all[i] for i in sad_sample] + [joy_songs_all[i] for i in joy_sample]
+                love_songs = Song.objects.select_related('album').filter(type='love', like__gt=500)
+                sad_songs = Song.objects.select_related('album').filter(type='sad', like__gt=500)
+                joy_songs = Song.objects.select_related('album').filter(type='joy', like__gt=500)
+
+                love_sample = sample(range(len(love_songs)), 11)
+                sad_sample = sample(range(len(sad_songs)), 5)
+                joy_sample = sample(range(len(joy_songs)), 2)
+                all = [love_songs[i] for i in love_sample] \
+                      + [sad_songs[i] for i in sad_sample] + [joy_songs[i] for i in joy_sample]
             else:
-                love_sample = sample(range(len(love_songs_all)), 6)
-                sad_sample = sample(range(len(sad_songs_all)), 6)
-                joy_sample = sample(range(len(joy_songs_all)), 6)
-                all = [love_songs_all[i] for i in love_sample] \
-                      + [sad_songs_all[i] for i in sad_sample] + [joy_songs_all[i] for i in joy_sample]
+                all = Song.objects.select_related('album').filter(like__gt=1000)
+                all_sample = sample(range(len(all)),18)
+                all = [all[i] for i in all_sample]
 
             serializer = SongSerializer(all, many=True)
             return Response({
