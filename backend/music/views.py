@@ -53,9 +53,9 @@ class CategoryDetail(APIView):
 class SearchResult(APIView):
     def get(self, request, category, keyword):
         if category == 'song':
-            songs = Song.objects.filter(name__contains=keyword).order_by('-pk')
+            songs = Song.objects.filter(name__icontains=keyword).order_by('-pk')
             try:
-                artist = Artist.objects.get(name__contains=keyword)
+                artist = Artist.objects.get(name__icontains=keyword)
                 artist_songs = Song.objects.filter(artist=artist.pk)
             except:
                 artist_songs = []
@@ -64,11 +64,11 @@ class SearchResult(APIView):
             serializer = SongSerializer(songs, many=True)
             return Response(serializer.data)
         elif category == 'album':
-            albums = Album.objects.filter(name__contains=keyword).order_by('-pk')
+            albums = Album.objects.filter(name__icontains=keyword).order_by('-pk')
             serializer = AlbumSerializer(albums, many=True)
             return Response(serializer.data)
         elif category == 'artist':
-            artists = Artist.objects.filter(name__contains=keyword).order_by('-pk')
+            artists = Artist.objects.filter(name__icontains=keyword).order_by('-pk')
             serializer = ArtistSerializer(artists, many=True)
             return Response(serializer.data)
         else:
@@ -84,7 +84,7 @@ class MusicDna(APIView):
         emotion = request.GET['emotion']
         keyword = request.GET['keyword']
         if category == 'artist':
-            artist = Artist.objects.get(name__contains=keyword)
+            artist = Artist.objects.get(name__icontains=keyword)
             songs = Song.objects.filter(artist=artist.pk, type=emotion)\
                 .exclude(like__lt=500)
             if len(songs) >= 10:
@@ -94,7 +94,7 @@ class MusicDna(APIView):
             songs = [songs[i] for i in nums]
             serializer = SongSerializer(songs, many=True)
         elif category == 'genre':
-            genre = Genre.objects.get(name__contains=keyword)
+            genre = Genre.objects.get(name__icontains=keyword)
             songs = Song.objects.filter(genres__in=[genre], type=emotion)\
                 .exclude(like__lt=500)
 

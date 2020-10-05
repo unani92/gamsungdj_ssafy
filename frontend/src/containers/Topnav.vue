@@ -140,13 +140,19 @@ export default {
     },
     link() {
       this.$router.push(`${adminRoot}/musicDNA`)
+      if(this.$store.state.visiblePlaylist){
+        this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
+      }
     },
     goMyPage() {
       this.$router.push(`${adminRoot}/profile`)
+      if(this.$store.state.visiblePlaylist){
+        this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
+      }
     }
   },
   computed: {
-    imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
+    imgURL: function() { return "http://j3a505.p.ssafy.io:8000/api/accounts/" + this.user.avatar },
     ...mapGetters({
       currentUser: "currentUser",
     }),

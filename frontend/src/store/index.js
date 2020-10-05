@@ -31,7 +31,7 @@ export default new Vuex.Store({
       duration: '',
       volume: '',
       like: '',
-      comment: '',
+      comments: '',
     },
     isLoggedin: sessionStorage.getItem('isLoggedin'),
   },

@@ -3,7 +3,10 @@
     <div class="footer-content">
         <div class="row" style="height:100%; align-items:center;">
             <div class="col-12 col-sm-3">
-                <img :src="selectedSong.img" style="height:-webkit-fill-available;"> {{ selectedSong.title }} - {{ selectedSong.artist }}
+                <img :src="selectedSong.img" style="height:-webkit-fill-available;">
+                <span v-if="selectedSong.title">
+                    {{ selectedSong.title }} - {{ selectedSong.artist }}
+                </span>
                 <p class="mb-0 text-muted">
                 </p>
             </div>
@@ -12,7 +15,7 @@
                 <p class="mb-0 text-muted">
                     <font class="button" size="10px">
                         <span class="glyph-icon simple-icon-control-rewind" @click="action('prev')"></span>
-                        <span class="glyph-icon simple-icon-control-play" @click="action('play')"  v-show="this.$store.state.visiblePlayButton" style="padding:0px 20px 0px 20px;"></span>
+                        <span class="glyph-icon simple-icon-control-play" @click="action('play')" v-show="this.$store.state.visiblePlayButton" style="padding:0px 20px 0px 20px;"></span>
                         <span class="glyph-icon simple-icon-control-pause" @click="action('pause')" v-show="this.$store.state.visiblePauseButton" style="padding:0px 20px 0px 20px;"></span>
                         <span class="glyph-icon simple-icon-control-forward" @click="action('next')"></span>
                     </font>

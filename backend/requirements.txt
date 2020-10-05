@@ -11,6 +11,7 @@ django-extensions==3.0.8
 django-rest-auth==0.9.5
 djangorestframework==3.10.3
 djangorestframework-jwt==1.11.0
+gunicorn
 idna==2.10
 joblib==0.14.0
 JPype1==1.0.2
