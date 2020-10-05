@@ -162,7 +162,7 @@ export default {
    
     computed: {
         ...mapState(['user']),
-        imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
+        imgURL: function() { return "http://j3a505.p.ssafy.io:8000/api/accounts/" + this.user.avatar },
     },
     created() {
         this.nickname = this.user.nickname

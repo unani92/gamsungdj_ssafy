@@ -144,7 +144,7 @@ export default {
   computed: {
 	...mapState(['user', 'userPlayList']),
 	...mapGetters(['config']),
-	imgURL: function() { return "http://127.0.0.1:8000/api/accounts/" + this.user.avatar },
+	imgURL: function() { return "http://j3a505.p.ssafy.io:8000/api/accounts/" + this.user.avatar },
     sortPlaylist() {
 		if(this.sort_value=='name'){
 			if(this.sort_type=='asc'){
