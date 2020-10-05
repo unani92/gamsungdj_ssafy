@@ -32,6 +32,8 @@ export default new Vuex.Store({
       volume: '',
       like: '',
       comments: '',
+      songID: -1,
+      singerID: -1,
     },
     isLoggedin: sessionStorage.getItem('isLoggedin'),
   },

@@ -3,9 +3,9 @@
     <div class="footer-content">
         <div class="row" style="height:100%; align-items:center;">
             <div class="col-12 col-sm-3">
-                <img :src="selectedSong.img" style="height:-webkit-fill-available;">
+                <img :src="selectedSong.img" style="height:-webkit-fill-available;"> 
                 <span v-if="selectedSong.title">
-                    {{ selectedSong.title }} - {{ selectedSong.artist }}
+                    <a class="glyph-icon" style="cursor:pointer;" @click="detailArtist(selectedSong.singerID)">{{ selectedSong.title }}</a> - <a class="glyph-icon" style="cursor:pointer;" @click="detailSong(selectedSong.songID)">{{ selectedSong.artist }}</a>
                 </span>
                 <p class="mb-0 text-muted">
                 </p>
@@ -35,7 +35,7 @@
 </template>
 <script>
 import { mapState } from "vuex"
-import testcomponenet from "./Mask"
+import { adminRoot } from '../constants/config'
 export default {
     computed: {
         ...mapState([
@@ -62,6 +62,11 @@ export default {
                 let height_mask = height - height_topnav - height_footer;
                 document.getElementById('mask').style.height = height_mask+1 + "px";
                 document.getElementById('mask').style.top = height_topnav + "px";
+                if(document.getElementById('lyricArea')){
+                    document.getElementById('lyricArea').style.height = height_mask-70 + "px";
+                    // document.getElementById('lyricArea').style.top = height_topnav + "px";
+                }
+                
             }
             this.$store.state.visiblePlaylist = !this.$store.state.visiblePlaylist
         },
@@ -83,7 +88,16 @@ export default {
                 this.$store.state.visiblePauseButton = true
             }
             this.$store.state.playerControl = msg
-        }
+        },
+        detailArtist: function(id){
+            this.$store.state.visiblePlaylist = false;
+            this.$router.push(`${adminRoot}/ArtistDetail/${id}`)
+        },
+        detailSong: function(id){
+            this.$store.state.visiblePlaylist = false;
+            this.$router.push(`${adminRoot}/songDetail/${id}`)
+        },
+
     }
 }
 </script>
