@@ -29,8 +29,10 @@
                                                 <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
-                                        <h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
+                                        <router-link :to='"songDetail/"+data.id'><h5 class="card-title text-white">{{ data.name }}</h5></router-link>
+										<router-link :to='"artistDetail/"+data.artist[index].id'  v-for="(artist, index) in data.artist" :key="index">
+                                            <p class="card-text text-white">{{ artist.name }}</p>
+										</router-link>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -53,8 +55,10 @@
                                                 <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
-										<h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
+										<router-link :to='"songDetail/"+data.id'><h5 class="card-title text-white">{{ data.name }}</h5></router-link>
+										<router-link :to='"artistDetail/"+data.artist[index].id'  v-for="(artist, index) in data.artist" :key="index">
+                                            <p class="card-text text-white">{{ artist.name }}</p>
+										</router-link>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -89,8 +93,10 @@
                                                 <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
-                                        <h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
+                                        <router-link :to='"songDetail/"+data.id'><h5 class="card-title text-white">{{ data.name }}</h5></router-link>
+										<router-link :to='"artistDetail/"+data.artist[index].id'  v-for="(artist, index) in data.artist" :key="index">
+                                            <p class="card-text text-white">{{ artist.name }}</p>
+										</router-link>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -113,8 +119,10 @@
                                                 <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
-                                        <h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
+                                        <router-link :to='"songDetail/"+data.id'><h5 class="card-title text-white">{{ data.name }}</h5></router-link>
+										<router-link :to='"artistDetail/"+data.artist[index].id'  v-for="(artist, index) in data.artist" :key="index">
+                                            <p class="card-text text-white">{{ artist.name }}</p>
+										</router-link>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -149,8 +157,10 @@
                                                 <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
-                                        <h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
+                                        <router-link :to='"songDetail/"+data.id'><h5 class="card-title text-white">{{ data.name }}</h5></router-link>
+										<router-link :to='"artistDetail/"+data.artist[index].id'  v-for="(artist, index) in data.artist" :key="index">
+                                            <p class="card-text text-white">{{ artist.name }}</p>
+										</router-link>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -173,8 +183,10 @@
                                                 <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(data, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                                             </b-dropdown>
                                         </div>
-                                        <h5 class="card-title">{{ data.name }}</h5>
-										<p class="card-text" v-for="(artist, index) in data.artist" :key="index">{{ artist.name }}</p>
+                                        <router-link :to='"songDetail/"+data.id'><h5 class="card-title text-white">{{ data.name }}</h5></router-link>
+										<router-link :to='"artistDetail/"+data.artist[index].id'  v-for="(artist, index) in data.artist" :key="index">
+                                            <p class="card-text text-white">{{ artist.name }}</p>
+										</router-link>
 									</div>
 								</b-card>
 								</b-colxx>
@@ -199,11 +211,11 @@
                 <div v-for="(data, index) in climateRecommend" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                            <a href="#" @click.prevent="search(data.id, 'song')"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                            <a href="#" @click.prevent="search(data.artist[0].name)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                            <a href="#" @click.prevent="search(data.id, 'song')"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                            <a href="#" @click.prevent="search(data.artist[0].id, 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                 <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer;"></span>
@@ -238,11 +250,11 @@
                 <div v-for="(data, index) in timeRecommend" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                     <b-card no-body>
                         <div class="position-relative">
-                            <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                            <a href="#" @click.prevent="search(data.id, 'song')"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                            <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                            <a href="#" @click.prevent="search(data.artist[0].name)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                            <a href="#" @click.prevent="search(data.id, 'song')"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                            <a href="#" @click.prevent="search(data.artist[0].id, 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                             <div class="mt-4" style="font-size:x-large;">
                                 <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                 <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer;"></span>
@@ -410,9 +422,6 @@ export default {
                 }
             }
         },
-		tempFunction() {
-			alert("페이지 준비중입니다.");
-        },
         showOverlay(index) {
             let el = document.getElementsByClassName('overlayClass'+index)
             for(var i=0; i<el.length; i++){
@@ -449,8 +458,8 @@ export default {
                 el[i].style.display="none"
             }
         },
-        search(word){
-            this.$router.push(`/A505/search/${word}`);
+        search(word, detail){
+            this.$router.push(`/A505/${detail}Detail/${word}`)
         },
         getWeather(){
           if (this.climate === null) {

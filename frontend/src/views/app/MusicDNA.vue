@@ -83,11 +83,11 @@
                             <div v-for="(data, index) in genreEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                               <b-card no-body>
                                 <div class="position-relative">
-                                    <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                                    <a href="#" @click.prevent="search(data.id, 'song')"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                                 </div>
                                 <b-card-body>
-                                  <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                                  <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                                  <a href="#" @click.prevent="search(data.id, 'song')"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                                  <a href="#" @click.prevent="search(data.artist[0].id , 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                                   <div class="mt-4" style="font-size:large;">
                                     <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNotify(data)"></span>
                                     <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
@@ -136,11 +136,11 @@
                     <div v-for="(data, index) in artistEmotion" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
                       <b-card no-body>
                         <div class="position-relative">
-                            <a href="#" @click.prevent="search(data.name)"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
+                            <a href="#" @click.prevent="search(data.id, 'song')"><img class="card-img-top" :src="data.img" alt="Card cap" /></a>
                         </div>
                         <b-card-body>
-                          <a href="#" @click.prevent="search(data.name)"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
-                          <a href="#" @click.prevent="search(data.artist)"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
+                          <a href="#" @click.prevent="search(data.id, 'song')"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
+                          <a href="#" @click.prevent="search(data.artist[0].id, 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                           <div class="mt-4" style="font-size:large;">
                             <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNotify(data)"></span>
                             <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
@@ -337,6 +337,9 @@ export default {
               this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
               this.userPlayList[index].song.push(data)
           })
+      },
+      search(word, detail){
+          this.$router.push(`/A505/${detail}Detail/${word}`)
       },
       isLiked(data) {
         if (this.user) {
