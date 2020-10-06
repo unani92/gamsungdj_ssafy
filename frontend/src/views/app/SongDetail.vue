@@ -122,6 +122,13 @@ export default {
       .then((rest) => {
         this.song = rest.data;
         this.lyrics = this.song.lyric.split('/');
+        if(rest.data.type=="sad"){
+          this.song.type="슬픔";
+        }else if(rest.data.type=="joy"){
+          this.song.type="신남";
+        }else if(rest.data.type=="love"){
+          this.song.type="설렘";
+        }
       })
     http
       .get("/song/"+this.songID+"/comment/")

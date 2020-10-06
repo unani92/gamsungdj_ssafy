@@ -23,8 +23,8 @@
                         <player v-show="!playerToggleFlag" />
                     </div>
                 </b-tab>
-                <b-tab title="Analyze" title-item-class="w-50 text-center">
-                        <analyze />
+                <b-tab title="Lyric" title-item-class="w-50 text-center">
+                        <lyric />
                 </b-tab>
             </b-tabs>
         </div>
@@ -80,7 +80,7 @@
 <script>
 import MusicBar from "../components/Playlist/Musicbar"
 import Player from "../components/Playlist/Player"
-import Analyze from "../components/Playlist/Analyze"
+import Lyric from "../components/Playlist/Lyric"
 import Switches from "vue-switches"
 import http from "../utils/http-common"
 import { mapGetters, mapMutations, mapActions, mapState } from "vuex"
@@ -94,7 +94,7 @@ export default {
     components:{
         'music-bar': MusicBar,
         'player': Player,
-        'analyze': Analyze,
+        'lyric': Lyric,
         switches: Switches
     },
     data() {
