@@ -5,7 +5,6 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Song, Album, Artist, Log, AlbumComment, SongComment, Genre
 from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
 from random import sample
-import re
 # Create your views here.
 
 class SongType(APIView):
@@ -49,6 +48,22 @@ class CategoryDetail(APIView):
                 "status": 401,
                 "msg": "invalid approach"
             })
+
+
+class CategoryDetailBulk(APIView):
+    @permission_classes([IsAuthenticated])
+    def get(self, request, category):
+        id_list = request.query_params.getlist('id[]')
+        if category == 'song':
+            songs = Song.objects.filter(pk__in=id_list)
+            serializer = SongSerializer(songs, many=True)
+            return Response(serializer.data)
+        elif category == 'album':
+            albums = Album.objects.filter(pk__in=id_list)
+            serializer = AlbumSerializer(albums, many=True)
+            return Response(serializer.data)
+        return Response({"status": 401})
+
 
 class SearchResult(APIView):
     def get(self, request, category, keyword):

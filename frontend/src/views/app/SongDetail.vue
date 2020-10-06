@@ -155,7 +155,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist", "likeSong"]),
     async addToPlaylistAndPlayNotify(data) {
       for(let i=0; i<this.playlist.length; i++) {
         if(this.playlist[i].id == data.id) {
@@ -191,43 +191,13 @@ export default {
       })
     },
     checkLikeSong(){
-      if(this.user && this.song.user_like){
-        for(var i=0;i<this.song.user_like.length;i++){
-          if(this.song.user_like[i].id==this.user.id){
-            return true;
-          }
-        }
-        return false;
+      if (this.user) {
+        return this.user.like_songs.includes(this.song.id)
       }
-      return false;
+      return false
+      
     },
-    likeSong: function(id) {
-      console.log(this.$store.state.authorization)
-      if(this.user){
-        http.post(`song/${id}/like/`,'',{
-          headers: {
-            Authorization: this.$store.state.authorization
-          },
-        })
-        .then((rest) => {
-          console.log(rest.data)
-          if(rest.data.liked){
-            this.song.user_like.push(this.user);
-            this.$notify('primary', "♥ 좋아요", this.song.name+" - "+this.song.artist[0].name, { duration: 5000, permanent: false });
-          }else{
-            for(var i=0;i<this.song.user_like.length;i++){
-              if(this.song.user_like[i].id==this.user.id){
-                this.song.user_like.splice(i, 1);
-                this.$notify('primary', "♡ 좋아요 취소", this.song.name+" - "+this.song.artist[0].name, { duration: 5000, permanent: false });
-                break;
-              }
-            }
-          }
-      })
-      }else{
-        this.showLogin=true;
-      }
-    },
+    
     checkComment: function(id) {
       if(this.user){
         if(this.user.id == id){

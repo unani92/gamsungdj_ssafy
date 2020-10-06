@@ -27,8 +27,8 @@
                 <thead style="font-size: initial; text-align: center;">
                     <th></th>
                     <th id="checkbox" key="checkbox" style="width:5%;"></th>
-                    <th id='song' @click="changeSortValue('name')" style="cursor:pointer; width:40%;">곡</th>
-                    <th id='artist' @click="changeSortValue('artist')" style="cursor:pointer; width:20%;">가수</th>
+                    <th id='song' style="cursor:pointer; width:40%;">곡</th>
+                    <th id='artist' style="cursor:pointer; width:20%;">가수</th>
                     <th style="width: 20%;">장르</th>
                     <th style="width: 15%;">재생</th>
                 </thead>
@@ -83,8 +83,8 @@
                 <thead style="font-size: initial; width:100%; text-align:center;">
                     <th ></th>
                     <th id="checkbox" key="checkbox" style="width:5%;"></th>
-                    <th id='song' @click="changeSortValue('name')" style="cursor:pointer; width:50%;">곡</th>
-                    <th id='artist' @click="changeSortValue('artist')" style="cursor:pointer; width:25%;">가수</th>
+                    <th id='song' style="cursor:pointer; width:50%;">곡</th>
+                    <th id='artist' style="cursor:pointer; width:25%;">가수</th>
                     <th style="width:20%">장르</th>
                     
                 </thead>
@@ -139,8 +139,8 @@
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                             <td style="vertical-align: middle; width: 10%;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
-                            <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
-                            <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
+                            <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
+                            <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
                             </tr>
                         </tbody>
                         <tbody style="border-top: none; display: none;" :id="'toggle'+playlist.id">
@@ -149,8 +149,8 @@
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                             <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                             <td style="vertical-align: middle; width: 10%;" @click.prevent="addToPlaylistAndPlay(song)"><div class="glyph-icon simple-icon-control-play"/></td>
-                            <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
-                            <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
+                            <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:13px;"/></td>
+                            <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:13px;"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -211,7 +211,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['setPlayList']),
+        ...mapActions(['setPlayList', 'likeSong']),
         
         // 펼치기 접기
         showAll(index) {
@@ -237,35 +237,7 @@ export default {
             })
         },
         
-        changeSortValue(value) {
-            if(this.sort_value != value){
-                this.sort_value=value;
-                this.sort_type = 'asc';
-            }else{
-                if(this.sort_type =='asc'){
-                this.sort_type = 'desc';
-                }else if(this.sort_type =='desc'){
-                this.sort_value = '';
-                this.sort_type = 'none';
-                }else{
-                this.sort_type = 'asc'
-                }
-            }
-
-            var tag1 = document.getElementById('song');
-            var tag2 = document.getElementById('artist');
-            if(this.sort_value=='name'){
-                tag1.style.color = "#236591";
-            }else {
-                tag1.style.color = "";
-            }
-
-            if(this.sort_value=='artist'){
-                tag2.style.color = "#236591";
-            }else {
-                tag2.style.color = "";
-            }
-        },
+        
         limitString(songName) {
             if(songName.length>26){
                 return songName.substr(0,22) + "...";
@@ -284,20 +256,7 @@ export default {
             }
             return false;
         },
-        async songLike(songData) {
-            const { data: { liked } } = await http.post(`song/${songData.id}/like/`, '',this.config)
-            if (liked) {
-                this.$notify('primary', "♥ 좋아요", songData.name+" - "+songData.artist[0].name, { duration: 4000, permanent: false });
-                this.$store.state.user.like_songs.push(Number(songData.id))
-            }
-            else {
-                this.$notify('primary', "♡ 좋아요 취소", songData.name+" - "+songData.artist[0].name, { duration: 4000, permanent: false });
-                this.$store.state.user.like_songs = this.$store.state.user.like_songs.filter(song => {
-                    return song !== Number(songData.id)
-                })
-            }
-            
-        },
+       
         
         updatePlayList() {
             httpUser.put(`playlist/${this.adminList.id}/`, {"name": this.adminList.name}, this.config)
