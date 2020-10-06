@@ -327,12 +327,12 @@ export default {
           console.log(rest.data)
           if(rest.data.liked){
             this.songs[index].user_like.push(this.user);
-            this.$notify('primary', "♥ 좋아요", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
+            this.$notify('primary', "♥ 좋아요", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 4000, permanent: false });
           }else{
             for(var i=0;i<this.songs[index].user_like.length;i++){
               if(this.songs[index].user_like[i].id==this.user.id){
                 this.songs[index].user_like.splice(i, 1);
-                this.$notify('primary', "♡ 좋아요 취소", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
+                this.$notify('primary', "♡ 좋아요 취소", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 4000, permanent: false });
                 break;
               }
             }
@@ -354,12 +354,12 @@ export default {
           console.log(rest.data)
           if(rest.data.liked){
             this.albums[index].user_like.push(this.user);
-            this.$notify('primary', "♥ 좋아요", this.albums[index].name, { duration: 5000, permanent: false });
+            this.$notify('primary', "♥ 좋아요", this.albums[index].name, { duration: 4000, permanent: false });
           }else{
             for(var i=0;i<this.albums[index].user_like.length;i++){
               if(this.albums[index].user_like[i].id==this.user.id){
                 this.albums[index].user_like.splice(i, 1);
-                this.$notify('primary', "♡ 좋아요 취소", this.albums[index].name, { duration: 5000, permanent: false });
+                this.$notify('primary', "♡ 좋아요 취소", this.albums[index].name, { duration: 4000, permanent: false });
                 break;
               }
             }

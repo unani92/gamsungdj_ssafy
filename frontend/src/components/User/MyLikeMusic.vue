@@ -16,8 +16,8 @@
                         </a>
                         <div class="mt-4" style="font-size:x-large;">
                             <span class="glyph-icon simple-icon-control-play mr-3" style="cursor:pointer;" @click="addToPlaylistAndPlay(song)"></span>
-                            <span v-if="isLike(song.id)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer;" @click="songLike(song.id)"></span>
-                            <span v-else class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;" @click="songLike(song.id)"></span>
+                            <span v-if="isLike(song.id)" class="glyph-icon simple-icon-heart mr-3 liked" style="cursor:pointer;" @click="songLike(song)"></span>
+                            <span v-else class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;" @click="songLike(song)"></span>
                             <b-dropdown variant="empty" toggle-class="p-0 m-0 pt-1 pl-1" no-caret style="position:absolute;">
                                 <template slot="button-content">
                                     <span class="glyph-icon simple-icon-playlist text-secondary" style="font-size:x-large; cursor:pointer;"></span>
@@ -100,16 +100,16 @@ export default {
                 return false
 
         },
-        async songLike(id) {      
-                const { data: { liked } } = await http.post(`song/${id}/like/`, '',this.config)
+        async songLike(songData) {      
+                const { data: { liked } } = await http.post(`song/${songData.id}/like/`, '',this.config)
                 if (liked) {
-                    // this.$notify('primary', "좋아요", this.song.name+" - "+this.song.artist[0].name, { duration: 5000, permanent: false });
+                    this.$notify('primary', "좋아요", songData.name+" - "+songData.artist[0].name, { duration: 4000, permanent: false });
                     this.$store.state.user.like_songs.push(Number(id))
                 }
                 else {
-                    // this.$notify('primary', "좋아요 취소", '', { duration: 5000, permanent: false });
+                    this.$notify('primary', "좋아요 취소", songData.name+" - "+songData.artist[0].name, { duration: 4000, permanent: false });
                     this.$store.state.user.like_songs = this.$store.state.user.like_songs.filter(song => {
-                        return song !== Number(id)
+                        return song !== Number(songData.id)
                     })
                 }        
         },

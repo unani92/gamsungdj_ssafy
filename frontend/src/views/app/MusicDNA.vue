@@ -90,8 +90,8 @@
                                   <a href="#" @click.prevent="search(data.artist[0].id , 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                                   <div class="mt-4" style="font-size:large;">
                                     <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
-                                    <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
-                                    <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
+                                    <span @click="songLike(data, $event)" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
+                                    <span @click="songLike(data, $event)" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
                                     <b-dropdown variant="empty" dropup toggle-class="p-0 m-0" no-caret>
                                       <template slot="button-content">
                                           <span class="glyph-icon simple-icon-playlist text-color" style="font-size:large; cursor:pointer;"></span>
@@ -143,8 +143,8 @@
                           <a href="#" @click.prevent="search(data.artist[0].id, 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                           <div class="mt-4" style="font-size:large;">
                             <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
-                            <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
-                            <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
+                            <span @click="songLike(data, $event)" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
+                            <span @click="songLike(data, $event)" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
                             <b-dropdown variant="empty" dropup toggle-class="p-0 m-0" no-caret>
                               <template slot="button-content">
                                   <span class="glyph-icon simple-icon-playlist text-color" style="font-size:large; cursor:pointer;"></span>
@@ -346,14 +346,15 @@ export default {
           return this.user.like_songs.includes(data.id);
           } else return false
         },
-      async songLike(e) {
+      async songLike(songData, e) {
         if (this.isLoggedin) {
           const { id } = e.target
-          console.log(id)
           const { data: { liked } } = await http.post(`song/${id}/like/`, '',this.config)
           if (liked) {
+            this.$notify('primary', "♥ 좋아요", songData.name+" - "+songData.artist[0].name, { duration: 4000, permanent: false });
             this.$store.state.user.like_songs.push(Number(id))
           } else {
+            this.$notify('primary', "♡ 좋아요 취소", songData.name+" - "+songData.artist[0].name, { duration: 4000, permanent: false });
             this.$store.state.user.like_songs = this.$store.state.user.like_songs.filter(song => {
               return song !== Number(id)
             })
@@ -493,8 +494,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.liked {
-  color: red !important;
-}
-</style>
