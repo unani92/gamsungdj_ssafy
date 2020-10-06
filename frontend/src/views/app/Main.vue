@@ -285,9 +285,6 @@ import http from '../../utils/http-common'
 import http2 from '../../utils/http-user'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faHeart as emptyHeart } from '@fortawesome/free-regular-svg-icons'
-import { faHeart as fillHeart } from '@fortawesome/free-solid-svg-icons'
 
 const youtubeURL = 'https://www.googleapis.com/youtube/v3/search'
 const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
@@ -295,7 +292,6 @@ const API_KEY = process.env.VUE_APP_YOUTUBE_API_KEY
 export default {
     components: {
         'glide-component': GlideComponent,
-        FontAwesomeIcon,
     },
 	mounted(){
         this.getTimeRecommend()
@@ -336,8 +332,6 @@ export default {
             carouselData2_2: '',
             carouselData3_1: '',
             carouselData3_2: '',
-            emptyHeart,
-            fillHeart,
         }
     },
     computed: {
@@ -417,12 +411,11 @@ export default {
                 const { id } = e.target
                 const { data: { liked } } = await http.post(`song/${id}/like/`, '',this.config)
                 if (liked) {
-                    this.$notify('primary', "좋아요", '', { duration: 5000, permanent: false });
+                    // this.$notify('primary', "좋아요", '', { duration: 5000, permanent: false });
                     this.$store.state.user.like_songs.push(Number(id))
                 }
                 else {
-                    console.log("왜에러?")
-                    this.$notify('primary', "좋아요 취소", '', { duration: 5000, permanent: false });
+                    // this.$notify('primary', "좋아요 취소", '', { duration: 5000, permanent: false });
                     this.$store.state.user.like_songs = this.$store.state.user.like_songs.filter(song => {
                         return song !== Number(id)
                     })
@@ -483,9 +476,11 @@ export default {
                     let weather = res.data.weather[0].description
                     this.setClimate(weather)
                     weather = weather.split(' ')
+                    console.log(weather)
                     if (weather.includes('rain') || weather.includes('thunderstorm')) {
                       http.get('rain/')
                         .then(res => {
+                          console.log(res.data)
                         })
                         .catch(e => console.log(e))
                     } else {
