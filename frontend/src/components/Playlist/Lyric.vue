@@ -1,7 +1,7 @@
 <template>
     <div class="tab-content">
-        <b-colxx class="col-sm-9" style="display:inline-block; float:left">
-            <b-row>
+        <b-colxx class="col-sm-12" style="display:inline-block; float:left">
+            <b-row class="ml-0">
                 
                 <div v-if="playlist[selectedSong.index]" style="width: -webkit-fill-available;">
                     <vue-perfect-scrollbar
@@ -23,7 +23,7 @@
             </wordcloud> -->
             </b-row>
         </b-colxx>
-        <b-colxx class="col-sm-3" style="display:inline-block; float:right">
+        <!-- <b-colxx class="col-sm-3" style="display:inline-block; float:right">
             <b-row class="mb-3">
                 <b-colxx>
                     <b-card class="h-100" title="분석1">
@@ -46,7 +46,7 @@
                     </b-card>
                 </b-colxx>
             </b-row>
-        </b-colxx>
+        </b-colxx> -->
     </div>
 </template>
 
