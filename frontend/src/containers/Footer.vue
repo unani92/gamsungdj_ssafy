@@ -2,15 +2,16 @@
 <footer class="page-footer">
     <div class="footer-content">
         <div class="row" style="height:100%; align-items:center;">
-            <div class="col-12 col-sm-3">
+            <div class="col-12 col-sm-4">
                 <img :src="selectedSong.img" style="height:-webkit-fill-available;"> 
-                <span v-if="selectedSong.title">
-                    <a class="glyph-icon" style="cursor:pointer;" @click="detailArtist(selectedSong.singerID)">{{ selectedSong.title }}</a> - <a class="glyph-icon" style="cursor:pointer;" @click="detailSong(selectedSong.songID)">{{ selectedSong.artist }}</a>
+                <span v-if="selectedSong.title" style="display:inline-block; vertical-align:middle;">
+                    <a class="glyph-icon" style="cursor:pointer;" @click="detailArtist(selectedSong.singerID)">{{ selectedSong.title }}</a><br>
+                    <a class="glyph-icon" style="cursor:pointer;" @click="detailSong(selectedSong.songID)">{{ selectedSong.artist }}</a>
                 </span>
                 <p class="mb-0 text-muted">
                 </p>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <center>
                 <p class="mb-0 text-muted">
                     <font class="button" size="10px">
@@ -22,7 +23,7 @@
                 </p>
                 </center>
             </div>
-            <div class="col-sm-3 d-none d-sm-block">
+            <div class="col-sm-4 d-none d-sm-block">
                 <p class="mb-0 text-muted float-right">
                     <font size="20px">
                         <span class="glyph-icon simple-icon-playlist" @click="togglePlaylist"></span>
