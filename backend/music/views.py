@@ -84,7 +84,7 @@ class MusicDna(APIView):
         emotion = request.GET['emotion']
         keyword = request.GET['keyword']
         if category == 'artist':
-            artist = Artist.objects.get(name__icontains=keyword)
+            artist = Artist.objects.get(pk=int(keyword))
             songs = Song.objects.filter(artist=artist.pk, type=emotion)\
                 .exclude(like__lt=500)
             if len(songs) >= 10:
