@@ -3,7 +3,7 @@
     <div class="d-flex align-items-center navbar-left">
       <div style="margin-left:50px;">
         <router-link to="/A505/main">
-          home..
+          <img src="@/assets/logos/home.png" style="width:60px;" />
         </router-link>
       </div>
     </div>
