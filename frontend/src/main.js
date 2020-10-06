@@ -21,7 +21,12 @@ import GSignInButton from 'vue-google-signin-button'
 import VueYoutube from 'vue-youtube'
 import VueLodash from 'vue-lodash'
 import lodash from 'lodash'
- 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faHeart as emptyHeart } from '@fortawesome/free-regular-svg-icons'
+import { faHeart as fillHeart } from '@fortawesome/free-solid-svg-icons'
+
+library.add(emptyHeart, fillHeart)
 
 Vue.use(VueLodash)
 Vue.use(IconsPlugin)
@@ -35,11 +40,12 @@ Vue.use(VueScrollTo);
 Vue.use(VueLineClamp, {
   importCss: true
 });
-
 Vue.component('b-refresh-button', RefreshButton);
 Vue.component('b-colxx', Colxx);
 Vue.component('vue-perfect-scrollbar', vuePerfectScrollbar);
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
+
 export default new Vue({
   router,
   store,
