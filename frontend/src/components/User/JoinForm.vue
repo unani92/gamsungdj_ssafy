@@ -129,7 +129,6 @@ export default {
                     }
                 })
                 .then(res => {
-                    console.log(res)
                     this.setUser(res.data)
                     this.hideModal(refname)
                 })

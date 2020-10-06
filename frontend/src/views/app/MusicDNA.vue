@@ -89,7 +89,7 @@
                                   <a href="#" @click.prevent="search(data.id, 'song')"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
                                   <a href="#" @click.prevent="search(data.artist[0].id , 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                                   <div class="mt-4" style="font-size:large;">
-                                    <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNotify(data)"></span>
+                                    <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                                     <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
                                     <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
                                     <b-dropdown variant="empty" dropup toggle-class="p-0 m-0" no-caret>
@@ -142,7 +142,7 @@
                           <a href="#" @click.prevent="search(data.id, 'song')"><h6 class="mb-4 ellipsis">{{ data.name }}</h6></a>
                           <a href="#" @click.prevent="search(data.artist[0].id, 'artist')"><p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p></a>
                           <div class="mt-4" style="font-size:large;">
-                            <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addPlayListAndPlayNotify(data)"></span>
+                            <span class="glyph-icon simple-icon-control-play mr-2" style="cursor:pointer;" @click="addToPlaylistAndPlayNotify(data)"></span>
                             <span @click="songLike" :id="data.id" v-if="isLiked(data)" class="glyph-icon simple-icon-heart mr-2 liked" style="cursor:pointer;"></span>
                             <span @click="songLike" :id='data.id' v-else class="glyph-icon simple-icon-heart mr-2" style="cursor:pointer;"></span>
                             <b-dropdown variant="empty" dropup toggle-class="p-0 m-0" no-caret>
@@ -187,11 +187,11 @@ export default {
         "v-select": vSelect
     },
     computed: {
-      ...mapState(['user', "isLoggedin"]),
       ...mapState([
         'isLoggedin',
         'userPlayList',
         'user',
+        'playlist',
       ]),
       ...mapGetters(['config']),
       favGenre() {
