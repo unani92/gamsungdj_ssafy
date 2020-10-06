@@ -48,7 +48,7 @@ export default {
                 client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID
             },
             user: [],
-            username: '',
+            username: ''
         }
     },
     methods: {
@@ -56,10 +56,12 @@ export default {
         // 구글 로그인
         onGoogleSignInSuccess (response) {
             const token = response.wc.access_token
+            console.log(response)
             httpUser.post("google/", {
                 access_token: token
             })
             .then(resp => {
+                console.log(resp)
                 this.setAuth("JWT " + resp.data.token)
                 this.createUserProfile(resp)
 
@@ -86,6 +88,7 @@ export default {
         getKaKaoInfo(authInfo) {
             httpUser.post("kakao/", { access_token: authInfo.access_token })
             .then(response => {
+                console.log(response)
                 this.setAuth("JWT " + response.data.token)
                 this.createUserProfile(Response)
             })
@@ -100,6 +103,7 @@ export default {
                     this.hideModal('loginmodal')
                 }
                 else {
+                    console.log(res.data)
                     this.joinForm(res.data.data.username)
                 }
             })
@@ -111,7 +115,7 @@ export default {
         },
         hideModal (refname) {
             this.showJoin = false
-            // this.showLogin = false
+            this.showLogin = false
             this.$emit("hideModal")
         },
 
@@ -123,6 +127,7 @@ export default {
     created() {
         if (!window.Kakao.isInitialized()) {
             Kakao.init(process.env.VUE_APP_KAKAO_APP_KEY)
+            console.log(window.Kakao.isInitialized())
         }
     }
 

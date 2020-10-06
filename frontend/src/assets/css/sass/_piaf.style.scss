@@ -7876,15 +7876,13 @@ select:-webkit-autofill:focus {
 }
 .glyph-icon:hover {
   color: $theme-color-1 !important;
-  cursor: pointer;
-}
-.awesomeIcon:hover {
-  color: $theme-color-1 !important;
-  cursor: pointer;
 }
 .liked {
   color: $theme-color-1 !important;
 }
 .text-color {
-  color: $primary-color !important;
+  color : $primary-color !important;
+}
+.dashboard-list-with-thumbs2 {
+  height: 500px;
 }

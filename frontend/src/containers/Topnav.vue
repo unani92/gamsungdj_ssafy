@@ -136,7 +136,7 @@ export default {
     },
     signout() {
       this.logout()
-      this.$router.push(`${adminRoot}/main`).catch(()=>{})
+      this.$router.push(`${adminRoot}/main`)
     },
     link() {
       this.$router.push(`${adminRoot}/musicDNA`)
