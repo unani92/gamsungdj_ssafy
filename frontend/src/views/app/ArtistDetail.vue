@@ -9,7 +9,8 @@
     <b-colxx xxs="12">
         <b-colxx xxs="12" class="mb-4 pl-3 pr-3" style="display: inline-flex;">
                 <div xxs="4" class="card mb-4"  style="width:30%; margin-right:3%">
-                  <img class="card-img-top" :src="artist.img" style="border-top-left-radius:initial; border-top-right-radius:initial"/>
+                  <img v-if="artist.img === 'https://cdnimg.melon.co.kr'" class="card-img-top" src="http://cdnimg.melon.co.kr/resource/image/web/default/noArtist_300_160727.jpg/melon/resize/208" style="border-top-left-radius:initial; border-top-right-radius:initial">
+                  <img v-else class="card-img-top" :src="artist.img" style="border-top-left-radius:initial; border-top-right-radius:initial"/>
                 </div>
                 <div xxs="8" style="width:70%;">
                   <h1 class="mb-0 truncate text-xlarge" style="margin-top:3%">{{artist.name}}</h1><br>

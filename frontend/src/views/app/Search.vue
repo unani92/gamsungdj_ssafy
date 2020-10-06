@@ -19,7 +19,8 @@
             <div class="pr-3 pl-3 mb-4 glide__slide" v-for="(artist, index) in artists.slice(0,3)" :key="index"  @click="detailArtist(artist.id)" style="width:33%">
                 <b-card class="flex-row" no-body style=" cursor:pointer;">
                     <div class="w-50 position-relative">
-                        <img class="card-img-left" :src="artist.img"/>
+                        <img v-if="artist.img === 'https://cdnimg.melon.co.kr'" class="card-img-left" src="http://cdnimg.melon.co.kr/resource/image/web/default/noArtist_300_160727.jpg/melon/resize/208"/>
+                        <img v-else class="card-img-left" :src="artist.img"/>
                         <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge> -->
                     </div>
                     <div class="w-50">
