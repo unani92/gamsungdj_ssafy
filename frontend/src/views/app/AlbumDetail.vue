@@ -70,8 +70,8 @@
                       </b-dropdown>
                       </td>
 
-                      <td v-if="!checkLikeSong(index)" style="vertical-align: middle;" @click="likeSong(song.id, index)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                      <td v-if="checkLikeSong(index)" style="vertical-align: middle;" @click="likeSong(song.id, index)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
+                      <td v-if="!checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td v-if="checkLikeSong(song.id)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
                     <tr v-show="!song.id" :class="{'flex-row':true}" v-for="(song, index) in sortSongs.slice(0,songListSize)" v-bind:key="index+songListSize" class="card-img-overlay" style="position: relative">
                       <td style="width:85px;opacity:0.5;"><img :src="album.img" class="list-thumbnail responsive border-0" @click="detailSong(song.id)"/></td>
@@ -197,7 +197,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist", "likeSong", "likeAlbum"]),
     async addToPlaylistAndPlayNotify(data) {
       for(let i=0; i<this.playlist.length; i++) {
         if(this.playlist[i].id == data.id) {
@@ -272,77 +272,17 @@ export default {
         tag2.style.color = "";
       }
     },
-    checkLikeSong(index){
+    checkLikeSong(id){
       if(this.user){
-        for(let i=0;i<this.songs[index].user_like.length;i++){
-          if(this.songs[index].user_like[i].id===this.user.id){
-            return true;
-          }
-        }
-        return false;
+        return this.user.like_songs.includes(id)
       }
       return false;
-    },
-    likeSong: function(id, index) {
-      if(this.user){
-        http.post(`song/${id}/like/`,'',{
-          headers: {
-            Authorization: this.$store.state.authorization
-          },
-        })
-        .then((rest) => {
-          if(rest.data.liked){
-            this.songs[index].user_like.push(this.user);
-            this.$notify('primary', "♥ 좋아요", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
-          }else{
-            for(var i=0;i<this.songs[index].user_like.length;i++){
-              if(this.songs[index].user_like[i].id==this.user.id){
-                this.songs[index].user_like.splice(i, 1);
-                this.$notify('primary', "♡ 좋아요 취소", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
-                break;
-              }
-            }
-          }
-      })
-      }else{
-        this.showLogin=true;
-      }
     },
     checkLikeAlbum(){
        if(this.user && this.album.user_like){
-         for(var i=0;i<this.album.user_like.length;i++){
-          if(this.album.user_like[i].id==this.user.id){
-            return true;
-          }
-        }
-        return false;
+         return this.user.like_albums.includes(this.album.id)
        }
       return false;
-    },
-    likeAlbum: function(id) {
-      if(this.user){
-        http.post(`album/${id}/like/`,'',{
-          headers: {
-            Authorization: this.$store.state.authorization
-          },
-        })
-        .then((rest) => {
-          if(rest.data.liked){
-            this.album.user_like.push(this.user);
-            this.$notify('primary', "♥ 좋아요", this.album.name, { duration: 5000, permanent: false });
-          }else{
-            for(var i=0;i<this.album.user_like.length;i++){
-              if(this.album.user_like[i].id==this.user.id){
-                this.album.user_like.splice(i, 1);
-                this.$notify('primary', "♡ 좋아요 취소", this.album.name, { duration: 5000, permanent: false });
-                break;
-              }
-            }
-          }
-      })
-      }else{
-        this.showLogin=true;
-      }
     },
     checkComment: function(id) {
       if(this.user){

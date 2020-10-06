@@ -58,8 +58,8 @@
                           <b-dropdown-item v-for="(playlist, index) in userPlayList" :key="index" @click="addToUserPlaylist(song, playlist, index)">{{ playlist.name }}</b-dropdown-item>
                       </b-dropdown>
                       </td>
-                      <td v-if="!checkLikeSong((currentPage-1)*5+index)" style="vertical-align: middle;" @click="likeSong(song.id, (currentPage-1)*5+index)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
-                      <td v-if="checkLikeSong((currentPage-1)*5+index)" style="vertical-align: middle;" @click="likeSong(song.id, (currentPage-1)*5+index)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
+                      <td v-if="!checkLikeSong((currentPage-1)*5+index)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_empty.png" style="width:32px;"/></td>
+                      <td v-if="checkLikeSong((currentPage-1)*5+index)" style="vertical-align: middle;" @click="likeSong(song.id)" ><img src="../../assets/img/heart/heart_full.png" style="width:32px;"/></td>
                     </tr>
                   </tbody>
               </table>
@@ -110,8 +110,8 @@
                             <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
                             <h6 v-if="album.genre">장르:<a v-for="(genre, index) in album.genres" v-bind:key="index"> {{genre.name}}</a></h6>
                             <h6>발매일: {{dateformat(album.released_date)}}</h6>
-                            <img src="../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id, index)"/>
-                            <img src="../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id, index)"/>
+                            <img src="../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id)"/>
+                            <img src="../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id)"/>
                         </b-colxx>
                     </b-row>
                 </b-card-body>
@@ -130,8 +130,8 @@
                         <h5><a v-for="(singer, index) in album.artist" v-bind:key="index">{{singer.name}}</a></h5>
                         <h6 v-if="album.genre">장르: {{album.genre}}</h6>
                         <h6>발매일: {{dateformat(album.released_date)}}</h6>
-                        <img src="../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id, index)"/>
-                        <img src="../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id, index)"/>
+                        <img src="../../assets/img/heart/heart_empty.png" v-if="!checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id)"/>
+                        <img src="../../assets/img/heart/heart_full.png" v-if="checkLikeAlbum(index)" style="width:32px;" @click="likeAlbum(album.id)"/>
                     </b-colxx>
                 </b-row>
               </b-card-body>
@@ -194,7 +194,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+    ...mapActions(["addToPlaylistAndPlay", "addToPlaylist", "likeSong", "likeAlbum"]),
     async addToPlaylistAndPlayNotify(data) {
       for(let i=0; i<this.playlist.length; i++) {
         if(this.playlist[i].id == data.id) {
@@ -271,59 +271,6 @@ export default {
         tag2.style.color = "";
       }
     },
-    likeSong: function(id, index) {
-      if(this.user){
-        http.post(`song/${id}/like/`,'',{
-          headers: {
-            Authorization: this.$store.state.authorization
-          },
-        })
-        .then((rest) => {
-          console.log(rest.data)
-          if(rest.data.liked){
-            this.songs[index].user_like.push(this.user);
-            this.$notify('primary', "♥ 좋아요", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
-          }else{
-            for(var i=0;i<this.songs[index].user_like.length;i++){
-              if(this.songs[index].user_like[i].id==this.user.id){
-                this.songs[index].user_like.splice(i, 1);
-                this.$notify('primary', "♡ 좋아요 취소", this.songs[index].name+" - "+this.songs[index].artist[0].name, { duration: 5000, permanent: false });
-                break;
-              }
-            }
-          }
-      })
-      }else{
-        this.showLogin=true;
-      }
-    },
-    likeAlbum: function(id, index) {
-      this.clickAlbumLike = true;
-      if(this.user){
-        http.post(`album/${id}/like/`,'',{
-          headers: {
-            Authorization: this.$store.state.authorization
-          },
-        })
-        .then((rest) => {
-          console.log(rest.data)
-          if(rest.data.liked){
-            this.albums[index].user_like.push(this.user);
-            this.$notify('primary', "♥ 좋아요", this.albums[index].name, { duration: 5000, permanent: false });
-          }else{
-            for(var i=0;i<this.albums[index].user_like.length;i++){
-              if(this.albums[index].user_like[i].id==this.user.id){
-                this.albums[index].user_like.splice(i, 1);
-                this.$notify('primary', "♡ 좋아요 취소", this.albums[index].name, { duration: 5000, permanent: false });
-                break;
-              }
-            }
-          }
-      })
-      }else{
-        this.showLogin=true;
-      }
-    },
     limitString(songName) {
       if(songName.length>26){
         return songName.substr(0,22) + "...";
@@ -336,12 +283,7 @@ export default {
     },
     checkLikeSong(index){
       if(this.user){
-        for(var i=0;i<this.songs[index].user_like.length;i++){
-          if(this.songs[index].user_like[i].id==this.user.id){
-            return true;
-          }
-        }
-        return false;
+        return this.user.like_songs.includes(this.songs[index].id)
       }
       return false;
     },

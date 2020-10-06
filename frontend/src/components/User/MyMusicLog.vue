@@ -18,8 +18,8 @@
                         <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(member, index) in song.artist" v-bind:key="index">{{member.name}}</a></td>
                         <td class="list-item-heading mb-0 truncate" style="vertical-align: middle; font-size: 0.85rem; width: 20%;" @click="detailSong(song.id)"><a v-for="(genre, index) in song.genres" v-bind:key="index">{{genre.name}}</a>{{song.genre}}</td>
                         <td style="vertical-align: middle; width: 10%;" @click.prevent="addToPlaylistAndPlayNotify(song)"><div class="glyph-icon simple-icon-control-play"/></td>
-                        <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song)" ><img src="@/assets/img/heart/heart_empty.png" style="width:13px;"/></td>
-                        <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="songLike(song)" ><img src="@/assets/img/heart/heart_full.png" style="width:13px;"/></td>
+                        <td :id="song.id" v-if="!checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="@/assets/img/heart/heart_empty.png" style="width:13px;"/></td>
+                        <td :id="song.id" v-if="checkLikeSong(song.id)" style="vertical-align: middle; width: 10%;" @click="likeSong(song.id)" ><img src="@/assets/img/heart/heart_full.png" style="width:13px;"/></td>
                         <td style="vertical-align: middle;">
                         <b-dropdown variant="empty" toggle-class="p-0 m-0" dropleft no-caret style="position:relative;">
                             <template slot="button-content">
@@ -52,7 +52,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["addToPlaylistAndPlay", "addToPlaylist"]),
+        ...mapActions(["addToPlaylistAndPlay", "addToPlaylist","likeSong"]),
         limitString(songName) {
             if(songName.length>26){
                 return songName.substr(0,22) + "...";
@@ -107,19 +107,6 @@ export default {
                 this.$notify('primary', "사용자 재생 목록에 추가 되었습니다.", data.name+" - "+data.artist[0].name, { duration: 4000, permanent: false })
                 this.userPlayList[index].song.push(data)
             })
-        },
-        async songLike(songData) {  
-            const { data: { liked } } = await http.post(`song/${songData.id}/like/`, '',this.config)
-            if (liked) {
-                this.$notify('primary', "♥ 좋아요", songData.name+" - "+songData.artist[0].name, { duration: 4000, permanent: false });
-                this.$store.state.user.like_songs.push(Number(songData.id))
-            }
-            else {
-                this.$notify('primary', "♡ 좋아요 취소", songData.name+" - "+songData.artist[0].name, { duration: 4000, permanent: false });
-                this.$store.state.user.like_songs = this.$store.state.user.like_songs.filter(song => {
-                    return song !== Number(songData.id)
-                })
-            }
         },
 
     },
