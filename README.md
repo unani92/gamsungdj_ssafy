@@ -1,7 +1,7 @@
 # 감성 DJ
 <img src="./frontend/src/assets/logos/home.png">
 
-[http://j3a505.p.ssafy.io/](http://i3a402.p.ssafy.io/)
+[http://j3a505.p.ssafy.io/](http://j3a505.p.ssafy.io/)
 <br><br>
 
 ## :mag_right: 서비스 소개
