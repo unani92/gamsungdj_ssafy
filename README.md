@@ -8,7 +8,7 @@
 <img src="./res/carousel.gif" width="800">
 <br><br><br>
 ### 이용자의 시간, 장소를 파악하여 협업필터링 기반의 날씨/시간대별 음악 추천 서비스<br>
-<img src="./res/weather.gif" width="800">
+<img src="./res/weather.png" width="800">
 <br><br><br>
 ### 누구나 이용할 수 있는 뮤직 플레이어 기능
 <img src="./res/player.png" width="800">
