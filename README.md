@@ -52,21 +52,21 @@
 ### **Frontend**
 
 - Vue.js
-- 
+
 - Bootstrap
-- 
+
 - node.js
 
 ### **Backend**
 
 - Django
-- 
+
 - Django REST framework
-- 
+
 - python
-- 
+
 - PostgreSQL
-- 
+
 ## :bulb: 아키텍쳐
  
 <img src="./res/architecture.PNG">
