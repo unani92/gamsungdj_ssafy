@@ -69,5 +69,5 @@
 - 
 ## :bulb: 아키텍쳐
  
-<img src="./res/architecture.png">
+<img src="./res/architecture.PNG">
 
