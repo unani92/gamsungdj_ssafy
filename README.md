@@ -49,6 +49,8 @@
 
 ## :wrench: 기술 스택
 
+<br><br><br>
+
 ### **Frontend**
 
 - Vue.js
@@ -66,6 +68,8 @@
 - python
 
 - PostgreSQL
+
+<br><br><br>
 
 ## :bulb: 아키텍쳐
  
