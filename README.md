@@ -1,24 +1,35 @@
 # 감성 DJ
+<img src="./frontend/src/assets/logos/home.png"><br>
+[http://j3a505.p.ssafy.io/](http://i3a402.p.ssafy.io/)
+<br><br><br>
+## :mag_right: 서비스 소개
 
-## 개요
-텍스트마이닝을 통한 가사의 감정분석, 감정 기반 음악 추천 서비스
+### 텍스트마이닝을 통한 가사의 감정분석, 감정 기반 음악 추천 서비스
+<img src="./res/carousel.png">
+<br><br><br>
+### 이용자의 시간, 장소를 파악하여 협업필터링 기반의 날씨/시간대별 음악 추천 서비스
+<img src="./res/weather.gif">
+<br><br><br>
+### 누구나 이용할 수 있는 뮤직 플레이어 기능
+<img src="./res/player.png">
+<br><br><br>
+### 원하는 음악을 찾아서 자신만의 플레이리스트를 만들고 관리할 수 있는 기능 
+<img src="./res/playlist.gif">
+<br><br><br>
+### 사용자의 음악감상 패턴을 분석하여 음악을 추천해주는 맞춤형 서비스 뮤직DNA
+<img src="./res/dna.png">
+<br><br><br>
+## :family: 팀 소개
+팀장 정윤환 : 데이터셋 스크래핑 및 감정 학습, 음악 추천/검색 컨트롤러 설계 및 구성, 서비스 배포 및 인프라 담당
+팀원 김유창 : 메인페이지 화면구성, 재생 컨트롤바 및 재생목록 화면구성, 뮤직DNA 화면 구성
+팀원 오정엽 : 검색기능 화면 구성, 음악, 앨범, 아티스트 세부페이지 화면구성
+팀원 오지수 : OAuth 2.0 소셜 인증 및 유저 페이지 구성, 회원 기능, 플레이리스트 컨트롤러 설계 및 구성
+<br><br><br>
+## :calendar: 개발 일정
 
-## 사용기술
-FE: Vue JS
-BE: Django, SQLite
-    - text mining: konlpy(전처리),  scikit-learn(분석모델)
+<br><br><br>
+## :wrench: 기술 스택
 
-## 서비스 소개
+<br><br><br>
+## :wrench: 아키텍쳐
 
-- 노래 가사에서 보이는 패턴을 바탕으로 노래를 각 감정으로 분류
-- 유사 감성의 음악 추천
-- 플레이리스트, 접속 시간대, 좋아요를 바탕으로 선호할 만한 노래 추천
-
-## 와이어프레임
-![505중간발표1](https://user-images.githubusercontent.com/53211781/93545182-c72b3980-f99a-11ea-8784-1c28e6e99697.jpg)
-
-![505중간발표](https://user-images.githubusercontent.com/53211781/93545211-d7dbaf80-f99a-11ea-9e5c-cbeeff06375d.jpg)
-
-## 향후 추친과제
-
-<img width="398" alt="워드클라우드" src="https://user-images.githubusercontent.com/53211781/93545318-0fe2f280-f99b-11ea-9a5c-d79e085ab101.png">
