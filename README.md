@@ -73,5 +73,5 @@
 
 ## :bulb: 아키텍쳐
  
-<img src="./res/architecture.PNG">
+<img src="./res/architecture.PNG" width="600">
 
