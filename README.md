@@ -5,7 +5,7 @@
 ## :mag_right: 서비스 소개
 
 ### 텍스트마이닝을 통한 가사의 감정분석, 감정 기반 음악 추천 서비스
-<img src="./res/carousel.png">
+<img src="./res/carousel.gif">
 <br><br><br>
 ### 이용자의 시간, 장소를 파악하여 협업필터링 기반의 날씨/시간대별 음악 추천 서비스
 <img src="./res/weather.gif">
@@ -17,7 +17,7 @@
 <img src="./res/playlist.gif">
 <br><br><br>
 ### 사용자의 음악감상 패턴을 분석하여 음악을 추천해주는 맞춤형 서비스 뮤직DNA
-<img src="./res/dna.png">
+<img src="./res/dna.gif">
 <br><br><br>
 ## :family: 팀 소개
 팀장 정윤환 : 데이터셋 스크래핑 및 감정 학습, 음악 추천/검색 컨트롤러 설계 및 구성, 서비스 배포 및 인프라 담당
