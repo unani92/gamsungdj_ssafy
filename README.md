@@ -49,8 +49,6 @@
 
 ## :wrench: 기술 스택
 
-<br><br><br>
-
 ### **Frontend**
 
 - Vue.js
@@ -73,5 +71,5 @@
 
 ## :bulb: 아키텍쳐
  
-<img src="./res/architecture.PNG" width="600">
+<img src="./res/architecture.png" width="600">
 
