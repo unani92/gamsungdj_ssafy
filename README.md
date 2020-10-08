@@ -2,6 +2,8 @@
 <img src="./frontend/src/assets/logos/home.png">
 
 [http://j3a505.p.ssafy.io/](http://j3a505.p.ssafy.io/)
+
+테스트 계정 : ssafytest01@gmail.com / testssafy01!
 <br><br>
 
 ## :mag_right: 서비스 소개
