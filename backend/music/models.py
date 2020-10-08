@@ -3,20 +3,20 @@ from django.conf import settings
 
 # Create your models here.
 class Genre(models.Model):
-    name = models.CharField(max_length=200, primary_key=True)
-    num = models.CharField(max_length=200, null=True)
+    name = models.CharField(max_length=300, primary_key=True)
+    num = models.CharField(max_length=300, null=True)
 
 class Artist(models.Model):
     # artist_id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=200)
-    debue = models.CharField(max_length=200)
+    name = models.CharField(max_length=300)
+    debue = models.CharField(max_length=300)
     img = models.URLField(null=True)
-    type = models.CharField(max_length=200)
-    member = models.CharField(max_length=200, null=True)
+    type = models.CharField(max_length=300)
+    member = models.CharField(max_length=300, null=True)
 
 class Album(models.Model):
     # album_id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=300)
     like = models.IntegerField()
     genres = models.ManyToManyField(
         Genre,
@@ -31,12 +31,12 @@ class Album(models.Model):
         related_name='like_albums',
     )
     img = models.URLField(null=True)
-    released_date = models.CharField(max_length=200)
+    released_date = models.CharField(max_length=300)
     songs = models.TextField(null=True)
 
 class Song(models.Model):
     # song_id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=300)
     like = models.IntegerField()
     genres = models.ManyToManyField(
         Genre,
@@ -57,8 +57,9 @@ class Song(models.Model):
     )
     img = models.URLField(null=True)
     lyric = models.TextField(null=True)
-    released = models.CharField(max_length=200)
-    type = models.CharField(max_length=200, null=True)
+    released = models.CharField(max_length=300)
+    src = models.CharField(max_length=300, null=True, default='')
+    type = models.CharField(max_length=300, null=True)
 
 class Log(models.Model):
     user = models.ForeignKey(

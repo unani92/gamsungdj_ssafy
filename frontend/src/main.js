@@ -6,15 +6,8 @@ import { BootstrapVue, IconsPlugin }from 'bootstrap-vue'
 // Router & Store add
 import router from './router'
 import store from './store'
-// Multi Language Add
-import en from './locales/en.json'
-import es from './locales/es.json'
-import VueI18n from 'vue-i18n'
-import { firebaseConfig } from './constants/config'
 // Notification Component Add
 import Notifications from './components/Common/Notification'
-// Breadcrumb Component Add
-import Breadcrumb from './components/Common/Breadcrumb'
 // RefreshButton Component Add
 import RefreshButton from './components/Common/RefreshButton'
 // Colxx Component Add
@@ -24,24 +17,21 @@ import vuePerfectScrollbar from 'vue-perfect-scrollbar'
 import contentmenu from 'v-contextmenu'
 import VueLineClamp from 'vue-line-clamp'
 import VueScrollTo from 'vue-scrollto'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import { getCurrentLanguage } from './utils'
 import GSignInButton from 'vue-google-signin-button'
 import VueYoutube from 'vue-youtube'
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faHeart as emptyHeart } from '@fortawesome/free-regular-svg-icons'
+import { faHeart as fillHeart } from '@fortawesome/free-solid-svg-icons'
 
-const SERVER_URL = "http://localhost:8000/api/music/";
+library.add(emptyHeart, fillHeart)
+
+Vue.use(VueLodash)
 Vue.use(IconsPlugin)
 Vue.use(GSignInButton)
 Vue.use(BootstrapVue);
-Vue.use(VueI18n);
-const messages = { en: en, es: es };
-const locale = getCurrentLanguage();
-const i18n = new VueI18n({
-  locale: locale,
-  fallbackLocale: 'en',
-  messages
-});
 Vue.use(VueYoutube);
 Vue.use(Notifications);
 Vue.use(require('vue-shortkey'));
@@ -50,16 +40,13 @@ Vue.use(VueScrollTo);
 Vue.use(VueLineClamp, {
   importCss: true
 });
-
-Vue.component('piaf-breadcrumb', Breadcrumb);
 Vue.component('b-refresh-button', RefreshButton);
 Vue.component('b-colxx', Colxx);
 Vue.component('vue-perfect-scrollbar', vuePerfectScrollbar);
-
-firebase.initializeApp(firebaseConfig);
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
+
 export default new Vue({
-  i18n,
   router,
   store,
   render: h => h(App)

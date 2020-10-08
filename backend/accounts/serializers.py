@@ -6,17 +6,16 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # from music.serializers import SongSerializer
+    nickname = serializers.CharField(source='userprofile.nickname')
     password = serializers.CharField(write_only=True)
     avatar = serializers.ImageField(source='userprofile.avatar', use_url=True, required=False)
     gender = serializers.CharField(source='userprofile.gender')
     age = serializers.CharField(source='userprofile.age')
     is_signed_up = serializers.BooleanField(source="userprofile.is_signed_up")
-    # like_songs = SongSerializer(many=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'username', 'password', 'avatar', 'gender', 'age', 'is_signed_up', 'like_songs', 'like_albums')
+        fields = ('id', 'email', 'nickname', 'username', 'password', 'avatar', 'gender', 'age', 'is_signed_up', 'like_songs', 'like_albums')
 
     def create(self, validated_data, instance=None):
         avatar = validated_data.pop('avatar')

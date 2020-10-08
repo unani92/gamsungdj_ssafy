@@ -1,15 +1,23 @@
 <template>
 <div>
-<b-modal v-model="showJoin" id="modalbackdrop" ref="modalbackdrop" :title="$t('회원가입')"
-        :hide-backdrop="selectedBackdrop=='false'"
-        :no-close-on-backdrop="selectedBackdrop=='false'">
+<b-modal v-model="showJoin" id="modalbackdrop" ref="modalbackdrop" title="회원가입"
+        :hide-header-close="true"
+        :no-close-on-backdrop="selectedBackdrop=='false'"
+        centered>
     <b-row>
-    <b-form class="form-container">
-            <b-form-file v-model="avatar" accept="image/jpeg, image/png, image/gif, image/jpg" class="mb-3"></b-form-file>
-            <b-form-group :label="$t('성별')">
+        <b-form class="form-container">
+            <div class="avatar-wrapper mb-3" @click="uploadImg">
+                <b-avatar v-if="!avatar" size="150" class="profile-pic"></b-avatar>
+                <b-avatar v-else size="150" class="profile-pic" id="changeImg" :src="avatarURL"></b-avatar>
+                <b-form-file v-model="avatar" id="file-upload" accept="image/jpeg, image/png, image/gif" @change="onChangeImg"/>
+            </div>
+            <b-form-group label="닉네임" label-for="username-input"> 
+                <b-form-input v-model="username" id="username-input"></b-form-input>
+            </b-form-group>
+            <b-form-group label="성별">
                 <v-select v-model="gender" :options="genderData" :reduce="genderData=>genderData.value" />
             </b-form-group>
-            <b-form-group :label="$t('나이')">
+            <b-form-group label="나이">
                 <v-select v-model="age" :options="ageData" :reduce="ageData=>ageData.value" />
             </b-form-group>
         </b-form>
@@ -23,8 +31,7 @@
 </template>
 
 <script>
-const baseURL = "http://localhost:8000/api/"
-import axios from 'axios'
+import httpUser from'@/utils/http-user'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import { mapActions } from 'vuex'
@@ -32,13 +39,14 @@ export default {
     components: {
         'v-select': vSelect
     },
-    props: ['showJoin'],
+    props: ['showJoin', 'username'],
     data() {
         return {
             selectedBackdrop: 'false',
             gender: '',
             age: '',
             avatar: null,
+            avatarURL: '',
             genderData: [
                 {
                     label: "남성",
@@ -83,7 +91,14 @@ export default {
             this.showJoin = false   
             this.$emit("hideModal")      
         },
-        
+        uploadImg() {
+            const fileUpload = document.getElementById('file-upload')
+            fileUpload.click();
+        },
+        onChangeImg(e) {
+            const file = e.target.files[0]; // Get first index in files
+            this.avatarURL = URL.createObjectURL(file); // Create File URL
+        },
         submit(refname) {
             if (this.avatar !== null) {
                 const joinInfo = new FormData()
@@ -91,10 +106,12 @@ export default {
                 joinInfo.append("gender",this.gender)
                 joinInfo.append("age", this.age)
                 joinInfo.append("is_signed_up", true)
+                joinInfo.append("nickname", this.username)
                 this.postData(joinInfo, refname)
             }
             else {
                 const joinInfo = {
+                    "nickname": this.username,
                     "gender": this.gender,
                     "age": this.age,
                     "is_signed_up":true
@@ -106,7 +123,7 @@ export default {
         },
         postData(joinInfo, refname) {
             if (this.gender != "" && this.age !="") {
-                axios.post(baseURL + "accounts/", joinInfo, {
+                httpUser.post('', joinInfo, {
                     headers: {
                         Authorization: this.$store.state.authorization,
                     }
@@ -138,6 +155,20 @@ export default {
 <style scoped>
 .form-container {
     width: 100%;
+}
+.avatar-wrapper{
+	position: relative;
+	height: 150px;
+	width: 150px;
+	margin: auto;
+	border-radius: 50%;
+	overflow: hidden;
+	box-shadow: 1px 1px 15px -5px black;
+	transition: all .3s ease;
+	cursor:pointer;
+}
+.avatar-wrapper:hover {
+    opacity: 0.5;
 }
 
 </style>

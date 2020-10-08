@@ -1,15 +1,17 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import Song, Album, Artist, Log, AlbumComment, SongComment
+from .models import Song, Album, Artist, Log, AlbumComment, SongComment, Genre
 from .serializers import SongSerializer, AlbumSerializer, ArtistSerializer, LogSerializer, AlbumCommentSerializer, SongCommentSerializer
-
+from random import sample
 # Create your views here.
 
 class SongType(APIView):
     def get(self, request, emotion_type):
-        songs = Song.objects.filter(type__exact=emotion_type).order_by('-like')[:10]
+        songs = Song.objects.filter(type__exact=emotion_type).order_by('-like')[:200]
+        selected = list(sample(range(0,200), 10))
+        songs = [songs[i] for i in selected]
         serializer = SongSerializer(songs, many=True)
         return Response(serializer.data)
 
@@ -21,45 +23,67 @@ class CategoryDetail(APIView):
             return Response(serializer.data)
         elif category == 'album':
             album = get_object_or_404(Album, pk=pk)
-            songs = [song for song in album.songs.split(',')]
-            print(songs)
-            artist = album.artist.name
-            arr = []
-            for idx,song in enumerate(songs):
-                try:
-                    s = Song.objects.filter(name__exact=song, album=album)[0]
-                    serializer = SongSerializer(s)
-                    arr.append(serializer.data)
-                except:
-                    arr.append('')
+            songs = Song.objects.filter(album=pk)
 
             serializer = AlbumSerializer(album)
+            song_serializer = SongSerializer(songs, many=True)
             return Response({
                 "data": serializer.data,
-                "songs": arr
+                "songs": song_serializer.data
             })
         elif category == 'artist':
             artist = get_object_or_404(Artist, pk=pk)
             serializer = ArtistSerializer(artist)
-            return Response(serializer.data)
+            songs = Song.objects.filter(artist=pk)
+            song_serializer = SongSerializer(songs, many=True)
+            albums = Album.objects.filter(artist=pk)
+            album_serializer = AlbumSerializer(albums, many=True)
+            return Response({
+                'data': serializer.data,
+                'songs': song_serializer.data,
+                'albums': album_serializer.data
+            })
         else:
             return Response({
                 "status": 401,
                 "msg": "invalid approach"
             })
 
-class SearchResult(APIView):
-    def get(self, request, category, keyword):
+
+class CategoryDetailBulk(APIView):
+    @permission_classes([IsAuthenticated])
+    def get(self, request, category):
+        id_list = request.query_params.getlist('id[]')
         if category == 'song':
-            songs = Song.objects.filter(name__contains=keyword).order_by('-pk')
+            songs = Song.objects.filter(pk__in=id_list)
             serializer = SongSerializer(songs, many=True)
             return Response(serializer.data)
         elif category == 'album':
-            albums = Album.objects.filter(name__contains=keyword).order_by('-pk')
+            albums = Album.objects.filter(pk__in=id_list)
+            serializer = AlbumSerializer(albums, many=True)
+            return Response(serializer.data)
+        return Response({"status": 401})
+
+
+class SearchResult(APIView):
+    def get(self, request, category, keyword):
+        if category == 'song':
+            songs = Song.objects.filter(name__icontains=keyword).order_by('-pk')
+            try:
+                artist = Artist.objects.get(name__icontains=keyword)
+                artist_songs = Song.objects.filter(artist=artist.pk)
+            except:
+                artist_songs = []
+
+            songs = list(artist_songs) + list(songs)
+            serializer = SongSerializer(songs, many=True)
+            return Response(serializer.data)
+        elif category == 'album':
+            albums = Album.objects.filter(name__icontains=keyword).order_by('-pk')
             serializer = AlbumSerializer(albums, many=True)
             return Response(serializer.data)
         elif category == 'artist':
-            artists = Artist.objects.filter(name__contains=keyword).order_by('-pk')
+            artists = Artist.objects.filter(name__icontains=keyword).order_by('-pk')
             serializer = ArtistSerializer(artists, many=True)
             return Response(serializer.data)
         else:
@@ -68,10 +92,42 @@ class SearchResult(APIView):
                 "msg": "invalid approach"
             })
 
+class MusicDna(APIView):
+    @permission_classes([IsAuthenticated])
+    def get(self, request, category):
+        print(request.GET)
+        emotion = request.GET['emotion']
+        keyword = request.GET['keyword']
+        if category == 'artist':
+            artist = Artist.objects.get(pk=int(keyword))
+            songs = Song.objects.filter(artist=artist.pk, type=emotion)\
+                .exclude(like__lt=500)
+            if len(songs) >= 10:
+                nums = sample(range(len(songs)),10)
+            else:
+                nums = range(len(songs))
+            songs = [songs[i] for i in nums]
+            serializer = SongSerializer(songs, many=True)
+        elif category == 'genre':
+            genre = Genre.objects.get(name__icontains=keyword)
+            songs = Song.objects.filter(genres__in=[genre], type=emotion)\
+                .exclude(like__lt=500)
+
+            if len(songs) >= 20:
+                nums = sample(range(len(songs)), 20)
+            else:
+                nums = range(len(songs))
+            songs = [songs[i] for i in nums]
+            serializer = SongSerializer(songs, many=True)
+        else:
+            return Response({'msg': 'failed'})
+
+        return Response(serializer.data)
+
 class CreateLog(APIView):
     @permission_classes([IsAuthenticated])
     def get(self, request):
-        logs = Log.objects.filter(user=request.user)
+        logs = Log.objects.filter(user=request.user).exclude(song__type='no lyric')
         serializer = LogSerializer(logs, many=True)
         return Response(serializer.data)
 
@@ -130,8 +186,14 @@ class AlbumCommentList(APIView):
     def get(self, request, pk):
         album = get_object_or_404(Album, pk=pk)
         comments = AlbumComment.objects.filter(album=album)
+        song_comments = SongComment.objects.filter(song__album=pk)
+
+        song_serializer = SongCommentSerializer(song_comments, many=True)
         serializer = AlbumCommentSerializer(comments, many=True)
-        return Response(serializer.data)
+        return Response({
+            'albumComment': serializer.data,
+            'songComment': song_serializer.data
+        })
 
     @permission_classes([IsAuthenticated])
     def post(self, request, pk):
@@ -191,6 +253,7 @@ class SongCommentList(APIView):
     def post(self, request, pk):
         song = get_object_or_404(Song, pk=pk)
         serializer = SongCommentSerializer(data=request.data)
+        print(request.user)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, song=song)
             return Response(serializer.data)
@@ -232,4 +295,18 @@ class SongCommentList(APIView):
             return Response({
                 "status": 401,
                 "msg": "게시글 삭제 권한이 없습니다."
+            })
+
+class AddYoutubeId(APIView):
+    def post(self, request, pk):
+        song = get_object_or_404(Song, pk=pk)
+        src = request.data['src']
+        if not song.src:
+            song.src = src
+            song.save()
+            serializer = SongSerializer(song)
+            return Response(serializer.data)
+        else:
+            return Response({
+                'msg': 'failed'
             })

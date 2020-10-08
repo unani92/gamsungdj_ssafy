@@ -1910,8 +1910,9 @@ button {
       padding: 0.5rem 1rem;
       line-height: 2;
       font-size: 0.8rem;
-      width: 93%;
+      // width: 93%;
       color: $primary-color;
+      border-radius: 20px;
     }
 
     .search-icon {
@@ -1921,7 +1922,7 @@ button {
       position: absolute;
       width: 40px;
       height: 40px;
-      bottom: -8px;
+      bottom: 0px;
       right: 3px;
       text-align: center;
       cursor: pointer;
@@ -7857,4 +7858,33 @@ select:-webkit-autofill:focus {
   bottom: 25%;
   display: inline-block;
   width: 270px;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  width: 100%;
+  overflow: hidden;
+}
+.button-refresh {
+  float: right;
+  margin-top: 5%;
+  margin-right: 5%;
+  cursor: pointer;
+  
+}
+.glyph-icon:hover {
+  color: $theme-color-1 !important;
+  cursor: pointer;
+}
+.awesomeIcon:hover {
+  color: $theme-color-1 !important;
+  cursor: pointer;
+}
+.liked {
+  color: $theme-color-1 !important;
+}
+.text-color {
+  color: $primary-color !important;
 }

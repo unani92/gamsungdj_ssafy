@@ -26,7 +26,9 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True)
     age = models.CharField(max_length=1, choices=AGE_CHOICES, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=20, default='')
     is_signed_up = models.BooleanField(default=False)
+
 
 
 class UserPlayList(models.Model):

@@ -15,12 +15,6 @@ export default {
 </script>
 
 <style>
-.music-bar {
-  /* position: absolute;
-  left:26px;
-  top:26px; */
-}
-
 .bar {
   display: block;
   background-color: #00b4ff;
