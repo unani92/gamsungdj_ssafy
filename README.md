@@ -43,10 +43,6 @@
 
 <br><br>
 
-## :calendar: 개발 일정
-
-<br><br><br>
-
 ## :wrench: 기술 스택
 
 ### **Frontend**
