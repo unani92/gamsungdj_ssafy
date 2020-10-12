@@ -9,6 +9,11 @@
                     <b-card class="flex-row" no-body>
 						<div class="col-sm-4 main-carousel-bg1" style="font-size:xx-large;">
                             <div class="glyph-icon simple-icon-refresh button-refresh" @click="getSadSong"></div>
+                            <div class="mt-2"><v-btn id="tool-emotion1" class="text-primary simple-icon-question" style="font-size:xx-large; cursor:pointer; vertical-align: middle;"></v-btn></div>
+                            <b-tooltip target="tool-emotion1" 
+                                    placement="right"
+                                    title="가사로 분석한 감정을 바탕으로 감정별 인기곡 추천">
+                            </b-tooltip>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
@@ -73,6 +78,12 @@
                     <b-card class="flex-row" no-body>
 						<div class="col-sm-4 main-carousel-bg2" style="font-size:xx-large;">
                             <div class="glyph-icon simple-icon-refresh button-refresh" @click="getJoySong"></div>
+                            <div class="mt-2"><v-btn id="tool-emotion2" class="text-primary simple-icon-question" style="font-size:xx-large; cursor:pointer; vertical-align: middle;"></v-btn></div>
+                            <b-tooltip target="tool-emotion2" 
+                                    placement="right"
+                                    title="가사로 분석한 감정을 바탕으로 감정별 인기곡 추천"
+                                    class="mt-4">
+                            </b-tooltip>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
@@ -137,6 +148,12 @@
                     <b-card class="flex-row" no-body>
 						<div class="col-sm-4 main-carousel-bg3" style="font-size:xx-large;">
                             <div class="glyph-icon simple-icon-refresh button-refresh" @click="getLoveSong"></div>
+                            <div class="mt-2"><v-btn id="tool-emotion3" class="text-primary simple-icon-question" style="font-size:xx-large; cursor:pointer; vertical-align: middle;"></v-btn></div>
+                            <b-tooltip target="tool-emotion3" 
+                                    placement="right"
+                                    title="가사로 분석한 감정을 바탕으로 감정별 인기곡 추천"
+                                    class="mt-4">
+                            </b-tooltip>
 						</div>
 						<div class="col-sm-8">
 							<b-row>
@@ -203,8 +220,14 @@
 	<!-- 날씨 매칭 추천 시작 -->
     <div v-if="climateRecommend">
     <b-row>
-        <b-colxx xxs="12">
-            <a href="#" @click.prevent="getWeather"><h5 class="mb-4 card-title">오늘 같은 날에는 ></h5></a>
+        <b-colxx xxs="12" style="display: flex;">
+            <a href="#" @click.prevent="getWeather"><h5 class="mb-4 card-title"> 오늘 같은 날에는</h5></a>
+            <v-btn id="tool-weather" class="text-primary simple-icon-question ml-1" style="font-size:large; cursor:pointer;"></v-btn>
+            <b-tooltip target="tool-weather" 
+                    placement="right"
+                    title="사용자 위치의 날씨를 기반으로 노래를 추천해줍니다"
+                    class="mt-4">
+            </b-tooltip>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
@@ -242,8 +265,14 @@
 	<!-- 시간 매칭 추천 시작 -->
     <div v-if="timeRecommend">
     <b-row >
-        <b-colxx xxs="12">
-            <a href="#" id="timeRecommend" @click.prevent="getTimeRecommend"><h5 class="mb-4 card-title">이시간에는 ></h5></a>
+        <b-colxx xxs="12" style="display: flex;">
+            <a href="#" id="timeRecommend" @click.prevent="getTimeRecommend"><h5 class="mb-4 card-title">이시간에는</h5></a>
+            <v-btn id="tool-time" class="text-primary simple-icon-question ml-1" style="font-size:large; cursor:pointer;"></v-btn>
+            <b-tooltip target="tool-time" 
+                    placement="right"
+                    title="사용자 로그를 분석하여 해당 시간의 맞춤곡 추천"
+                    class="mt-4">
+            </b-tooltip>
         </b-colxx>
         <b-colxx xxs="12" class="mb-4 pl-0 pr-0">
             <glide-component :settings="glideNoControlsSettings">
