@@ -40,8 +40,7 @@ Vue.use(VueScrollTo);
 Vue.use(VueLineClamp, {
   importCss: true
 });
-import vuetify from 'vuetify'
-Vue.use(vuetify)
+
 Vue.component('b-refresh-button', RefreshButton);
 Vue.component('b-colxx', Colxx);
 Vue.component('vue-perfect-scrollbar', vuePerfectScrollbar);
