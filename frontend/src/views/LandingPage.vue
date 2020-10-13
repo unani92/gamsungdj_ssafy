@@ -21,7 +21,7 @@
                     <a @click="scrollTo('#components')" href="javascript:;">뮤직DNA</a>
                   </li>
                   <li class="nav-item">
-                    <a :href="adminRoot+'/main'">감성DJ 즐기기</a>
+                    <a class="btn btn-primary btn-lg text-light" :href="adminRoot+'/main'">감성DJ 즐기기</a>
                   </li>
                 </ul>
                 <span
@@ -69,6 +69,7 @@
                     </a>
                   </div>
                 </div>
+                <!-- 이미지 -->
                 <div class="col-12 col-xl-7 offset-xl-1 col-lg-7 col-md-6 d-none d-md-block">
                   <a :href="adminRoot">
                     <img alt="hero" src="/assets/img/landing-page/home-hero.png" />
@@ -148,18 +149,62 @@
                   </p>
                 </div>
               </div>
-
               <div class="row pt-5">
-                <div
-                  class="col-12 mb-5"
-                  v-for="(l,index) in layouts"
-                  :key="`layout_${index}`"
-                > 
-                  <h4 class="text-left mb-3">{{l.title}}</h4>
-                  <img class="img-fluid border-radius depth-2 mb-3 semi-rounded" :src="l.img" alt="img"/>
-                  
-                </div>
+                <b-card class="col-4">
+                  <b-card-title>등교 혹은 출근길, 어떤 음악을 들으시나요?</b-card-title>
+                  <DoughnutChart :data="doughnutData[0]" shadow/>
+                </b-card>
+                <b-card class="col-4">
+                  <b-card-title>나른한 1시, 어떤 음악을 들으시나요?</b-card-title>
+                  <DoughnutChart :data="doughnutData[1]" shadow/>
+                </b-card>
+                <b-card class="col-4">
+                  <b-card-title>비가 오는 날, 어떤 음악을 들으시나요?</b-card-title>
+                  <DoughnutChart :data="doughnutData[2]" shadow/>
+                </b-card>
               </div>
+              <h4 class="text-left mt-3">시간에 따른 추천</h4>
+              <b-row class="pt-1">
+                <b-colxx cols="2" v-for="(data, index) in songTime" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                <div class=" mb-5"> 
+                    <b-card no-body>
+                        <div class="position-relative">
+                          <img class="card-img-top" :src="data.img" alt="Card cap" />
+                        </div>
+                        <b-card-body>
+                            <h6 class="mb-4 ellipsis">{{ data.name }}</h6>
+                            <p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p>
+                            <div class="mt-4" style="font-size:x-large;">
+                                <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" ></span>
+                                <span :id='data.id' class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
+                                <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" ></span>
+                            </div>
+                        </b-card-body>
+                    </b-card>
+                </div>
+                </b-colxx>
+              </b-row>
+              <h4 class="text-left mt-3">날씨에 따른 추천</h4>
+              <b-row class="pt-1">
+                <b-colxx cols="2" v-for="(data, index) in songWeather" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
+                <div class=" mb-5"> 
+                    <b-card no-body>
+                        <div class="position-relative">
+                          <img class="card-img-top" :src="data.img" alt="Card cap" />
+                        </div>
+                        <b-card-body>
+                            <h6 class="mb-4 ellipsis">{{ data.name }}</h6>
+                            <p class="text-muted mb-0 font-weight-light ellipsis">{{ data.artist[0].name }}</p>
+                            <div class="mt-4" style="font-size:x-large;">
+                                <span class="glyph-icon simple-icon-control-play mr-3" style="font-size:x-large; cursor:pointer;" ></span>
+                                <span :id='data.id' class="glyph-icon simple-icon-heart mr-3" style="cursor:pointer;"></span>
+                                <span class="glyph-icon simple-icon-playlist mr-3" style="font-size:x-large; cursor:pointer;" ></span>
+                            </div>
+                        </b-card-body>
+                    </b-card>
+                </div>
+                </b-colxx>
+              </b-row>
             </div>
           </div>
 
@@ -176,12 +221,52 @@
                 </div>
               </div>
             </div>
-            <img class="components-image mb-5 pb-5" src="/assets/img/landing-page/dna1.png" width="90%"/>
-            <img class="components-image mb-5 pb-5" src="/assets/img/landing-page/dna2.png" width="90%"/>
+            <b-row class="w-85 mx-auto">
+              <b-colxx lg="3" xl="3" class="mb-4">
+                  <gradient-with-radial-progress-card
+                      icon="simple-icon-heart"
+                      title="ambience"
+                      :detail=favAmbiance
+                      :percent=Number(favAmbianceProp.slice(0,favAmbianceProp.length-1))
+                      :progressText=favAmbianceProp
+                  />
+              </b-colxx>
+              <b-colxx lg="3" xl="3" class="mb-4">
+                  <gradient-with-radial-progress-card
+                      icon="simple-icon-star"
+                      title="Genre"
+                      :detail=favGenre
+                      :percent=Number(favGenreProp.slice(0,favGenreProp.length-1))
+                      :progressText=favGenreProp
+                  />
+              </b-colxx>
+              <b-colxx lg="3" xl="3" class="mb-4">
+                  <gradient-with-radial-progress-card
+                      icon="simple-icon-user"
+                      title="Artist"
+                      :detail=favArtist
+                      :percent=Number(favArtistProp.slice(0,favArtistProp.length-1))
+                      :progressText=favArtistProp
+                  />
+              </b-colxx>
+              <b-colxx lg="3" xl="3" class="mb-4">
+                  <gradient-with-radial-progress-card
+                      icon="simple-icon-clock"
+                      title="Time"
+                      :detail=favTime
+                      :percent=Number(favTimeProp.slice(0,favTimeProp.length-1))
+                      :progressText=favTimeProp
+                  />
+              </b-colxx>
+            </b-row>
+            <div class="w-85 mx-auto">
+              <b-card title="시간대별 이용 현황" class="mx-3">
+                  <div class="dashboard-line-chart">
+                  <line-chart :data="lineChartData" shadow />
+                  </div>
+              </b-card>
+            </div>
           </div>
-
-          
-
           <div class="section background background-no-bottom mb-0 pb-0">
             <div class="container">
               <div class="row">
@@ -233,20 +318,65 @@
 import { headroom } from "vue-headroom";
 import VueScrollTo from "vue-scrollto";
 import HomeLayout from "@/layouts/HomeLayout";
-import GlideComponent from "@/components/Carousel/GlideComponent";
+import GradientWithRadialProgressCard from "@/components/Cards/GradientWithRadialProgressCard"
+import DoughnutChart from "@/components/Charts/Doughnut"
+import LineChart from "@/components/Charts/Line"
+import { ThemeColors } from '@/utils'
 import { adminRoot } from "@/constants/config";
-const slideSettings = {
-  type: "carousel",
-  gap: 30,
-  perView: 4,
-  hideNav: true,
-  peek: { before: 10, after: 10 },
-  breakpoints: {
-    "600": { perView: 1 },
-    "992": { perView: 2 },
-    "1200": { perView: 3 }
-  }
-};
+import http from '@/utils/http-common'
+const colors = ThemeColors()
+const doughnutData = [
+  {
+    labels: ["신나는 노래", "잔잔한 발라드", "기타"],
+    datasets: [
+        {
+        label: '',
+        borderColor: [colors.themeColor3, colors.themeColor2, colors.themeColor1],
+        backgroundColor: [
+            colors.themeColor3_10,
+            colors.themeColor2_10,
+            colors.themeColor1_10
+        ],
+        borderWidth: 2,
+        data: [48, 18, 34]
+        }
+    ]
+  },
+  {
+    labels: ["신나는 노래", "잔잔한 발라드", "사랑 노래"],
+    datasets: [
+        {
+        label: '',
+        borderColor: [colors.themeColor3, colors.themeColor2, colors.themeColor1, colors.themeColor4],
+        backgroundColor: [
+            colors.themeColor3_10,
+            colors.themeColor2_10,
+            colors.themeColor1_10,
+            colors.themeColor4_10
+        ],
+        borderWidth: 2,
+        data: [55, 24, 6]
+        }
+    ]
+  },
+  {
+    labels: ["잔잔한 발라드", "사랑 노래", "신나는 노래"],
+    datasets: [
+        {
+        label: '',
+        borderColor: [colors.themeColor3, colors.themeColor2, colors.themeColor1, colors.themeColor4],
+        backgroundColor: [
+            colors.themeColor3_10,
+            colors.themeColor2_10,
+            colors.themeColor1_10,
+            colors.themeColor4_10
+        ],
+        borderWidth: 2,
+        data: [52, 18, 15]
+        }
+    ]
+  },
+]
 
 const main = [
   {
@@ -269,17 +399,6 @@ const main = [
   }
 ];
 
-const layouts = [
-  {
-    title: "날씨에 따른 음악 추천",
-    img: "/assets/img/landing-page/weather.png"
-  },
-  {
-    title: "시간에 따른 음악 추천",
-    img: "/assets/img/landing-page/time.png"
-  }
-];
-
 
 
 const scrollOptions = {
@@ -293,17 +412,47 @@ const scrollOptions = {
 
 export default {
   components: {
+    "gradient-with-radial-progress-card": GradientWithRadialProgressCard,
+    "line-chart": LineChart,
     "home-layout": HomeLayout,
-    "glide-component": GlideComponent,
+    DoughnutChart,
     headroom: headroom
   },
   data() {
     return {
       showMobileMenu: false,
       adminRoot,
-      slideSettings,
       main,
-      layouts,
+      doughnutData,
+      songWeather: [],
+      songTime: [],
+      favAmbiance:"가장 선호하는 감정의 음악은 joy 입니다.",
+      favAmbianceProp:"63%",
+      favArtist:"가장 많이 들은 가수는 방탄소년단 입니다.",
+      favArtistProp:"45%",
+      favGenre:"가장 좋아하는 장르는 랩/힙합 입니다.",
+      favGenreProp:"26%",
+      favTime:"18 시에서 ~ 20 시 사이에 가장 많이 들었습니다.",
+      favTimeProp:"46%",
+      lineChartData: {
+        labels: ['00', '02', '04', '06', '08', '10', '12', '14', '16', '18', '20', '22'],
+        datasets:
+        [
+            {
+                label: '',
+                data: [1, 1, 1, 2, 2, 8, 2, 4, 2, 11, 6, 0],
+                borderColor: colors.themeColor1,
+                pointBackgroundColor: colors.foregroundColor,
+                pointBorderColor: colors.themeColor1,
+                pointHoverBackgroundColor: colors.themeColor1,
+                pointHoverBorderColor: colors.foregroundColor,
+                pointRadius: 6,
+                pointBorderWidth: 2,
+                pointHoverRadius: 10,
+                fill: false
+            }
+        ]
+      },
     };
   },
   methods: {
@@ -331,6 +480,21 @@ export default {
 
     scrollTo(target) {
       VueScrollTo.scrollTo(target, 200, scrollOptions);
+    },
+    getWeather() {
+      http.get('joy/')
+      .then(res => {
+        console.log(res.data)
+        this.songWeather = res.data.slice(0, 6)
+        console.log(this.songWeather)
+      })
+    },
+    getTime() {
+      http.get('recommend/time/')
+      .then(res => {
+        
+        this.songTime = res.data.data.slice(0, 6)
+      })
     }
   },
   mounted() {
@@ -345,6 +509,10 @@ export default {
     window.removeEventListener("scroll", this.onWindowScroll);
     window.removeEventListener("resize", this.onWindowResize);
     window.removeEventListener("click", this.onWindowClick);
+  },
+  created() {
+    this.getWeather()
+    this.getTime()
   }
 };
 </script>
