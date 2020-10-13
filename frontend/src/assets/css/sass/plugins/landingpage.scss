@@ -156,12 +156,12 @@
         height: $navbar-height-md;
         .navbar-logo {
           width: 100px;
-          height: 30px;
+          height: 90px;
 
           .white,
           .dark {
             width: 100px;
-            height: 30px;
+            height: 90px;
           }
         }
       }
@@ -178,19 +178,19 @@
 
     .navbar-logo {
       width: 120px;
-      height: 40px;
+      height: 90px;
 
       .white {
         display: inline-block;
         width: 120px;
-        height: 40px;
+        height: 90px;
         background: url($lp-logo-path);
         background-repeat: no-repeat;
       }
 
       .dark {
         width: 120px;
-        height: 40px;
+        height: 90px;
         background: url($lp-logo-path-pinned);
         background-repeat: no-repeat;
         display: none;
@@ -405,14 +405,16 @@
           $lp-bg-color-4
         )+";opacity:0.3;' d='M624.43,1418.11c-44.33,4.25-94.67-9.44-127.35-37.63L0,952.48v50.82l452.08,389.18C496.69,1431,574.21,1442.48,624.43,1418.11Z'/%3E%3C/g%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position-y: 0;
+      background-position-x: -200px;
+      background-position-y: -200px;
       background-color: transparent;
-      height: 1440px;
+      height: 100vh;
       margin-bottom: 0;
       padding-top: 0;
       padding-bottom: 0;
       position: relative;
       background-size: cover;
+      background-size: 120vw 120vh;
 
       @include respond-below(xs) {
         height: 1340px;
@@ -479,6 +481,7 @@
       background-size: cover;
       background-size: auto 1100px;
       padding-top: 340px;
+      background-position-x: -500px;
       background-position-y: 150px;
       margin-top: -150px;
 

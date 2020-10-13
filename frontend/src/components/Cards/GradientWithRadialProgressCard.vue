@@ -5,7 +5,7 @@
             <i :class="`${icon} mr-2 text-white align-text-bottom d-inline-block`" />
             <div>
                 <p class="lead text-white">{{ title }}</p>
-                <p class="text-small text-white">{{ detail }}</p>
+                <p id="detail" class="text-small text-white">{{ detail }}</p>
             </div>
         </div>
         <div class="progress-bar-circle progress-bar-banner position-relative">
@@ -51,3 +51,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+#detail {
+    font-size: small !important;
+}
+
+</style>

@@ -7,8 +7,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: () => import("./views/app"),
-    redirect: `${adminRoot}/main`,
+    component: () => import("./views/LandingPage"),
   },
   {
     path: "/A505",

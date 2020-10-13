@@ -47,7 +47,7 @@
           <template slot="button-content">
             <span class="name mr-1">{{user.nickname}}</span>
             <span v-if="user.avatar">
-              <img :alt="user.nickname" :src="imgURL" />
+              <img :src="imgURL" />
             </span>
             <span v-else>
               <b-avatar></b-avatar>
