@@ -55,7 +55,7 @@
                       <h1 style="color:white;">감성 DJ</h1>
                       <h3 style="color:white;">감성으로 받는 추천 플레이리스트</h3>
                     </div>
-                    
+
                     <p class="white mt-5 mb-5">
                       즐거움, 사랑, 슬픔
                       <br />
@@ -63,7 +63,7 @@
                       <br />
                       <br />감성에 따라 추천 플레이리스트를 들어보세요
                     </p>
-                    
+
                     <a class="btn btn-light btn-xl mr-2 mb-2" :href="adminRoot+'/main'" target="_blank">
                       시작하기 >
                     </a>
@@ -72,11 +72,15 @@
                 <!-- 이미지 -->
                 <div class="col-12 col-xl-7 offset-xl-1 col-lg-7 col-md-6 d-none d-md-block">
                   <a :href="adminRoot">
-                    <img alt="hero" src="/assets/img/landing-page/home-hero.png" />
+<!--                    <img alt="hero" src="/assets/img/landing-page/home-hero.png" />-->
+                    <video controls>
+                      <source src="/assets/img/landing-page/intro.mp4" type="video/mp4">
+                    </video>
+<!--                    <img class="intro-carousel" src="/assets/img/landing-page/carousel.gif" alt="">-->
                   </a>
                 </div>
               </div>
-            
+
 
               <div class="row">
                 <a
@@ -166,7 +170,7 @@
               <h4 class="text-left mt-3">시간에 따른 추천</h4>
               <b-row class="pt-1">
                 <b-colxx cols="2" v-for="(data, index) in songTime" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
-                <div class=" mb-5"> 
+                <div class=" mb-5">
                     <b-card no-body>
                         <div class="position-relative">
                           <img class="card-img-top" :src="data.img" alt="Card cap" />
@@ -187,7 +191,7 @@
               <h4 class="text-left mt-3">날씨에 따른 추천</h4>
               <b-row class="pt-1">
                 <b-colxx cols="2" v-for="(data, index) in songWeather" :key="index" class="pr-3 pl-3 mb-4 glide__slide">
-                <div class=" mb-5"> 
+                <div class=" mb-5">
                     <b-card no-body>
                         <div class="position-relative">
                           <img class="card-img-top" :src="data.img" alt="Card cap" />
@@ -295,7 +299,7 @@
                   </a>
                 </div>
                 <div class="col-12 text-center footer-content">
-                  
+
                 </div>
               </div>
             </div>
@@ -492,13 +496,13 @@ export default {
     getTime() {
       http.get('recommend/time/')
       .then(res => {
-        
+
         this.songTime = res.data.data.slice(0, 6)
       })
     }
   },
   mounted() {
-    
+
     document.body.classList.add("no-footer");
     window.addEventListener("scroll", this.onWindowScroll);
     window.addEventListener("resize", this.onWindowResize);
@@ -516,3 +520,10 @@ export default {
   }
 };
 </script>
+<style scoped>
+  video, .intro-carousel {
+    width: 100%;
+    height: auto;
+    margin-top: 50px;
+  }
+</style>
