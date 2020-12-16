@@ -212,3 +212,4 @@ dmypy.json
 
 *.json
 backend/static
+.DS_Store
