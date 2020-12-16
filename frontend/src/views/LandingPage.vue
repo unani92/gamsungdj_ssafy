@@ -40,23 +40,24 @@
             <div class="container">
               <div class="row home-row" id="homeRow">
                 <div class="col-12 d-block d-md-none">
-                  <a :href="adminRoot" target="_blank">
-                    <img
-                      alt="mobile hero"
-                      class="mobile-hero"
-                      src="/assets/img/landing-page/home-hero-mobile.png"
-                    />
-                  </a>
+                  <img class="intro-carousel" src="/assets/img/landing-page/carousel.gif" alt="">
+<!--                  <a :href="adminRoot" target="_blank">-->
+<!--                    <img-->
+<!--                      alt="mobile hero"-->
+<!--                      class="mobile-hero"-->
+<!--                      src="/assets/img/landing-page/home-hero-mobile.png"-->
+<!--                    />-->
+<!--                  </a>-->
                 </div>
 
                 <div class="col-12 col-xl-4 col-lg-5 col-md-6">
                   <div class="home-text">
                     <div>
-                      <h1 style="color:white;">감성 DJ</h1>
-                      <h3 style="color:white;">감성으로 받는 추천 플레이리스트</h3>
+                      <h1 >감성 DJ</h1>
+                      <h3 >감성으로 받는 추천 플레이리스트</h3>
                     </div>
 
-                    <p class="white mt-5 mb-5">
+                    <p class="mt-5 mb-5 home-text">
                       즐거움, 사랑, 슬픔
                       <br />
                       <br />당신의 현재 감성은 무엇인가요?
@@ -70,13 +71,12 @@
                   </div>
                 </div>
                 <!-- 이미지 -->
-                <div class="col-12 col-xl-7 offset-xl-1 col-lg-7 col-md-6 d-none d-md-block">
+                <div class="col-12 col-xl-7 offset-xl-1 col-lg-7 col-md-6 ">
                   <a :href="adminRoot">
 <!--                    <img alt="hero" src="/assets/img/landing-page/home-hero.png" />-->
                     <video controls>
                       <source src="/assets/img/landing-page/intro.mp4" type="video/mp4">
                     </video>
-<!--                    <img class="intro-carousel" src="/assets/img/landing-page/carousel.gif" alt="">-->
                   </a>
                 </div>
               </div>
@@ -525,5 +525,8 @@ export default {
     width: 100%;
     height: auto;
     margin-top: 50px;
+  }
+  .intro-carousel {
+    margin-top: 0;
   }
 </style>

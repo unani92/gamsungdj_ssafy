@@ -55,7 +55,7 @@ export default {
         ...mapActions(['setAuth', 'setUser', 'setPlayList']),
         // 구글 로그인
         onGoogleSignInSuccess (response) {
-            const token = response.wc.access_token
+            const token = response.xc.access_token
             httpUser.post("google/", {
                 access_token: token
             })
@@ -84,11 +84,13 @@ export default {
             })
         },
         getKaKaoInfo(authInfo) {
+            console.log(authInfo.access_token)
             httpUser.post("kakao/", { access_token: authInfo.access_token })
             .then(response => {
                 this.setAuth("JWT " + response.data.token)
                 this.createUserProfile(Response)
             })
+            .catch(e => console.log(e))
         },
         // 회원가입시 프로필 생성
         createUserProfile(auth) {
