@@ -1,7 +1,7 @@
 <template>
     <div v-if="genres.length">
         <div class="mb-4">
-            <h3>{{ user.username }}님은 {{ new Date().getFullYear() }}.{{ new Date().getMonth() + 1 }}.{{ new Date().getDate() }}까지 {{ genresCnt }}개의 곡의 음악을 감상하고 있습니다.</h3>
+            <h3>{{ user.nickname }}님은 {{ new Date().getFullYear() }}.{{ new Date().getMonth() + 1 }}.{{ new Date().getDate() }}까지 {{ genresCnt }}개의 곡의 음악을 감상하고 있습니다.</h3>
         </div>
         <b-row>
             <b-colxx lg="3" xl="3" class="mb-4">
