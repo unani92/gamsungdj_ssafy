@@ -17,7 +17,7 @@ joblib==0.14.0
 JPype1==1.0.2
 konlpy==0.5.2
 lxml==4.5.2
-numpy==1.19.2
+numpy==1.22.0
 oauthlib==3.1.0
 pandas==0.25.3
 Pillow==7.2.0
