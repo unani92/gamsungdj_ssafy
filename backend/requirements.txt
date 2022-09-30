@@ -13,7 +13,7 @@ djangorestframework==3.10.3
 djangorestframework-jwt==1.11.0
 gunicorn
 idna==2.10
-joblib==0.14.0
+joblib==1.2.0
 JPype1==1.0.2
 konlpy==0.5.2
 lxml==4.5.2
