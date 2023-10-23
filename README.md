@@ -1,11 +1,6 @@
 # 감성 DJ
 <img src="./frontend/src/assets/logos/home.png">
 
-[http://j3a505.p.ssafy.io/](http://j3a505.p.ssafy.io/)
-
-테스트 계정 : ssafytest01@gmail.com / testssafy01!
-<br><br>
-
 ## :mag_right: 서비스 소개
 
 ### 1. 텍스트마이닝을 통한 가사의 감정분석, 감정 기반 음악 추천
